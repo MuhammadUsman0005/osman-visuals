@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as LicensingRouteImport } from './routes/licensing'
@@ -19,6 +20,11 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/licensing': typeof LicensingRoute
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/guides/$slug': typeof GuidesSlugRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/licensing': typeof LicensingRoute
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/guides/$slug': typeof GuidesSlugRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/licensing': typeof LicensingRoute
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/guides/$slug': typeof GuidesSlugRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/licensing'
     | '/refunds'
     | '/resources'
+    | '/sitemap.xml'
     | '/guides/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/licensing'
     | '/refunds'
     | '/resources'
+    | '/sitemap.xml'
     | '/guides/$slug'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/licensing'
     | '/refunds'
     | '/resources'
+    | '/sitemap.xml'
     | '/guides/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -144,10 +156,18 @@ export interface RootRouteChildren {
   LicensingRoute: typeof LicensingRoute
   RefundsRoute: typeof RefundsRoute
   ResourcesRoute: typeof ResourcesRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/resources': {
       id: '/resources'
       path: '/resources'
@@ -234,6 +254,7 @@ const rootRouteChildren: RootRouteChildren = {
   LicensingRoute: LicensingRoute,
   RefundsRoute: RefundsRoute,
   ResourcesRoute: ResourcesRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
