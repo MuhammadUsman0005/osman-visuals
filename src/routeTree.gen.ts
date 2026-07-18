@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as LicensingRouteImport } from './routes/licensing'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -20,6 +21,11 @@ import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LicensingRoute = LicensingRouteImport.update({
+  id: '/licensing',
+  path: '/licensing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryRoute = LibraryRouteImport.update({
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/guides': typeof GuidesRouteWithChildren
   '/library': typeof LibraryRoute
+  '/licensing': typeof LicensingRoute
   '/resources': typeof ResourcesRoute
   '/guides/$slug': typeof GuidesSlugRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/guides': typeof GuidesRouteWithChildren
   '/library': typeof LibraryRoute
+  '/licensing': typeof LicensingRoute
   '/resources': typeof ResourcesRoute
   '/guides/$slug': typeof GuidesSlugRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/guides': typeof GuidesRouteWithChildren
   '/library': typeof LibraryRoute
+  '/licensing': typeof LicensingRoute
   '/resources': typeof ResourcesRoute
   '/guides/$slug': typeof GuidesSlugRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/guides'
     | '/library'
+    | '/licensing'
     | '/resources'
     | '/guides/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/guides'
     | '/library'
+    | '/licensing'
     | '/resources'
     | '/guides/$slug'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/guides'
     | '/library'
+    | '/licensing'
     | '/resources'
     | '/guides/$slug'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   GuidesRoute: typeof GuidesRouteWithChildren
   LibraryRoute: typeof LibraryRoute
+  LicensingRoute: typeof LicensingRoute
   ResourcesRoute: typeof ResourcesRoute
 }
 
@@ -127,6 +140,13 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/licensing': {
+      id: '/licensing'
+      path: '/licensing'
+      fullPath: '/licensing'
+      preLoaderRoute: typeof LicensingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/library': {
@@ -191,6 +211,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   GuidesRoute: GuidesRouteWithChildren,
   LibraryRoute: LibraryRoute,
+  LicensingRoute: LicensingRoute,
   ResourcesRoute: ResourcesRoute,
 }
 export const routeTree = rootRouteImport
