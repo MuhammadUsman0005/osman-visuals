@@ -14,23 +14,21 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
-    <SiteChrome>
-      <div className="flex min-h-[60vh] items-center justify-center px-4">
-        <div className="max-w-md text-center">
-          <p className="eyebrow">No. 404</p>
-          <h1 className="mt-4 text-5xl font-display text-bone">Nothing filed here</h1>
-          <p className="mt-3 text-sm text-muted-foreground">
-            This page isn't in the archive. Try the library instead.
-          </p>
-          <Link
-            to="/library"
-            className="mt-6 inline-flex items-center border-b border-gold pb-0.5 text-sm text-bone hover:text-gold transition-colors"
-          >
-            Browse the library
-          </Link>
-        </div>
+    <div className="flex min-h-[70vh] items-center justify-center px-4 bg-void">
+      <div className="max-w-md text-center">
+        <p className="eyebrow">No. 404</p>
+        <h1 className="mt-4 text-5xl font-display text-bone">Nothing filed here</h1>
+        <p className="mt-3 text-sm text-bone/60">
+          This page isn't in the archive. Try the library instead.
+        </p>
+        <Link
+          to="/library"
+          className="mt-6 inline-flex items-center border-b border-gold pb-0.5 text-sm text-bone hover:text-gold transition-colors"
+        >
+          Browse the library
+        </Link>
       </div>
-    </SiteChrome>
+    </div>
   );
 }
 
