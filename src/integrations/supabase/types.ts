@@ -14,7 +14,165 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      guides: {
+        Row: {
+          body: string
+          category: string
+          cover_image_url: string | null
+          created_at: string
+          featured: boolean
+          id: string
+          read_time: number
+          slug: string
+          title: string
+        }
+        Insert: {
+          body: string
+          category: string
+          cover_image_url?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          read_time?: number
+          slug: string
+          title: string
+        }
+        Update: {
+          body?: string
+          category?: string
+          cover_image_url?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          read_time?: number
+          slug?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string | null
+        }
+        Relationships: []
+      }
+      prompts: {
+        Row: {
+          catalog_number: string
+          category: string
+          created_at: string
+          featured: boolean
+          id: string
+          is_premium: boolean
+          pdf_url: string | null
+          preview_image_url: string | null
+          prompt_text: string
+          slug: string
+          tags: string[]
+          title: string
+        }
+        Insert: {
+          catalog_number: string
+          category: string
+          created_at?: string
+          featured?: boolean
+          id?: string
+          is_premium?: boolean
+          pdf_url?: string | null
+          preview_image_url?: string | null
+          prompt_text: string
+          slug: string
+          tags?: string[]
+          title: string
+        }
+        Update: {
+          catalog_number?: string
+          category?: string
+          created_at?: string
+          featured?: boolean
+          id?: string
+          is_premium?: boolean
+          pdf_url?: string | null
+          preview_image_url?: string | null
+          prompt_text?: string
+          slug?: string
+          tags?: string[]
+          title?: string
+        }
+        Relationships: []
+      }
+      resources: {
+        Row: {
+          created_at: string
+          description: string | null
+          file_url: string | null
+          id: string
+          is_premium: boolean
+          preview_image_url: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          file_url?: string | null
+          id?: string
+          is_premium?: boolean
+          preview_image_url?: string | null
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          file_url?: string | null
+          id?: string
+          is_premium?: boolean
+          preview_image_url?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
