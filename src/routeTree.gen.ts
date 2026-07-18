@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as GuidesRouteImport } from './routes/guides'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 
@@ -30,6 +31,11 @@ const GuidesRoute = GuidesRouteImport.update({
   path: '/guides',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const GuidesSlugRoute = GuidesSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/guides': typeof GuidesRouteWithChildren
   '/library': typeof LibraryRoute
   '/resources': typeof ResourcesRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/guides': typeof GuidesRouteWithChildren
   '/library': typeof LibraryRoute
   '/resources': typeof ResourcesRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/guides': typeof GuidesRouteWithChildren
   '/library': typeof LibraryRoute
   '/resources': typeof ResourcesRoute
@@ -65,14 +74,28 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/guides' | '/library' | '/resources' | '/guides/$slug'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/guides'
+    | '/library'
+    | '/resources'
+    | '/guides/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/guides' | '/library' | '/resources' | '/guides/$slug'
-  id: '__root__' | '/' | '/guides' | '/library' | '/resources' | '/guides/$slug'
+  to: '/' | '/about' | '/guides' | '/library' | '/resources' | '/guides/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/guides'
+    | '/library'
+    | '/resources'
+    | '/guides/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   GuidesRoute: typeof GuidesRouteWithChildren
   LibraryRoute: typeof LibraryRoute
   ResourcesRoute: typeof ResourcesRoute
@@ -99,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/guides'
       fullPath: '/guides'
       preLoaderRoute: typeof GuidesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -131,6 +161,7 @@ const GuidesRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   GuidesRoute: GuidesRouteWithChildren,
   LibraryRoute: LibraryRoute,
   ResourcesRoute: ResourcesRoute,
