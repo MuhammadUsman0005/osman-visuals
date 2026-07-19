@@ -9,13 +9,13 @@ import { Search } from "lucide-react";
 export const Route = createFileRoute("/library")({
   head: () => ({
     meta: [
-      { title: "Prompt Library — Osman Visuals" },
+      { title: "The Vault — Osman Visuals" },
       {
         name: "description",
         content:
           "The full archive of AI prompts. Copy free prompts instantly, or unlock premium packs.",
       },
-      { property: "og:title", content: "Prompt Library — Osman Visuals" },
+      { property: "og:title", content: "The Vault — Osman Visuals" },
       {
         property: "og:description",
         content:
@@ -67,9 +67,9 @@ function Library() {
     <>
       <section className="border-b hairline">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 pt-20 pb-12">
-          <p className="eyebrow">Cat. IV — The Library</p>
+          <p className="eyebrow">Cat. IV — The Vault</p>
           <h1 className="mt-4 font-display text-5xl md:text-6xl text-bone leading-tight">
-            The archive, in full.
+            The Vault
           </h1>
           <p className="mt-4 text-bone/70 max-w-xl">
             Every plate we've filed. Free prompts copy on click. Premium packs unlock with an email
