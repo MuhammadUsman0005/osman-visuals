@@ -73,13 +73,13 @@ function Home() {
               to="/library"
               className="inline-flex items-center gap-3 bg-gold text-void px-6 py-3.5 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
             >
-              EXPLORE PROMPT LIBRARY <ArrowRight className="w-3.5 h-3.5" />
+              EXPLORE PROMPTS <ArrowRight className="w-3.5 h-3.5" />
             </Link>
             <Link
               to="/guides"
               className="text-sm text-bone/80 hover:text-gold border-b border-gold-hairline hover:border-gold pb-0.5"
             >
-              Discover the Art of Identity Consistency
+              The Identity Framework
             </Link>
           </div>
         </div>
