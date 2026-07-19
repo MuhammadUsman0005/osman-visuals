@@ -265,7 +265,7 @@ function SiteFooter() {
       </div>
       <div className="border-t hairline">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-5 flex items-center justify-between text-xs text-bone/50">
-          <span>© {new Date().getFullYear()} Osman Visuals</span>
+          <span>© {new Date().getFullYear()} Osman Visuals. All rights reserved.</span>
           <span className="eyebrow">Cat. MMXXVI</span>
         </div>
       </div>
