@@ -9,7 +9,7 @@ type NavLink = {
 };
 
 interface MobileNavProps {
-  links: NavLink[];
+  links: readonly NavLink[];
 }
 
 export function MobileNav({ links }: MobileNavProps) {
