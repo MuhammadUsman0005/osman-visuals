@@ -164,7 +164,7 @@ function SiteHeader() {
           <span className="font-display text-xl tracking-tight text-bone group-hover:text-gold transition-colors">
             Osman Visuals
           </span>
-          <span className="eyebrow hidden sm:inline">Archive</span>
+          <span className="eyebrow hidden sm:inline">THE STUDIO</span>
         </Link>
         <MobileNav links={links} />
       </div>

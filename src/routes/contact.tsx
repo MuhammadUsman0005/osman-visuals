@@ -78,10 +78,10 @@ function Contact() {
     <div className="mx-auto max-w-2xl px-6 lg:px-10 pt-20 pb-24">
       <p className="eyebrow">Contact</p>
       <h1 className="mt-4 font-display text-5xl text-bone leading-tight">
-        Studio, licensing, commissions.
+        Let's build something remarkable.
       </h1>
       <p className="mt-4 text-bone/70">
-        Send a note. We read every message and reply within two business days.
+        Whether you're looking for custom AI visuals, licensing, creative collaboration, or brand campaigns, we'd love to hear from you.
       </p>
 
       <form onSubmit={submit} className="mt-12 space-y-6 border-t hairline pt-12">

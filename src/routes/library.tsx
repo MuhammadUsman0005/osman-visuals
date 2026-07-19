@@ -69,11 +69,10 @@ function Library() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10 pt-20 pb-12">
           <p className="eyebrow">Cat. IV — The Vault</p>
           <h1 className="mt-4 font-display text-5xl md:text-6xl text-bone leading-tight">
-            The Vault
+            The Creative Vault
           </h1>
           <p className="mt-4 text-bone/70 max-w-xl">
-            Every plate we've filed. Free prompts copy on click. Premium packs unlock with an email
-            or purchase.
+            Discover the complete OsmanVisuals archive, featuring premium AI prompts, creative frameworks, cinematic workflows, and professional visual resources. From AI portraits and commercial advertising to concept art, brand campaigns, and prompt engineering, every collection is carefully curated to help creators, brands, and storytellers produce extraordinary visuals with confidence.
           </p>
         </div>
       </section>

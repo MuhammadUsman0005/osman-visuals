@@ -79,10 +79,10 @@ function Resources() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10 pt-20 pb-12">
           <p className="eyebrow">Cat. V — Resources</p>
           <h1 className="mt-4 font-display text-5xl md:text-6xl text-bone leading-tight">
-            The working materials.
+            The tools behind the work.
           </h1>
           <p className="mt-4 text-bone/70 max-w-xl">
-            Prompt packs, PDFs, and reference plates we use in the studio.
+            Everything that supports the creative process, from downloadable assets and production guides to references, templates, and creator utilities.
           </p>
         </div>
       </section>
