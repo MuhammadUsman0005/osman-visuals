@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState, useDeferredValue } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PromptCard, type Prompt } from "@/components/PromptCard";
-import { UnlockModal } from "@/components/UnlockModal";
+import { PromptPreviewModal } from "@/components/PromptPreviewModal";
 import { Search } from "lucide-react";
 
 export const Route = createFileRoute("/library")({
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/library")({
 function Library() {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string>("All");
-  const [unlock, setUnlock] = useState<Prompt | null>(null);
+  const [preview, setPreview] = useState<Prompt | null>(null);
   const deferredQ = useDeferredValue(q);
 
   const { data: prompts, isLoading } = useQuery({
@@ -120,19 +120,14 @@ function Library() {
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filtered.map((p) => (
-                <PromptCard key={p.id} prompt={p} onUnlock={setUnlock} />
+                <PromptCard key={p.id} prompt={p} onOpen={setPreview} />
               ))}
             </div>
           )}
         </div>
       </section>
 
-      <UnlockModal
-        open={!!unlock}
-        onClose={() => setUnlock(null)}
-        title={unlock?.title ?? ""}
-        source={`library:${unlock?.slug ?? ""}`}
-      />
+      <PromptPreviewModal prompt={preview} onClose={() => setPreview(null)} />
     </>
   );
 }
