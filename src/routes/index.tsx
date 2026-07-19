@@ -71,9 +71,15 @@ function Home() {
             className="mt-8 text-lg text-bone/70 max-w-xl leading-relaxed reveal"
             style={{ animationDelay: "120ms" }}
           >
-            The official archive of Osman Visuals; featuring cinematic AI prompts, premium prompt
-            packs, creator guides, visual resources, and transformation techniques used to create
-            high-end AI portraits.
+            The official archive of Osman Visuals, featuring cinematic AI prompts and premium prompt
+            packs.
+          </p>
+          <p
+            className="mt-4 text-lg text-bone/70 max-w-xl leading-relaxed reveal"
+            style={{ animationDelay: "120ms" }}
+          >
+            Creator guides, commercial visuals, and professional creative resources built for
+            creators, brands, and digital storytellers.
           </p>
           <div className="mt-10 flex items-center gap-6 reveal" style={{ animationDelay: "220ms" }}>
             <Link
@@ -155,7 +161,6 @@ function Home() {
 
       {/* Lead capture CTA */}
       <LeadBand />
-
       <PromptPreviewModal prompt={preview} onClose={() => setPreview(null)} />
     </>
   );

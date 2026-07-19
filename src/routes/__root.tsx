@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { MobileNav } from "../components/MobileNav";
+import { Instagram } from "lucide-react";
 
 function NotFoundComponent() {
   return (
@@ -178,9 +179,20 @@ function SiteFooter() {
         <div className="md:col-span-2">
           <p className="font-display text-2xl text-bone">Osman Visuals</p>
           <p className="mt-3 text-sm text-bone/60 max-w-sm">
-            A working archive of prompts, packs, and guides for photographers building
-            identity-consistent AI imagery.
+            Crafting cinematic AI visuals, premium prompts, and creative resources. For creators,
+            brands, and storytellers worldwide.
           </p>
+
+          <a
+            href="https://instagram.com/osmanvisuals"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold hover:text-bone transition-colors"
+            aria-label="Osman Visuals on Instagram"
+          >
+            <Instagram size={16} />
+            <span>@osmanvisuals</span>
+          </a>
         </div>
         <div>
           <p className="eyebrow mb-3">Explore</p>
