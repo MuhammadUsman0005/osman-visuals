@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PromptCard, type Prompt } from "@/components/PromptCard";
-import { UnlockModal } from "@/components/UnlockModal";
+import { PromptPreviewModal } from "@/components/PromptPreviewModal";
 import { z } from "zod";
 import { ArrowRight, Check } from "lucide-react";
 import heroImage from "@/assets/hero-portrait.jpg";
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
 const emailSchema = z.string().trim().email().max(255);
 
 function Home() {
-  const [unlock, setUnlock] = useState<Prompt | null>(null);
+  const [preview, setPreview] = useState<Prompt | null>(null);
 
   const featured = useQuery({
     queryKey: ["prompts", "featured"],
@@ -106,7 +106,7 @@ function Home() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {featured.data?.map((p) => (
-              <PromptCard key={p.id} prompt={p} onUnlock={setUnlock} />
+              <PromptCard key={p.id} prompt={p} onOpen={setPreview} />
             ))}
           </div>
         )}
@@ -145,12 +145,7 @@ function Home() {
       {/* Lead capture CTA */}
       <LeadBand />
 
-      <UnlockModal
-        open={!!unlock}
-        onClose={() => setUnlock(null)}
-        title={unlock?.title ?? ""}
-        source={`prompt:${unlock?.slug ?? ""}`}
-      />
+      <PromptPreviewModal prompt={preview} onClose={() => setPreview(null)} />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Copy, Check, Lock, Download } from "lucide-react";
+import { Copy, Check, Lock, Download, Maximize2 } from "lucide-react";
 
 export type Prompt = {
   id: string;
@@ -16,16 +16,17 @@ export type Prompt = {
 
 export function PromptCard({
   prompt,
-  onUnlock,
+  onOpen,
 }: {
   prompt: Prompt;
-  onUnlock: (prompt: Prompt) => void;
+  onOpen: (prompt: Prompt) => void;
 }) {
   const [copied, setCopied] = useState(false);
 
-  async function handleCopy() {
+  async function handleCopy(e: React.MouseEvent) {
+    e.stopPropagation();
     if (prompt.is_premium) {
-      onUnlock(prompt);
+      onOpen(prompt);
       return;
     }
     try {
@@ -38,7 +39,10 @@ export function PromptCard({
   }
 
   return (
-    <article className="group border hairline bg-surface flex flex-col transition-colors hover:border-gold/60">
+    <article
+      onClick={() => onOpen(prompt)}
+      className="group border hairline bg-surface flex flex-col transition-colors hover:border-gold/60 cursor-pointer text-left"
+    >
       <header className="flex items-center justify-between px-4 pt-4 pb-3 border-b hairline">
         <span className="eyebrow">{prompt.catalog_number}</span>
         <span className="eyebrow text-bone/50">{prompt.category}</span>
@@ -85,9 +89,21 @@ export function PromptCard({
             </>
           )}
         </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen(prompt);
+          }}
+          className="flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase tracking-widest text-bone/80 hover:text-gold border-l hairline"
+          aria-label="Preview prompt"
+        >
+          <Maximize2 className="w-3.5 h-3.5" />
+          Preview
+        </button>
         {prompt.pdf_url && !prompt.is_premium && (
           <a
             href={prompt.pdf_url}
+            onClick={(e) => e.stopPropagation()}
             className="flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase tracking-widest text-bone/80 hover:text-gold border-l hairline"
           >
             <Download className="w-3.5 h-3.5" />
