@@ -61,25 +61,25 @@ function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-void via-void/85 to-void/10" />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 pt-24 pb-32 md:pt-36 md:pb-48">
-          <p className="eyebrow reveal">No. 001 — The Archive</p>
+          <p className="eyebrow reveal">NO. 001 — OSMAN'S ARCHIVE</p>
           <h1 className="mt-6 font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-bone max-w-3xl reveal">
             The same face,<br />across every frame.
           </h1>
           <p className="mt-8 text-lg text-bone/70 max-w-xl leading-relaxed reveal" style={{ animationDelay: "120ms" }}>
-            Osman Visuals is a working archive of AI prompts, packs, and guides for photographers building cinematic imagery with identity-consistent subjects.
+            The official archive of Osman Visuals; featuring cinematic AI prompts, premium prompt packs, creator guides, visual resources, and transformation techniques used to create high-end AI portraits.
           </p>
           <div className="mt-10 flex items-center gap-6 reveal" style={{ animationDelay: "220ms" }}>
             <Link
               to="/library"
               className="inline-flex items-center gap-3 bg-gold text-void px-6 py-3.5 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
             >
-              Browse the library <ArrowRight className="w-3.5 h-3.5" />
+              EXPLORE PROMPT LIBRARY <ArrowRight className="w-3.5 h-3.5" />
             </Link>
             <Link
               to="/guides"
               className="text-sm text-bone/80 hover:text-gold border-b border-gold-hairline hover:border-gold pb-0.5"
             >
-              Read the identity preservation guide
+              Discover the Art of Identity Consistency
             </Link>
           </div>
         </div>
@@ -89,8 +89,8 @@ function Home() {
       <section className="mx-auto max-w-7xl px-6 lg:px-10 py-24">
         <div className="flex items-baseline justify-between mb-10">
           <div>
-            <p className="eyebrow">Cat. I — Featured plates</p>
-            <h2 className="mt-2 font-display text-4xl text-bone">From the archive</h2>
+            <p className="eyebrow">CAT. I — SIGNATURE COLLECTION</p>
+            <h2 className="mt-2 font-display text-4xl text-bone">Transformations Worth Saving</h2>
           </div>
           <Link to="/library" className="hidden sm:inline text-sm text-bone/60 hover:text-gold">
             View all →
