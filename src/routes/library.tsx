@@ -10,9 +10,17 @@ export const Route = createFileRoute("/library")({
   head: () => ({
     meta: [
       { title: "Prompt Library — Osman Visuals" },
-      { name: "description", content: "The full archive of AI prompts. Copy free prompts instantly, or unlock premium packs." },
+      {
+        name: "description",
+        content:
+          "The full archive of AI prompts. Copy free prompts instantly, or unlock premium packs.",
+      },
       { property: "og:title", content: "Prompt Library — Osman Visuals" },
-      { property: "og:description", content: "The full archive of AI prompts. Copy free prompts instantly, or unlock premium packs." },
+      {
+        property: "og:description",
+        content:
+          "The full archive of AI prompts. Copy free prompts instantly, or unlock premium packs.",
+      },
       { property: "og:url", content: "/library" },
     ],
     links: [{ rel: "canonical", href: "/library" }],
@@ -29,10 +37,7 @@ function Library() {
   const { data: prompts, isLoading } = useQuery({
     queryKey: ["prompts", "all"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("prompts")
-        .select("*")
-        .order("catalog_number");
+      const { data, error } = await supabase.from("prompts").select("*").order("catalog_number");
       if (error) throw error;
       return data as Prompt[];
     },
@@ -67,7 +72,8 @@ function Library() {
             The archive, in full.
           </h1>
           <p className="mt-4 text-bone/70 max-w-xl">
-            Every plate we've filed. Free prompts copy on click. Premium packs unlock with an email or purchase.
+            Every plate we've filed. Free prompts copy on click. Premium packs unlock with an email
+            or purchase.
           </p>
         </div>
       </section>

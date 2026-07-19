@@ -164,8 +164,8 @@ export function PromptPreviewModal({
                   <Lock className="w-3.5 h-3.5" /> Premium plate
                 </div>
                 <p className="mt-3 text-sm text-bone/70 leading-relaxed">
-                  Follow <span className="text-bone">@osmanvisuals</span> on Instagram to
-                  unlock this prompt. One tap, no email required.
+                  Follow <span className="text-bone">@osmanvisuals</span> on Instagram to unlock
+                  this prompt. One tap, no email required.
                 </p>
                 <a
                   href={INSTAGRAM_URL}

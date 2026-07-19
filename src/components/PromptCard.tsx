@@ -48,12 +48,8 @@ export function PromptCard({
         <span className="eyebrow text-bone/50">{prompt.category}</span>
       </header>
       <div className="px-4 py-5 flex-1 flex flex-col gap-3">
-        <h3 className="font-display text-xl leading-snug text-bone">
-          {prompt.title}
-        </h3>
-        <p className="text-sm text-bone/60 line-clamp-4 leading-relaxed">
-          {prompt.prompt_text}
-        </p>
+        <h3 className="font-display text-xl leading-snug text-bone">{prompt.title}</h3>
+        <p className="text-sm text-bone/60 line-clamp-4 leading-relaxed">{prompt.prompt_text}</p>
         {prompt.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-1">
             {prompt.tags.slice(0, 3).map((t) => (

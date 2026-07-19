@@ -14,9 +14,17 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact — Osman Visuals" },
-      { name: "description", content: "Reach the Osman Visuals studio. Studio, licensing, and commission enquiries welcome." },
+      {
+        name: "description",
+        content:
+          "Reach the Osman Visuals studio. Studio, licensing, and commission enquiries welcome.",
+      },
       { property: "og:title", content: "Contact — Osman Visuals" },
-      { property: "og:description", content: "Reach the Osman Visuals studio. Studio, licensing, and commission enquiries welcome." },
+      {
+        property: "og:description",
+        content:
+          "Reach the Osman Visuals studio. Studio, licensing, and commission enquiries welcome.",
+      },
       { property: "og:url", content: "/contact" },
     ],
     links: [{ rel: "canonical", href: "/contact" }],

@@ -24,9 +24,15 @@ export const Route = createFileRoute("/guides")({
   head: () => ({
     meta: [
       { title: "Guides — Osman Visuals" },
-      { name: "description", content: "Guides on prompting, identity preservation, and the AI tools we actually use." },
+      {
+        name: "description",
+        content: "Guides on prompting, identity preservation, and the AI tools we actually use.",
+      },
       { property: "og:title", content: "Guides — Osman Visuals" },
-      { property: "og:description", content: "Guides on prompting, identity preservation, and the AI tools we actually use." },
+      {
+        property: "og:description",
+        content: "Guides on prompting, identity preservation, and the AI tools we actually use.",
+      },
       { property: "og:url", content: "/guides" },
     ],
     links: [{ rel: "canonical", href: "/guides" }],
@@ -72,12 +78,18 @@ function Guides() {
             params={{ slug: featured.slug }}
             className="block border hairline bg-surface p-10 md:p-14 hover:border-gold/60 transition-colors group"
           >
-            <p className="eyebrow">{CATEGORY_LABEL[featured.category]} · {featured.read_time} min read</p>
+            <p className="eyebrow">
+              {CATEGORY_LABEL[featured.category]} · {featured.read_time} min read
+            </p>
             <h2 className="mt-4 font-display text-4xl md:text-5xl text-bone leading-tight max-w-3xl">
               {featured.title}
             </h2>
             <p className="mt-6 text-bone/70 max-w-2xl">
-              {featured.body.split("\n").find((l) => l.trim() && !l.startsWith("#"))?.slice(0, 200)}…
+              {featured.body
+                .split("\n")
+                .find((l) => l.trim() && !l.startsWith("#"))
+                ?.slice(0, 200)}
+              …
             </p>
             <span className="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold group-hover:gap-3 transition-all">
               Read the guide <ArrowUpRight className="w-3.5 h-3.5" />
@@ -100,7 +112,9 @@ function Guides() {
               <h3 className="mt-3 font-display text-2xl text-bone leading-snug">{g.title}</h3>
               <p className="mt-auto pt-6 text-xs uppercase tracking-widest text-bone/50 flex items-center gap-2">
                 {g.read_time} min read
-                <span className="ml-auto text-gold group-hover:translate-x-0.5 transition-transform">→</span>
+                <span className="ml-auto text-gold group-hover:translate-x-0.5 transition-transform">
+                  →
+                </span>
               </p>
             </Link>
           ))}

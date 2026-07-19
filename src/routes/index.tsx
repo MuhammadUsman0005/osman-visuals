@@ -63,10 +63,17 @@ function Home() {
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 pt-24 pb-32 md:pt-36 md:pb-48">
           <p className="eyebrow reveal">NO. 001 — OSMAN'S ARCHIVE</p>
           <h1 className="mt-6 font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-bone max-w-3xl reveal">
-            The same face,<br />across every frame.
+            The same face,
+            <br />
+            across every frame.
           </h1>
-          <p className="mt-8 text-lg text-bone/70 max-w-xl leading-relaxed reveal" style={{ animationDelay: "120ms" }}>
-            The official archive of Osman Visuals; featuring cinematic AI prompts, premium prompt packs, creator guides, visual resources, and transformation techniques used to create high-end AI portraits.
+          <p
+            className="mt-8 text-lg text-bone/70 max-w-xl leading-relaxed reveal"
+            style={{ animationDelay: "120ms" }}
+          >
+            The official archive of Osman Visuals; featuring cinematic AI prompts, premium prompt
+            packs, creator guides, visual resources, and transformation techniques used to create
+            high-end AI portraits.
           </p>
           <div className="mt-10 flex items-center gap-6 reveal" style={{ animationDelay: "220ms" }}>
             <Link
@@ -123,9 +130,13 @@ function Home() {
                 <div className="flex items-center justify-between mb-6">
                   <span className="eyebrow">Pack</span>
                   {r.is_premium ? (
-                    <span className="text-[10px] uppercase tracking-widest text-gold border border-gold/40 px-2 py-0.5">Premium</span>
+                    <span className="text-[10px] uppercase tracking-widest text-gold border border-gold/40 px-2 py-0.5">
+                      Premium
+                    </span>
                   ) : (
-                    <span className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-2 py-0.5">Free</span>
+                    <span className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-2 py-0.5">
+                      Free
+                    </span>
                   )}
                 </div>
                 <h3 className="font-display text-2xl text-bone leading-snug">{r.title}</h3>
@@ -164,7 +175,9 @@ function LeadBand() {
     }
     setState("saving");
     setErr(null);
-    const { error } = await supabase.from("leads").insert({ email: parsed.data, source: "home_cta" });
+    const { error } = await supabase
+      .from("leads")
+      .insert({ email: parsed.data, source: "home_cta" });
     if (error) {
       setState("idle");
       setErr("Couldn't save that just now. Try again in a moment.");
@@ -182,8 +195,8 @@ function LeadBand() {
           One premium prompt pack, on the house.
         </h2>
         <p className="mt-4 text-bone/70 max-w-lg mx-auto">
-          Leave an email. We'll send our Identity Preservation Starter pack.
-          No sequences, no course upsells.
+          Leave an email. We'll send our Identity Preservation Starter pack. No sequences, no course
+          upsells.
         </p>
         <form onSubmit={submit} className="mt-8 flex flex-col sm:flex-row max-w-md mx-auto gap-2">
           <input

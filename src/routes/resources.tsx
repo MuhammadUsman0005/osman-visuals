@@ -26,9 +26,17 @@ export const Route = createFileRoute("/resources")({
   head: () => ({
     meta: [
       { title: "Resources — Osman Visuals" },
-      { name: "description", content: "Downloadable PDFs, prompt packs, assets, and reference sheets from the Osman Visuals studio." },
+      {
+        name: "description",
+        content:
+          "Downloadable PDFs, prompt packs, assets, and reference sheets from the Osman Visuals studio.",
+      },
       { property: "og:title", content: "Resources — Osman Visuals" },
-      { property: "og:description", content: "Downloadable PDFs, prompt packs, assets, and reference sheets from the Osman Visuals studio." },
+      {
+        property: "og:description",
+        content:
+          "Downloadable PDFs, prompt packs, assets, and reference sheets from the Osman Visuals studio.",
+      },
       { property: "og:url", content: "/resources" },
     ],
     links: [{ rel: "canonical", href: "/resources" }],
@@ -54,10 +62,16 @@ function Resources() {
 
   const filtered = useMemo(
     () => (data ?? []).filter((r) => type === "All" || r.type === type),
-    [data, type]
+    [data, type],
   );
 
-  const filters: Array<"All" | Resource["type"]> = ["All", "prompt_pack", "pdf", "asset", "reference_image"];
+  const filters: Array<"All" | Resource["type"]> = [
+    "All",
+    "prompt_pack",
+    "pdf",
+    "asset",
+    "reference_image",
+  ];
 
   return (
     <>
@@ -103,9 +117,13 @@ function Resources() {
                 <header className="flex items-center justify-between px-4 pt-4 pb-3 border-b hairline">
                   <span className="eyebrow">{TYPE_LABEL[r.type]}</span>
                   {r.is_premium ? (
-                    <span className="text-[10px] uppercase tracking-widest text-gold border border-gold/40 px-2 py-0.5">Premium</span>
+                    <span className="text-[10px] uppercase tracking-widest text-gold border border-gold/40 px-2 py-0.5">
+                      Premium
+                    </span>
                   ) : (
-                    <span className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-2 py-0.5">Free</span>
+                    <span className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-2 py-0.5">
+                      Free
+                    </span>
                   )}
                 </header>
                 <div className="px-4 py-6 flex-1">

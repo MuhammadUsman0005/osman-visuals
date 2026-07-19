@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { MobileNav } from "../components/MobileNav";
 
 function NotFoundComponent() {
   return (
@@ -43,9 +44,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-void px-4">
       <div className="max-w-md text-center">
         <p className="eyebrow">Error</p>
-        <h1 className="mt-3 text-3xl font-display text-bone">
-          This page didn't load
-        </h1>
+        <h1 className="mt-3 text-3xl font-display text-bone">This page didn't load</h1>
         <p className="mt-3 text-sm text-muted-foreground">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
@@ -77,10 +76,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Osman Visuals — Identity-consistent AI imagery" },
-      { name: "description", content: "A curated archive of AI prompts, packs, and guides for photographers who need identity-consistent cinematic imagery." },
+      {
+        name: "description",
+        content:
+          "A curated archive of AI prompts, packs, and guides for photographers who need identity-consistent cinematic imagery.",
+      },
       { name: "author", content: "Osman Visuals" },
       { property: "og:title", content: "Osman Visuals — Identity-consistent AI imagery" },
-      { property: "og:description", content: "A curated archive of AI prompts, packs, and guides for photographers who need identity-consistent cinematic imagery." },
+      {
+        property: "og:description",
+        content:
+          "A curated archive of AI prompts, packs, and guides for photographers who need identity-consistent cinematic imagery.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Osman Visuals" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -153,21 +160,12 @@ function SiteHeader() {
     <header className="border-b hairline bg-void/80 backdrop-blur sticky top-0 z-40">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-baseline gap-2 group">
-          <span className="font-display text-xl tracking-tight text-bone group-hover:text-gold transition-colors">Osman Visuals</span>
+          <span className="font-display text-xl tracking-tight text-bone group-hover:text-gold transition-colors">
+            Osman Visuals
+          </span>
           <span className="eyebrow hidden sm:inline">Archive</span>
         </Link>
-        <nav className="flex items-center gap-6 md:gap-8 text-sm">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="text-bone/70 hover:text-bone transition-colors"
-              activeProps={{ className: "text-gold" }}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
+        <MobileNav links={links} />
       </div>
     </header>
   );
@@ -180,24 +178,53 @@ function SiteFooter() {
         <div className="md:col-span-2">
           <p className="font-display text-2xl text-bone">Osman Visuals</p>
           <p className="mt-3 text-sm text-bone/60 max-w-sm">
-            A working archive of prompts, packs, and guides for photographers building identity-consistent AI imagery.
+            A working archive of prompts, packs, and guides for photographers building
+            identity-consistent AI imagery.
           </p>
         </div>
         <div>
           <p className="eyebrow mb-3">Explore</p>
           <ul className="space-y-2 text-sm text-bone/70">
-            <li><Link to="/library" className="hover:text-gold">Prompt library</Link></li>
-            <li><Link to="/resources" className="hover:text-gold">Resources</Link></li>
-            <li><Link to="/guides" className="hover:text-gold">Guides</Link></li>
+            <li>
+              <Link to="/library" className="hover:text-gold">
+                Prompt library
+              </Link>
+            </li>
+            <li>
+              <Link to="/resources" className="hover:text-gold">
+                Resources
+              </Link>
+            </li>
+            <li>
+              <Link to="/guides" className="hover:text-gold">
+                Guides
+              </Link>
+            </li>
           </ul>
         </div>
         <div>
           <p className="eyebrow mb-3">Studio</p>
           <ul className="space-y-2 text-sm text-bone/70">
-            <li><Link to="/about" className="hover:text-gold">About</Link></li>
-            <li><Link to="/contact" className="hover:text-gold">Contact</Link></li>
-            <li><Link to="/licensing" className="hover:text-gold">Licensing</Link></li>
-            <li><Link to="/refunds" className="hover:text-gold">Refund policy</Link></li>
+            <li>
+              <Link to="/about" className="hover:text-gold">
+                About
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="hover:text-gold">
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link to="/licensing" className="hover:text-gold">
+                Licensing
+              </Link>
+            </li>
+            <li>
+              <Link to="/refunds" className="hover:text-gold">
+                Refund policy
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

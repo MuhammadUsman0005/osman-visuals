@@ -39,9 +39,7 @@ export function UnlockModal({
     }
     setState("saving");
     setErr(null);
-    const { error } = await supabase
-      .from("leads")
-      .insert({ email: parsed.data, source });
+    const { error } = await supabase.from("leads").insert({ email: parsed.data, source });
     if (error) {
       setState("error");
       setErr("Couldn't save that just now. Try again in a moment.");
@@ -87,7 +85,8 @@ export function UnlockModal({
         ) : (
           <>
             <p className="mt-3 text-sm text-bone/70">
-              Leave your email to receive the free premium pack. Stripe checkout for individual paid packs is coming soon.
+              Leave your email to receive the free premium pack. Stripe checkout for individual paid
+              packs is coming soon.
             </p>
             <form onSubmit={submit} className="mt-6 space-y-3">
               <input
