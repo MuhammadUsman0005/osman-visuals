@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Instagram } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -98,43 +97,36 @@ function About() {
           your brand, the goal is always the same: produce visuals that feel intentional, cinematic,
           and unmistakably professional.
         </p>
-      </div>
 
-      {/* Social proof / follow CTA */}
-      <div className="mt-8 border-t hairline pt-6">
-        <p className="eyebrow text-center">Follow the process</p>
-        <div className="mt-4 flex items-center justify-center gap-4">
-          <a
-            href="https://instagram.com/osmanvisuals"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold hover:text-bone transition-colors"
-            aria-label="Osman Visuals on Instagram"
-          >
-            <Instagram size={16} />
-            <span>@osmanvisuals</span>
-          </a>
+        <div
+          className="mt-6"
+          style={{
+            width: "180px",
+            height: "164px",
+            aspectRatio: "1599 / 1454",
+            backgroundColor: "var(--gold, #B8965A)",
+            WebkitMaskImage: "url('/signature.png')",
+            maskImage: "url('/signature.png')",
+            WebkitMaskSize: "contain",
+            maskSize: "contain",
+            WebkitMaskRepeat: "no-repeat",
+            maskRepeat: "no-repeat",
+            WebkitMaskPosition: "left center",
+            maskPosition: "left center",
+            WebkitMaskComposite: "source-in",
+            maskComposite: "source-in",
+          }}
+          aria-label="Muhammad Usman signature"
+          role="img"
+        />
 
-          <a
-            href="https://pin.it/5tCtnMSGL"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gold hover:text-bone transition-colors"
-            aria-label="Osman Visuals on Pinterest"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
-              focusable="false"
-              className="w-4 h-4"
-            >
-              <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.171-2.911 1.023 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.995-.283 1.194.6 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146 1.124.347 2.317.535 3.554.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.365 18.592 0 11.985 0h.032z" />
-            </svg>
-            <span>@osmanvisuals</span>
-          </a>
+        <div className="mt-6">
+          <p className="font-display text-lg text-bone">Muhammad Usman</p>
+          <p className="text-sm text-gold mt-1">Founder, Osman Visuals</p>
+          <p className="text-sm text-bone/60 mt-1">BS Artificial Intelligence Student</p>
+          <p className="text-sm text-bone/60 mt-3 max-w-sm">
+            Building cinematic AI workflows for creators and brands.
+          </p>
         </div>
       </div>
     </article>
