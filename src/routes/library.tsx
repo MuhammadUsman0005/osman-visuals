@@ -9,7 +9,7 @@ import { Search } from "lucide-react";
 export const Route = createFileRoute("/library")({
   head: () => ({
     meta: [
-      { title: "The Vault — Osman Visuals" },
+      { title: "The Vault | Osman Visuals" },
       {
         name: "description",
         content:
@@ -34,33 +34,57 @@ function Library() {
   const [preview, setPreview] = useState<Prompt | null>(null);
   const deferredQ = useDeferredValue(q);
 
+  const CATEGORIES = [
+    "All",
+    "Cinematic Portraits",
+    "Character Consistency",
+    "Luxury Fashion",
+    "Concept Art",
+    "Fantasy Worlds",
+    "Product Visualization",
+    "Branding & Marketing",
+    "Technology",
+    "Architecture & Interior",
+    "Icons",
+  ];
+
   const { data: prompts, isLoading } = useQuery({
     queryKey: ["prompts", "all"],
     queryFn: async () => {
       const { data, error } = await supabase.from("prompts").select("*").order("catalog_number");
       if (error) throw error;
-      return data as Prompt[];
+      return (data ?? []) as unknown as Prompt[];
     },
   });
 
-  const categories = useMemo(() => {
-    const s = new Set<string>();
-    prompts?.forEach((p) => s.add(p.category));
-    return ["All", ...Array.from(s)];
-  }, [prompts]);
+  function formatCatalogLabel(index: number) {
+    return `No. ${String(index).padStart(3, "0")}`;
+  }
 
-  const filtered = useMemo(() => {
+  // use the fixed category list (CATEGORIES above) rather than deriving from prompts
+  const displayedPrompts = useMemo(() => {
     if (!prompts) return [];
     const term = deferredQ.trim().toLowerCase();
-    return prompts.filter((p) => {
-      if (cat !== "All" && p.category !== cat) return false;
+    const filtered = prompts.filter((p) => {
+      // category filter: check if selected category exists in prompt.categories array
+      if (cat !== "All") {
+        if (!p.categories || !Array.isArray(p.categories)) return false;
+        if (!p.categories.some((c) => c === cat)) return false;
+      }
       if (!term) return true;
-      return (
-        p.title.toLowerCase().includes(term) ||
-        p.prompt_text.toLowerCase().includes(term) ||
-        p.tags.some((t) => t.toLowerCase().includes(term))
-      );
+
+      const inTitle = p.title.toLowerCase().includes(term);
+      const inPrompt = p.prompt_text.toLowerCase().includes(term);
+      const inTags = Array.isArray(p.tags) && p.tags.some((t) => t.toLowerCase().includes(term));
+      const inCats =
+        Array.isArray(p.categories) && p.categories.some((c) => c.toLowerCase().includes(term));
+      return inTitle || inPrompt || inTags || inCats;
     });
+
+    return filtered.map((p, index) => ({
+      ...p,
+      catalog_number: formatCatalogLabel(index + 1),
+    }));
   }, [prompts, deferredQ, cat]);
 
   return (
@@ -72,7 +96,11 @@ function Library() {
             The Creative Vault
           </h1>
           <p className="mt-4 text-bone/70 max-w-xl">
-            Discover the complete OsmanVisuals archive, featuring premium AI prompts, creative frameworks, cinematic workflows, and professional visual resources. From AI portraits and commercial advertising to concept art, brand campaigns, and prompt engineering, every collection is carefully curated to help creators, brands, and storytellers produce extraordinary visuals with confidence.
+            Discover the complete OsmanVisuals archive, featuring premium AI prompts, creative
+            frameworks, cinematic workflows, and professional visual resources. From AI portraits
+            and commercial advertising to concept art, brand campaigns, and prompt engineering,
+            every collection is carefully curated to help creators, brands, and storytellers produce
+            extraordinary visuals with confidence.
           </p>
         </div>
       </section>
@@ -91,7 +119,7 @@ function Library() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {categories.map((c) => (
+            {CATEGORIES.map((c) => (
               <button
                 key={c}
                 onClick={() => setCat(c)}
@@ -114,7 +142,7 @@ function Library() {
                 <div key={i} className="border hairline bg-surface h-72 animate-pulse" />
               ))}
             </div>
-          ) : filtered.length === 0 ? (
+          ) : displayedPrompts.length === 0 ? (
             <div className="border hairline bg-surface py-24 text-center">
               <p className="eyebrow">Empty plate</p>
               <p className="mt-3 font-display text-2xl text-bone">
@@ -124,7 +152,7 @@ function Library() {
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((p) => (
+              {displayedPrompts.map((p) => (
                 <PromptCard key={p.id} prompt={p} onOpen={setPreview} />
               ))}
             </div>

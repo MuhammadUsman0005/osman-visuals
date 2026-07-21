@@ -28,7 +28,7 @@ function Home() {
         .order("catalog_number")
         .limit(6);
       if (error) throw error;
-      return data as Prompt[];
+      return (data ?? []) as unknown as Prompt[];
     },
   });
 
