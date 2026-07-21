@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, Copy, Check, Instagram } from "lucide-react";
+import { X, Copy, Check, Instagram, Lock } from "lucide-react";
 import type { Prompt } from "@/components/PromptCard";
 import { onFollowedChange, persistUnlock, readFollowed } from "@/lib/instagram-unlock";
 
@@ -87,127 +87,126 @@ export function PromptPreviewModal({
 
         <div className="border hairline bg-surface">
           <div className="grid w-full lg:grid-cols-[4fr_5fr]">
-          <div className="aspect-[4/5] w-full bg-void border-b hairline overflow-hidden lg:border-b-0 lg:border-r hairline">
-            {prompt.preview_image_url ? (
-              <img
-                src={prompt.preview_image_url}
-                alt={prompt.title}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="text-center">
-                  <p className="eyebrow">{prompt.catalog_number}</p>
-                  <p className="mt-2 font-display text-2xl text-bone/40">No plate filed</p>
+            <div className="aspect-[4/5] w-full bg-void border-b hairline overflow-hidden lg:border-b-0 lg:border-r hairline">
+              {prompt.preview_image_url ? (
+                <img
+                  src={prompt.preview_image_url}
+                  alt={prompt.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="text-center">
+                    <p className="eyebrow">{prompt.catalog_number}</p>
+                    <p className="mt-2 font-display text-2xl text-bone/40">No plate filed</p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          <div className="px-6 py-6 pr-12 lg:max-h-[85vh] lg:overflow-y-auto">
-            <div className="flex items-center justify-between">
-              <span className="eyebrow">
-                {prompt.catalog_number} — {prompt.difficulty}
-              </span>
-              <span className={`eyebrow ${prompt.is_premium ? "text-gold" : "text-bone/50"}`}>
-                {prompt.is_premium ? "Exclusive" : "Free"}
-              </span>
-            </div>
-            <h2 className="mt-3 font-display text-2xl md:text-3xl text-bone leading-tight">
-              {prompt.title}
-              {prompt.tools && prompt.tools.length > 0 && (
-                <span className="text-sm text-bone/60 font-normal font-body not-italic ml-2">
-                  ({prompt.tools.join(", ")})
-                </span>
               )}
-            </h2>
+            </div>
 
-            {prompt.categories && prompt.categories.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-4">
-                {prompt.categories.slice(0, 3).map((c) => (
-                  <span
-                    key={c}
-                    className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-1.5 py-0.5"
-                  >
-                    {c}
-                  </span>
-                ))}
-                {prompt.categories.length > 3 && (
-                  <span className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-1.5 py-0.5">
-                    +{prompt.categories.length - 3}
+            <div className="px-6 py-6 pr-12 lg:max-h-[85vh] lg:overflow-y-auto">
+              <div className="flex items-center justify-between">
+                <span className="eyebrow">
+                  {prompt.catalog_number} — {prompt.difficulty}
+                </span>
+                <span className={`eyebrow ${prompt.is_premium ? "text-gold" : "text-bone/50"}`}>
+                  {prompt.is_premium ? "Exclusive" : "Free"}
+                </span>
+              </div>
+              <h2 className="mt-3 font-display text-2xl md:text-3xl text-bone leading-tight">
+                {prompt.title}
+                {prompt.tools && prompt.tools.length > 0 && (
+                  <span className="text-sm text-bone/60 font-normal font-body not-italic ml-2">
+                    ({prompt.tools.join(", ")})
                   </span>
                 )}
-              </div>
-            )}
+              </h2>
 
-            <div className="mt-6">
-              {unlocked ? (
-                <>
-                  <p className="eyebrow mb-2">The prompt</p>
-                  <pre className="whitespace-pre-wrap font-body text-sm text-bone/85 leading-relaxed bg-void border hairline p-4 max-h-80 overflow-y-auto">
-                    {prompt.prompt_text}
-                  </pre>
-                  <button
-                    onClick={copy}
-                    className="mt-4 w-full inline-flex items-center justify-center gap-2 bg-gold text-void py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="w-3.5 h-3.5" /> Copied
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" /> Copy prompt
-                      </>
-                    )}
-                  </button>
-                </>
-              ) : (
-                <>
-                  <div className="border hairline bg-void p-6 mt-6">
-                    <div className="flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
-                      <Instagram className="w-3.5 h-3.5" /> Unlock with Instagram
-                    </div>
-                    <p className="mt-3 text-sm text-bone/70 leading-relaxed">
-                      Follow <span className="text-bone">@osmanvisuals</span> on Instagram to
-                      unlock this prompt.
-                    </p>
-                    <a
-                      href={INSTAGRAM_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => {
-                        setFollowed(true);
-                        setWarning(false);
-                      }}
-                      className="mt-5 w-full flex flex-wrap items-center justify-center gap-2 border border-gold text-gold py-3 text-xs uppercase tracking-widest font-medium text-center hover:bg-gold/5 transition-colors whitespace-normal"
+              {prompt.categories && prompt.categories.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-4">
+                  {prompt.categories.slice(0, 3).map((c) => (
+                    <span
+                      key={c}
+                      className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-1.5 py-0.5"
                     >
-                      <Instagram className="w-3.5 h-3.5" />
-                      Follow @osmanvisuals on Instagram
-                    </a>
-                    <button
-                      onClick={confirmUnlock}
-                      className={`mt-2 w-full py-3 text-xs uppercase tracking-widest font-medium transition-colors ${
-                        followed
-                          ? "bg-gold text-void hover:bg-gold/90"
-                          : "bg-bone/10 text-bone/60 hover:bg-bone/15"
-                      }`}
-                    >
-                      I've followed — unlock
-                    </button>
-                  </div>
-                  {warning && (
-                    <p className="mt-3 text-sm text-rose-300 text-center">
-                      You didn't follow — tap 'Follow @osmanvisuals' above first.
-                    </p>
+                      {c}
+                    </span>
+                  ))}
+                  {prompt.categories.length > 3 && (
+                    <span className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-1.5 py-0.5">
+                      +{prompt.categories.length - 3}
+                    </span>
                   )}
-                  <p className="mt-3 text-[11px] text-bone/40 text-center">
-                    Your unlock is remembered on this device.
-                  </p>
-                </>
+                </div>
               )}
+
+              <div className="mt-6">
+                {unlocked ? (
+                  <>
+                    <p className="eyebrow mb-2">The prompt</p>
+                    <pre className="whitespace-pre-wrap font-body text-sm text-bone/85 leading-relaxed bg-void border hairline p-4 max-h-80 overflow-y-auto">
+                      {prompt.prompt_text}
+                    </pre>
+                    <button
+                      onClick={copy}
+                      className="mt-4 w-full inline-flex items-center justify-center gap-2 bg-gold text-void py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
+                    >
+                      {copied ? (
+                        <>
+                          <Check className="w-3.5 h-3.5" /> Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" /> Copy prompt
+                        </>
+                      )}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className="border hairline bg-void p-6 mt-6 w-full max-w-xl mx-auto lg:mx-0">
+                      <div className="flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
+                        <Lock className="w-3.5 h-3.5" /> Exclusive plate
+                      </div>
+                      <p className="mt-3 text-sm text-bone/70 leading-relaxed">
+                        Follow on Instagram to unlock this prompt. No email. No signup.
+                      </p>
+                      <a
+                        href={INSTAGRAM_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => {
+                          setFollowed(true);
+                          setWarning(false);
+                        }}
+                        className="mt-5 w-full flex flex-wrap items-center justify-center gap-2 border border-gold text-gold py-3 text-xs uppercase tracking-widest font-medium text-center hover:bg-gold/5 transition-colors whitespace-normal"
+                      >
+                        <Instagram className="w-3.5 h-3.5" />
+                        Follow OsmanVisuals on Instagram
+                      </a>
+                      <button
+                        onClick={confirmUnlock}
+                        className={`mt-2 w-full py-3 text-xs uppercase tracking-widest font-medium transition-colors ${
+                          followed
+                            ? "bg-gold text-void hover:bg-gold/90"
+                            : "bg-bone/10 text-bone/60 hover:bg-bone/15"
+                        }`}
+                      >
+                        I've followed — unlock
+                      </button>
+                    </div>
+                    {warning && (
+                      <p className="mt-3 text-sm text-rose-300 text-center">
+                        Follow @osmanvisuals to unlock this resource.
+                      </p>
+                    )}
+                    <p className="mt-3 text-[11px] text-bone/40 text-center">
+                      Your unlock is remembered on this device.
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
