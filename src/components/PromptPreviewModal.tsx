@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Mail, X, Copy, Check, Instagram, Lock } from "lucide-react";
+import { X, Copy, Check, Instagram } from "lucide-react";
 import type { Prompt } from "@/components/PromptCard";
 import { onFollowedChange, persistUnlock, readFollowed } from "@/lib/instagram-unlock";
-import { supabase } from "@/integrations/supabase/client";
 
 const INSTAGRAM_URL = "https://instagram.com/osmanvisuals";
 
@@ -17,18 +16,11 @@ export function PromptPreviewModal({
   const [followed, setFollowed] = useState(false);
   const [copied, setCopied] = useState(false);
   const [warning, setWarning] = useState(false);
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [emailSent, setEmailSent] = useState(false);
-  const [savingEmail, setSavingEmail] = useState(false);
 
   useEffect(() => {
     if (!prompt) return;
     setCopied(false);
     setWarning(false);
-    setEmail("");
-    setEmailError(null);
-    setEmailSent(false);
     const currentFollowed = readFollowed();
     setFollowed(currentFollowed);
     setUnlocked(!prompt.is_premium || currentFollowed);
@@ -60,37 +52,6 @@ export function PromptPreviewModal({
     }
   }
 
-  function validateEmail(value: string) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
-  }
-
-  async function unlockWithEmail() {
-    const normalized = email.trim();
-    setEmailError(null);
-    setWarning(false);
-
-    if (!validateEmail(normalized)) {
-      setEmailError("Enter a valid email address.");
-      return;
-    }
-
-    setSavingEmail(true);
-    try {
-      const { error } = await supabase.from("leads").insert({
-        email: normalized,
-        source: "vault_unlock",
-      });
-      if (error) throw error;
-      persistUnlock();
-      setUnlocked(true);
-      setEmailSent(true);
-    } catch {
-      setEmailError("Unable to submit your email. Please try again.");
-    } finally {
-      setSavingEmail(false);
-    }
-  }
-
   function confirmUnlock() {
     if (!followed) {
       setWarning(true);
@@ -107,7 +68,7 @@ export function PromptPreviewModal({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-6xl border hairline bg-surface my-10 mx-4"
+        className="relative w-full max-w-6xl my-10 mx-4 overflow-visible"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -118,13 +79,14 @@ export function PromptPreviewModal({
             e.stopPropagation();
             onClose();
           }}
-          className="absolute right-5 top-3 z-50 text-bone/60 hover:text-bone bg-void/60 border hairline p-1.5"
+          className="absolute -right-2 -top-2 z-[60] text-bone/70 hover:text-bone bg-void/80 border hairline p-1.5"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
         </button>
 
-        <div className="grid w-full lg:grid-cols-[4fr_5fr]">
+        <div className="border hairline bg-surface">
+          <div className="grid w-full lg:grid-cols-[4fr_5fr]">
           <div className="aspect-[4/5] w-full bg-void border-b hairline overflow-hidden lg:border-b-0 lg:border-r hairline">
             {prompt.preview_image_url ? (
               <img
@@ -202,77 +164,37 @@ export function PromptPreviewModal({
                 </>
               ) : (
                 <>
-                  <div className="grid gap-4 lg:grid-cols-[1fr_auto_1fr] mt-6">
-                    <div className="border hairline bg-void p-6">
-                      <div className="flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
-                        <Instagram className="w-3.5 h-3.5" /> Unlock with Instagram
-                      </div>
-                      <p className="mt-3 text-sm text-bone/70 leading-relaxed">
-                        Follow <span className="text-bone">@osmanvisuals</span> on Instagram to
-                        unlock this prompt.
-                      </p>
-                      <a
-                        href={INSTAGRAM_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => {
-                          setFollowed(true);
-                          setWarning(false);
-                        }}
-                        className="mt-5 w-full flex flex-wrap items-center justify-center gap-2 border border-gold text-gold py-3 text-xs uppercase tracking-widest font-medium text-center hover:bg-gold/5 transition-colors whitespace-normal"
-                      >
-                        <Instagram className="w-3.5 h-3.5" />
-                        Follow @osmanvisuals on Instagram
-                      </a>
-                      <button
-                        onClick={confirmUnlock}
-                        className={`mt-2 w-full py-3 text-xs uppercase tracking-widest font-medium transition-colors ${
-                          followed
-                            ? "bg-gold text-void hover:bg-gold/90"
-                            : "bg-bone/10 text-bone/60 hover:bg-bone/15"
-                        }`}
-                      >
-                        I've followed — unlock
-                      </button>
+                  <div className="border hairline bg-void p-6 mt-6">
+                    <div className="flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
+                      <Instagram className="w-3.5 h-3.5" /> Unlock with Instagram
                     </div>
-
-                    <div className="flex items-center justify-center text-xs uppercase tracking-widest text-bone/50">
-                      <span className="bg-surface px-3">or</span>
-                    </div>
-
-                    <div className="border hairline bg-void p-6">
-                      <div className="flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
-                        <Mail className="w-3.5 h-3.5" /> Unlock with email
-                      </div>
-                      <p className="mt-3 text-sm text-bone/70 leading-relaxed">
-                        Submit your email and we’ll unlock all premium prompts for you.
-                      </p>
-                      <label className="sr-only" htmlFor="unlock-email">
-                        Email address
-                      </label>
-                      <input
-                        id="unlock-email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          setEmailError(null);
-                        }}
-                        placeholder="you@example.com"
-                        className="mt-5 w-full bg-void border hairline px-4 py-3 text-sm text-bone placeholder:text-bone/40 focus:outline-none focus:border-gold"
-                      />
-                      {emailError && <p className="mt-3 text-sm text-rose-300">{emailError}</p>}
-                      {emailSent && (
-                        <p className="mt-3 text-sm text-emerald-300">Thanks! You’re unlocked.</p>
-                      )}
-                      <button
-                        onClick={unlockWithEmail}
-                        disabled={savingEmail}
-                        className="mt-4 w-full inline-flex items-center justify-center gap-2 border border-gold text-gold py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/5 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-                      >
-                        Unlock with email
-                      </button>
-                    </div>
+                    <p className="mt-3 text-sm text-bone/70 leading-relaxed">
+                      Follow <span className="text-bone">@osmanvisuals</span> on Instagram to
+                      unlock this prompt.
+                    </p>
+                    <a
+                      href={INSTAGRAM_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => {
+                        setFollowed(true);
+                        setWarning(false);
+                      }}
+                      className="mt-5 w-full flex flex-wrap items-center justify-center gap-2 border border-gold text-gold py-3 text-xs uppercase tracking-widest font-medium text-center hover:bg-gold/5 transition-colors whitespace-normal"
+                    >
+                      <Instagram className="w-3.5 h-3.5" />
+                      Follow @osmanvisuals on Instagram
+                    </a>
+                    <button
+                      onClick={confirmUnlock}
+                      className={`mt-2 w-full py-3 text-xs uppercase tracking-widest font-medium transition-colors ${
+                        followed
+                          ? "bg-gold text-void hover:bg-gold/90"
+                          : "bg-bone/10 text-bone/60 hover:bg-bone/15"
+                      }`}
+                    >
+                      I've followed — unlock
+                    </button>
                   </div>
                   {warning && (
                     <p className="mt-3 text-sm text-rose-300 text-center">
@@ -285,6 +207,7 @@ export function PromptPreviewModal({
                 </>
               )}
             </div>
+          </div>
           </div>
         </div>
       </div>
