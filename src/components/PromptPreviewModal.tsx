@@ -104,12 +104,12 @@ export function PromptPreviewModal({
               )}
             </div>
 
-            <div className="px-6 py-6 pr-12 lg:max-h-[85vh] lg:overflow-y-auto">
-              <div className="flex items-center justify-between">
+            <div className="px-6 py-6 lg:max-h-[85vh] lg:overflow-y-auto flex flex-col">
+              <div className="flex items-center justify-between gap-4">
                 <span className="eyebrow">
                   {prompt.catalog_number} — {prompt.difficulty}
                 </span>
-                <span className={`eyebrow ${prompt.is_premium ? "text-gold" : "text-bone/50"}`}>
+                <span className={`eyebrow shrink-0 ${prompt.is_premium ? "text-gold" : "text-bone/50"}`}>
                   {prompt.is_premium ? "Exclusive" : "Free"}
                 </span>
               </div>
@@ -164,7 +164,7 @@ export function PromptPreviewModal({
                   </>
                 ) : (
                   <>
-                    <div className="border hairline bg-void p-6 mt-6 w-full max-w-xl mx-auto lg:mx-0">
+                    <div className="border hairline bg-void p-6 mt-6 w-full">
                       <div className="flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
                         <Lock className="w-3.5 h-3.5" /> Exclusive plate
                       </div>
@@ -179,9 +179,9 @@ export function PromptPreviewModal({
                           setFollowed(true);
                           setWarning(false);
                         }}
-                        className="mt-5 w-full flex flex-wrap items-center justify-center gap-2 border border-gold text-gold py-3 text-xs uppercase tracking-widest font-medium text-center hover:bg-gold/5 transition-colors whitespace-normal"
+                        className="mt-5 w-full flex items-center justify-center gap-2 border border-gold text-gold py-3 px-4 text-xs uppercase tracking-widest font-medium text-center hover:bg-gold/5 transition-colors whitespace-normal"
                       >
-                        <Instagram className="w-3.5 h-3.5" />
+                        <Instagram className="w-3.5 h-3.5 shrink-0" />
                         Follow OsmanVisuals on Instagram
                       </a>
                       <button
@@ -196,11 +196,11 @@ export function PromptPreviewModal({
                       </button>
                     </div>
                     {warning && (
-                      <p className="mt-3 text-sm text-rose-300 text-center">
+                      <p className="mt-3 text-sm text-rose-300 text-left">
                         Follow @osmanvisuals to unlock this resource.
                       </p>
                     )}
-                    <p className="mt-3 text-[11px] text-bone/40 text-center">
+                    <p className="mt-3 text-[11px] text-bone/40 text-left">
                       Your unlock is remembered on this device.
                     </p>
                   </>
