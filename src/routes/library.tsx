@@ -57,15 +57,11 @@ function Library() {
     },
   });
 
-  function formatCatalogLabel(index: number) {
-    return `No. ${String(index).padStart(3, "0")}`;
-  }
-
   // use the fixed category list (CATEGORIES above) rather than deriving from prompts
   const displayedPrompts = useMemo(() => {
     if (!prompts) return [];
     const term = deferredQ.trim().toLowerCase();
-    const filtered = prompts.filter((p) => {
+    return prompts.filter((p) => {
       // category filter: check if selected category exists in prompt.categories array
       if (cat !== "All") {
         if (!p.categories || !Array.isArray(p.categories)) return false;
@@ -78,13 +74,9 @@ function Library() {
       const inTags = Array.isArray(p.tags) && p.tags.some((t) => t.toLowerCase().includes(term));
       const inCats =
         Array.isArray(p.categories) && p.categories.some((c) => c.toLowerCase().includes(term));
-      return inTitle || inPrompt || inTags || inCats;
+      const inTools = Array.isArray(p.tools) && p.tools.some((t) => t.toLowerCase().includes(term));
+      return inTitle || inPrompt || inTags || inCats || inTools;
     });
-
-    return filtered.map((p, index) => ({
-      ...p,
-      catalog_number: formatCatalogLabel(index + 1),
-    }));
   }, [prompts, deferredQ, cat]);
 
   return (

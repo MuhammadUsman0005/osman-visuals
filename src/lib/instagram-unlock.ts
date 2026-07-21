@@ -20,6 +20,10 @@ export function persistFollowed() {
   window.dispatchEvent(new CustomEvent(EVENT_NAME));
 }
 
+export function persistUnlock() {
+  persistFollowed();
+}
+
 export function onFollowedChange(callback: () => void) {
   if (typeof window === "undefined") return () => {};
 
