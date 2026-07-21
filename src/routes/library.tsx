@@ -40,6 +40,7 @@ function Library() {
     "Character Consistency",
     "Luxury Fashion",
     "Concept Art",
+    "Cyberpunk",
     "Fantasy Worlds",
     "Product Visualization",
     "Branding & Marketing",

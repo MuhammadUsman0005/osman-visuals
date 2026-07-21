@@ -197,7 +197,7 @@ export function PromptPreviewModal({
                     </div>
                     {warning && (
                       <p className="mt-3 text-sm text-rose-300 text-center">
-                        Follow @osmanvisuals to unlock this resource.
+                        Follow @osmanvisuals to unlock this promptnp.
                       </p>
                     )}
                     <p className="mt-3 text-[11px] text-bone/40 text-center">
