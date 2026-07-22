@@ -251,8 +251,8 @@ export function PromptPreviewModal({
                         {followClickCount === 0
                           ? "FOLLOW OSMANVISUALS"
                           : followClickCount === 1
-                            ? "Follow osmanvisuals"
-                            : "Followed — thanks!"}
+                            ? "FOLLOW OSMANVISUALS"
+                            : "FOLLOWED!"}
                       </a>
                       <button
                         onClick={confirmUnlock}

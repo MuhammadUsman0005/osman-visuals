@@ -102,15 +102,22 @@ function ResourcePage() {
   });
 
   const [followed, setFollowed] = useState(false);
+  const [followClickCount, setFollowClickCount] = useState(0);
   const [emailCaptured, setEmailCaptured] = useState(false);
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [followClicked, setFollowClicked] = useState(false);
+  const [warning, setWarning] = useState<string | false>(false);
 
   useEffect(() => {
-    setFollowed(readFollowed());
+    const initialFollowed = readFollowed();
+    setFollowed(initialFollowed);
+    setFollowClickCount(initialFollowed ? 2 : 0);
     setEmailCaptured(readEmailCaptured());
-    const off1 = onFollowedChange(() => setFollowed(readFollowed()));
+    const off1 = onFollowedChange(() => {
+      const currentFollowed = readFollowed();
+      setFollowed(currentFollowed);
+      setFollowClickCount(currentFollowed ? 2 : 0);
+    });
     const off2 = onEmailCapturedChange(() => setEmailCaptured(readEmailCaptured()));
     return () => {
       off1();
@@ -255,21 +262,35 @@ function ResourcePage() {
                     href="https://instagram.com/osmanvisuals"
                     target="_blank"
                     rel="noopener"
-                    onClick={() => setFollowClicked(true)}
+                    onClick={() => {
+                      setFollowClickCount((count) => Math.min(2, count + 1));
+                      setWarning(false);
+                    }}
                     className="inline-flex items-center justify-center gap-2 border hairline px-4 py-3 text-xs uppercase tracking-widest text-bone hover:text-gold hover:border-gold/60"
                   >
-                    <Instagram className="w-3.5 h-3.5" /> Follow @osmanvisuals
+                    <Instagram className="w-3.5 h-3.5" />
+                    {followClickCount === 0
+                      ? "Follow @osmanvisuals"
+                      : followClickCount === 1
+                      ? "Tap Follow once more →"
+                      : "Followed — thanks!"}
                   </a>
                   <button
-                    disabled={!followClicked}
-                    onClick={() => persistFollowed()}
+                    disabled={followClickCount < 2}
+                    onClick={() => {
+                      if (followClickCount < 2) {
+                        setWarning("Tap 'Follow' once more before unlocking.");
+                        return;
+                      }
+                      persistFollowed();
+                    }}
                     className="inline-flex items-center justify-center gap-2 border border-gold text-gold px-4 py-3 text-xs uppercase tracking-widest hover:bg-gold/5 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     I've followed — confirm
                   </button>
+                  {warning && <p className="text-xs text-rose-400">{warning}</p>}
                 </div>
               )}
-
               {!emailCaptured && (
                 <form onSubmit={submitEmail} className="flex flex-col sm:flex-row gap-2">
                   <input
