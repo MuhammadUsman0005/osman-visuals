@@ -18,6 +18,7 @@ import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -65,6 +66,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResourcesSlugRoute = ResourcesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ResourcesRoute,
+} as any)
 const GuidesSlugRoute = GuidesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -79,9 +85,10 @@ export interface FileRoutesByFullPath {
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
   '/refunds': typeof RefundsRoute
-  '/resources': typeof ResourcesRoute
+  '/resources': typeof ResourcesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/guides/$slug': typeof GuidesSlugRoute
+  '/resources/$slug': typeof ResourcesSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,9 +98,10 @@ export interface FileRoutesByTo {
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
   '/refunds': typeof RefundsRoute
-  '/resources': typeof ResourcesRoute
+  '/resources': typeof ResourcesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/guides/$slug': typeof GuidesSlugRoute
+  '/resources/$slug': typeof ResourcesSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,9 +112,10 @@ export interface FileRoutesById {
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
   '/refunds': typeof RefundsRoute
-  '/resources': typeof ResourcesRoute
+  '/resources': typeof ResourcesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/guides/$slug': typeof GuidesSlugRoute
+  '/resources/$slug': typeof ResourcesSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/guides/$slug'
+    | '/resources/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/guides/$slug'
+    | '/resources/$slug'
   id:
     | '__root__'
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/guides/$slug'
+    | '/resources/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -155,7 +167,7 @@ export interface RootRouteChildren {
   LibraryRoute: typeof LibraryRoute
   LicensingRoute: typeof LicensingRoute
   RefundsRoute: typeof RefundsRoute
-  ResourcesRoute: typeof ResourcesRoute
+  ResourcesRoute: typeof ResourcesRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -224,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/resources/$slug': {
+      id: '/resources/$slug'
+      path: '/$slug'
+      fullPath: '/resources/$slug'
+      preLoaderRoute: typeof ResourcesSlugRouteImport
+      parentRoute: typeof ResourcesRoute
+    }
     '/guides/$slug': {
       id: '/guides/$slug'
       path: '/$slug'
@@ -245,6 +264,18 @@ const GuidesRouteChildren: GuidesRouteChildren = {
 const GuidesRouteWithChildren =
   GuidesRoute._addFileChildren(GuidesRouteChildren)
 
+interface ResourcesRouteChildren {
+  ResourcesSlugRoute: typeof ResourcesSlugRoute
+}
+
+const ResourcesRouteChildren: ResourcesRouteChildren = {
+  ResourcesSlugRoute: ResourcesSlugRoute,
+}
+
+const ResourcesRouteWithChildren = ResourcesRoute._addFileChildren(
+  ResourcesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -253,7 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   LibraryRoute: LibraryRoute,
   LicensingRoute: LicensingRoute,
   RefundsRoute: RefundsRoute,
-  ResourcesRoute: ResourcesRoute,
+  ResourcesRoute: ResourcesRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
