@@ -1,26 +1,50 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { UnlockModal } from "@/components/UnlockModal";
-import { Download, Lock } from "lucide-react";
+import { Download, Lock, Maximize2, Star } from "lucide-react";
 
 type Resource = {
   id: string;
+  slug: string;
   title: string;
-  type: "pdf" | "prompt_pack" | "asset" | "reference_image";
+  category: string | null;
   file_url: string | null;
   preview_image_url: string | null;
   is_premium: boolean;
+  short_description: string | null;
   description: string | null;
+  rating: number | null;
 };
 
-const TYPE_LABEL: Record<Resource["type"], string> = {
-  pdf: "PDF",
-  prompt_pack: "Prompt pack",
-  asset: "Asset",
-  reference_image: "Reference",
-};
+const CATEGORIES = [
+  "All",
+  "Prompt Packs",
+  "PDF Guides",
+  "Assets",
+  "References",
+  "Templates",
+  "Workflows",
+  "Cheat Sheets",
+  "Color Packs",
+  "AI Tool Presets",
+  "Bonus Resources",
+];
+
+function StarRating({ value }: { value: number | null }) {
+  const v = value ?? 0;
+  return (
+    <div className="flex items-center gap-0.5" aria-label={`Rated ${v} out of 5`}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          className={`w-3.5 h-3.5 ${i < Math.round(v) ? "fill-gold text-gold" : "text-bone/25"}`}
+        />
+      ))}
+      {v > 0 && <span className="ml-1.5 text-[11px] text-bone/60">{v.toFixed(1)}</span>}
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/resources")({
   head: () => ({
