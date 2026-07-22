@@ -69,8 +69,7 @@ export const Route = createFileRoute("/resources")({
 });
 
 function Resources() {
-  const [type, setType] = useState<"All" | Resource["type"]>("All");
-  const [unlock, setUnlock] = useState<Resource | null>(null);
+  const [cat, setCat] = useState<string>("All");
 
   const { data, isLoading } = useQuery({
     queryKey: ["resources"],
@@ -80,22 +79,14 @@ function Resources() {
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as Resource[];
+      return data as unknown as Resource[];
     },
   });
 
   const filtered = useMemo(
-    () => (data ?? []).filter((r) => type === "All" || r.type === type),
-    [data, type],
+    () => (data ?? []).filter((r) => cat === "All" || r.category === cat),
+    [data, cat],
   );
-
-  const filters: Array<"All" | Resource["type"]> = [
-    "All",
-    "prompt_pack",
-    "pdf",
-    "asset",
-    "reference_image",
-  ];
 
   return (
     <>
@@ -113,17 +104,17 @@ function Resources() {
 
       <section className="mx-auto max-w-7xl px-6 lg:px-10 py-12">
         <div className="flex flex-wrap gap-2 mb-10">
-          {filters.map((t) => (
+          {CATEGORIES.map((t) => (
             <button
               key={t}
-              onClick={() => setType(t)}
+              onClick={() => setCat(t)}
               className={`px-4 py-2 text-xs uppercase tracking-widest border transition-colors ${
-                type === t
+                cat === t
                   ? "border-gold text-gold bg-gold/5"
                   : "border-gold-hairline text-bone/60 hover:text-bone hover:border-bone/30"
               }`}
             >
-              {t === "All" ? "All" : TYPE_LABEL[t]}
+              {t}
             </button>
           ))}
         </div>
@@ -137,59 +128,44 @@ function Resources() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((r) => (
-              <article key={r.id} className="border hairline bg-surface flex flex-col">
+              <Link
+                key={r.id}
+                to="/resources/$slug"
+                params={{ slug: r.slug }}
+                className="group border hairline bg-surface flex flex-col transition-colors hover:border-gold/60"
+              >
                 <header className="flex items-center justify-between px-4 pt-4 pb-3 border-b hairline">
-                  <span className="eyebrow">{TYPE_LABEL[r.type]}</span>
-                  {r.is_premium ? (
-                    <span className="text-[10px] uppercase tracking-widest text-gold border border-gold/40 px-2 py-0.5">
-                      Premium
-                    </span>
-                  ) : (
-                    <span className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-2 py-0.5">
-                      Free
-                    </span>
-                  )}
+                  <span className="eyebrow">{r.category ?? "Resource"}</span>
+                  <span className={`eyebrow ${r.is_premium ? "text-gold" : "text-bone/50"}`}>
+                    {r.is_premium ? "Exclusive" : "Free"}
+                  </span>
                 </header>
-                <div className="px-4 py-6 flex-1">
-                  <h3 className="font-display text-xl text-bone">{r.title}</h3>
-                  {r.description && (
-                    <p className="mt-3 text-sm text-bone/60 leading-relaxed">{r.description}</p>
+                <div className="px-4 py-5 flex-1 flex flex-col gap-3">
+                  <h3 className="font-display text-xl leading-snug text-bone">{r.title}</h3>
+                  {(r.short_description || r.description) && (
+                    <p className="text-sm text-bone/60 line-clamp-3 leading-relaxed">
+                      {r.short_description || r.description}
+                    </p>
                   )}
+                  <StarRating value={r.rating} />
                 </div>
-                <footer className="border-t hairline">
-                  <button
-                    onClick={() => {
-                      if (r.is_premium || !r.file_url) {
-                        setUnlock(r);
-                      } else {
-                        window.open(r.file_url, "_blank", "noopener");
-                      }
-                    }}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase tracking-widest text-bone/80 hover:text-gold hover:bg-gold/5 transition-colors"
-                  >
+                <footer className="flex items-stretch border-t hairline">
+                  <span className="flex-1 flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase tracking-widest text-bone/80 group-hover:text-gold">
+                    <Maximize2 className="w-3.5 h-3.5" /> Preview
+                  </span>
+                  <span className="flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase tracking-widest text-bone/80 group-hover:text-gold border-l hairline">
                     {r.is_premium ? (
-                      <>
-                        <Lock className="w-3.5 h-3.5" /> Unlock pack
-                      </>
+                      <><Lock className="w-3.5 h-3.5" /> Unlock</>
                     ) : (
-                      <>
-                        <Download className="w-3.5 h-3.5" /> Download
-                      </>
+                      <><Download className="w-3.5 h-3.5" /> Download</>
                     )}
-                  </button>
+                  </span>
                 </footer>
-              </article>
+              </Link>
             ))}
           </div>
         )}
       </section>
-
-      <UnlockModal
-        open={!!unlock}
-        onClose={() => setUnlock(null)}
-        title={unlock?.title ?? ""}
-        source={`resource:${unlock?.id ?? ""}`}
-      />
     </>
   );
 }
