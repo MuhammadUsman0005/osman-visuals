@@ -18,6 +18,8 @@ export type Prompt = {
   tags: string[];
   // new tools array (e.g., ChatGPT, NanoBanana)
   tools: string[];
+  // optional multiple preview images (new)
+  preview_image_urls?: string[] | null;
   catalog_number: string;
 };
 
@@ -72,7 +74,7 @@ export function PromptCard({
           {prompt.title}
           {prompt.tools && prompt.tools.length > 0 && (
             <span className="text-sm text-bone/60 font-normal font-body not-italic ml-2">
-              ({prompt.tools.join(", ")})
+              ({prompt.tools.join(" · ")})
             </span>
           )}
         </h3>

@@ -123,6 +123,16 @@ function Home() {
             ))}
           </div>
         )}
+
+        {/* Mobile-only "View all" link beneath featured grid */}
+        <div className="sm:hidden mt-6 px-6 lg:px-10">
+          <Link
+            to="/library"
+            className="inline-flex items-center gap-3 bg-gold text-void px-6 py-3.5 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors w-full justify-center"
+          >
+            View all →
+          </Link>
+        </div>
       </section>
 
       {/* Prompt packs */}

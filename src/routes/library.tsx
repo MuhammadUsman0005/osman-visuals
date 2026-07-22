@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState, useDeferredValue } from "react";
+import { useMemo, useState, useDeferredValue, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PromptCard, type Prompt } from "@/components/PromptCard";
 import { PromptPreviewModal } from "@/components/PromptPreviewModal";
@@ -80,6 +80,37 @@ function Library() {
     });
   }, [prompts, deferredQ, cat]);
 
+  // Pagination state: page and pageSize responsive to window width
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(() => {
+    if (typeof window === "undefined") return 42;
+    const w = window.innerWidth;
+    if (w >= 1024) return 42;
+    if (w >= 768) return 21;
+    return 9;
+  });
+
+  // update pageSize on resize
+  useEffect(() => {
+    function update() {
+      const w = window.innerWidth;
+      const newSize = w >= 1024 ? 42 : w >= 768 ? 21 : 9;
+      setPageSize(newSize);
+    }
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  // reset page whenever search or category changes
+  useEffect(() => setPage(1), [deferredQ, cat]);
+
+  const totalPages = Math.max(1, Math.ceil(displayedPrompts.length / pageSize));
+  const pagedPrompts = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return displayedPrompts.slice(start, start + pageSize);
+  }, [displayedPrompts, page, pageSize]);
+
   return (
     <>
       <section className="border-b hairline">
@@ -144,11 +175,48 @@ function Library() {
               <p className="mt-2 text-sm text-bone/60">Try a broader category or a shorter term.</p>
             </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {displayedPrompts.map((p) => (
-                <PromptCard key={p.id} prompt={p} onOpen={setPreview} />
-              ))}
-            </div>
+            <>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {pagedPrompts.map((p) => (
+                  <PromptCard key={p.id} prompt={p} onOpen={setPreview} />
+                ))}
+              </div>
+
+              {/* Pagination controls */}
+              {totalPages > 1 && (
+                <div className="mt-6 flex items-center gap-2 justify-center">
+                  <button
+                    onClick={() => setPage((s) => Math.max(1, s - 1))}
+                    disabled={page === 1}
+                    className="px-3 py-1 text-xs uppercase tracking-widest border transition-colors border-gold-hairline text-bone/60 disabled:opacity-50"
+                  >
+                    Previous
+                  </button>
+
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setPage(i + 1)}
+                      className={`px-3 py-1 text-xs uppercase tracking-widest border transition-colors ${
+                        page === i + 1
+                          ? "border-gold text-gold bg-gold/5"
+                          : "border-gold-hairline text-bone/60"
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+
+                  <button
+                    onClick={() => setPage((s) => Math.min(totalPages, s + 1))}
+                    disabled={page === totalPages}
+                    className="px-3 py-1 text-xs uppercase tracking-widest border transition-colors border-gold-hairline text-bone/60 disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
