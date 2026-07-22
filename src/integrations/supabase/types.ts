@@ -148,34 +148,58 @@ export type Database = {
       }
       resources: {
         Row: {
+          category: string | null
           created_at: string
           description: string | null
+          faqs: Json
+          file_format: string | null
+          file_size: string | null
           file_url: string | null
           id: string
           is_premium: boolean
           preview_image_url: string | null
+          rating: number | null
+          short_description: string | null
+          slug: string
           title: string
           type: string
+          whats_included: string[]
         }
         Insert: {
+          category?: string | null
           created_at?: string
           description?: string | null
+          faqs?: Json
+          file_format?: string | null
+          file_size?: string | null
           file_url?: string | null
           id?: string
           is_premium?: boolean
           preview_image_url?: string | null
+          rating?: number | null
+          short_description?: string | null
+          slug: string
           title: string
           type: string
+          whats_included?: string[]
         }
         Update: {
+          category?: string | null
           created_at?: string
           description?: string | null
+          faqs?: Json
+          file_format?: string | null
+          file_size?: string | null
           file_url?: string | null
           id?: string
           is_premium?: boolean
           preview_image_url?: string | null
+          rating?: number | null
+          short_description?: string | null
+          slug?: string
           title?: string
           type?: string
+          whats_included?: string[]
         }
         Relationships: []
       }
