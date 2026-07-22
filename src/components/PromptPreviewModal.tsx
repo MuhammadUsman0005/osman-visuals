@@ -59,7 +59,7 @@ export function PromptPreviewModal({
   function confirmUnlock() {
     const canUnlock = followed || followClickCount >= 2;
     if (!canUnlock) {
-      setWarning("Tap 'Follow' once more before unlocking.");
+      setWarning("Please follow @osmanvisuals to unlock this prompt.");
       return;
     }
     persistUnlock();
@@ -251,7 +251,7 @@ export function PromptPreviewModal({
                         {followClickCount === 0
                           ? "FOLLOW OSMANVISUALS"
                           : followClickCount === 1
-                            ? "Follow once more →"
+                            ? "Follow osmanvisuals"
                             : "Followed — thanks!"}
                       </a>
                       <button
