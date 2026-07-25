@@ -25,9 +25,6 @@ export const Route = createFileRoute("/gallery")({
   component: Gallery,
 });
 
-// Gallery always shows the same image already uploaded for the prompt in
-// the Vault — never a separately-uploaded gallery-only image. If a prompt
-// has multiple preview images, the first one is used as its gallery plate.
 function galleryImage(p: Prompt): string | null {
   if (p.preview_image_urls && p.preview_image_urls.length > 0) {
     return p.preview_image_urls[0];
@@ -95,7 +92,7 @@ function Gallery() {
               <button
                 key={p.id}
                 onClick={() => setActive(p)}
-                className="mb-4 block w-full break-inside-avoid border hairline overflow-hidden group"
+                className="relative mb-4 block w-full break-inside-avoid border hairline overflow-hidden group"
                 aria-label={`View ${p.title}`}
               >
                 <img
@@ -104,6 +101,19 @@ function Gallery() {
                   loading="lazy"
                   className="w-full h-auto object-cover group-hover:opacity-80 transition-opacity"
                 />
+
+                <span
+                  className={`absolute top-2 right-2 text-[9px] sm:text-[10px] uppercase tracking-widest px-1.5 py-0.5 sm:px-2 sm:py-1 bg-void/80 backdrop-blur-sm border hairline ${
+                    p.is_premium ? "text-gold" : "text-bone/80"
+                  }`}
+                >
+                  {p.is_premium ? "Exclusive" : "Free"}
+                </span>
+
+                <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-void/90 via-void/40 to-transparent pointer-events-none" />
+                <span className="absolute bottom-1.5 left-2 right-2 sm:bottom-2 sm:left-3 sm:right-3 text-left text-[11px] sm:text-xs text-bone font-medium leading-tight line-clamp-2 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                  {p.title}
+                </span>
               </button>
             ))}
           </div>
@@ -139,37 +149,36 @@ function Gallery() {
                 />
               </div>
 
-              <div className="px-6 py-6 flex items-center justify-between gap-4 flex-wrap">
-                <div>
-                  <h2 className="font-display text-2xl text-bone">{active.title}</h2>
-                  <p className="mt-1 eyebrow text-bone/50">
-                    <div>
-                      {/* <h2 className="font-display text-2xl text-bone">{active.title}</h2> */}
-                      {active.categories && active.categories.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-2">
-                          {active.categories.map((c) => (
-                            <span
-                              key={c}
-                              className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-1.5 py-0.5"
-                            >
-                              {c}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      {/* Agar aapko catalog_numberfallback ke tor par dikhana hai toh usay div ke bahar ya sahi jagah place karein */}
-                      {!active.categories?.length && active.catalog_number && (
-                        <div className="text-sm text-bone/70 mt-2">{active.catalog_number}</div>
-                      )}
-                    </div>
-                  </p>
+              <div className="px-5 py-5 sm:px-6 sm:py-6">
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                  <div>
+                    <h2 className="font-display text-xl sm:text-2xl text-bone">{active.title}</h2>
+                    {active.categories && active.categories.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {active.categories.map((c) => (
+                          <span
+                            key={c}
+                            className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-1.5 py-0.5"
+                          >
+                            {c}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => viewPrompt(active)}
+                    className="shrink-0 inline-flex items-center gap-2 bg-gold text-void px-5 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
+                  >
+                    View Prompt
+                  </button>
                 </div>
-                <button
-                  onClick={() => viewPrompt(active)}
-                  className="shrink-0 inline-flex items-center gap-2 bg-gold text-void px-5 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
-                >
-                  View Prompt
-                </button>
+
+                {active.description && (
+                  <p className="mt-4 text-sm text-bone/70 leading-relaxed">
+                    {active.description}
+                  </p>
+                )}
               </div>
             </div>
           </div>

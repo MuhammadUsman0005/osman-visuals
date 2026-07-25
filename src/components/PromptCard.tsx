@@ -21,6 +21,7 @@ export type Prompt = {
   // optional multiple preview images (new)
   preview_image_urls?: string[] | null;
   catalog_number: string;
+  description?: string | null;
 };
 
 export function PromptCard({

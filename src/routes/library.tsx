@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState, useDeferredValue, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PromptCard, type Prompt } from "@/components/PromptCard";
 import { PromptPreviewModal } from "@/components/PromptPreviewModal";
@@ -33,11 +33,13 @@ export const Route = createFileRoute("/library")({
 
 function Library() {
   const [q, setQ] = useState("");
+  const [activeSearch, setActiveSearch] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const { open } = Route.useSearch();
   const navigate = useNavigate();
+  const [dismissedSlug, setDismissedSlug] = useState<string | null>(null);
   const [cat, setCat] = useState<string>("All");
   const [preview, setPreview] = useState<Prompt | null>(null);
-  const deferredQ = useDeferredValue(q);
 
   const CATEGORIES = [
     "All",
@@ -64,17 +66,20 @@ function Library() {
   });
 
   // Auto-open a specific prompt's preview when arriving via ?open=<slug>
-  // (used by the Gallery page's "View Prompt" button).
+  // (used by the Gallery page's "View Prompt" button). dismissedSlug guards
+  // against a race with navigate() clearing the URL — without it, closing
+  // the modal could re-trigger this effect with the still-stale `open`
+  // value and immediately reopen the same prompt.
   useEffect(() => {
-    if (!open || !prompts || preview) return;
+    if (!open || !prompts || preview || open === dismissedSlug) return;
     const match = prompts.find((p) => p.slug === open);
     if (match) setPreview(match);
-  }, [open, prompts, preview]);
-  
+  }, [open, prompts, preview, dismissedSlug]);
+
   // use the fixed category list (CATEGORIES above) rather than deriving from prompts
   const displayedPrompts = useMemo(() => {
     if (!prompts) return [];
-    const term = deferredQ.trim().toLowerCase();
+    const term = activeSearch.trim().toLowerCase();
     return prompts.filter((p) => {
       // category filter: check if selected category exists in prompt.categories array
       if (cat !== "All") {
@@ -91,7 +96,7 @@ function Library() {
       const inTools = Array.isArray(p.tools) && p.tools.some((t) => t.toLowerCase().includes(term));
       return inTitle || inPrompt || inTags || inCats || inTools;
     });
-  }, [prompts, deferredQ, cat]);
+  }, [prompts, activeSearch, cat]);
 
   // Pagination state: page and pageSize responsive to window width
   const [page, setPage] = useState(1);
@@ -116,7 +121,7 @@ function Library() {
   }, []);
 
   // reset page whenever search or category changes
-  useEffect(() => setPage(1), [deferredQ, cat]);
+  useEffect(() => setPage(1), [activeSearch, cat]);
 
   const totalPages = Math.max(1, Math.ceil(displayedPrompts.length / pageSize));
   const pagedPrompts = useMemo(() => {
@@ -144,16 +149,34 @@ function Library() {
 
       <section className="mx-auto max-w-7xl px-6 lg:px-10 py-12">
         <div className="flex flex-col gap-6">
-          <div className="relative max-w-md">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setActiveSearch(q);
+              searchInputRef.current?.blur();
+            }}
+            className="relative max-w-md"
+          >
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-bone/40" />
             <input
+              ref={searchInputRef}
+              type="search"
+              enterKeyHint="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search titles, prompts, tags…"
               maxLength={100}
-              className="w-full bg-surface border hairline pl-10 pr-4 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
+              className="w-full bg-surface border hairline pl-10 pr-16 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
             />
-          </div>
+            {q && (
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] uppercase tracking-widest text-gold hover:text-bone px-2 py-1"
+              >
+                Search
+              </button>
+            )}
+          </form>
 
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((c) => (
@@ -234,10 +257,11 @@ function Library() {
         </div>
       </section>
 
-     <PromptPreviewModal
+      <PromptPreviewModal
         prompt={preview}
         onClose={() => {
           setPreview(null);
+          setDismissedSlug(open ?? null);
           if (open) navigate({ to: "/library", search: {} });
         }}
       />
