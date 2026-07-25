@@ -92,7 +92,7 @@ function Resources() {
     <>
       <section className="border-b hairline">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 pt-20 pb-12">
-          <p className="eyebrow">Cat. V — Resources</p>
+          <p className="eyebrow">Cat. VI — Resources</p>
           <h1 className="mt-4 font-display text-5xl md:text-6xl text-bone leading-tight">
             The tools behind the work.
           </h1>

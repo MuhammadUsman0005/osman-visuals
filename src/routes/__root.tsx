@@ -151,7 +151,8 @@ function SiteChrome({ children }: { children: ReactNode }) {
 
 function SiteHeader() {
   const links = [
-    { to: "/library", label: "The Vault" },
+    { to: "/gallery", label: "Gallery" },
+    { to: "/library", label: "Vault" },
     { to: "/resources", label: "Resources" },
     { to: "/guides", label: "Guides" },
     { to: "/about", label: "About" },
@@ -221,8 +222,13 @@ function SiteFooter() {
           <p className="eyebrow mb-3">Explore</p>
           <ul className="space-y-2 text-sm text-bone/70">
             <li>
+              <Link to="/gallery" className="hover:text-gold">
+                Gallery
+              </Link>
+            </li>
+            <li>
               <Link to="/library" className="hover:text-gold">
-                The Vault
+                Vault
               </Link>
             </li>
             <li>

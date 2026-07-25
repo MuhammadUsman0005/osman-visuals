@@ -60,7 +60,7 @@ function Guides() {
     <>
       <section className="border-b hairline">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 pt-20 pb-12">
-          <p className="eyebrow">Cat. VI — Guides</p>
+          <p className="eyebrow">Cat. VII — Guides</p>
           <h1 className="mt-4 font-display text-5xl md:text-6xl text-bone leading-tight">
             The manual.
           </h1>

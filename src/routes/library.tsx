@@ -7,6 +7,9 @@ import { PromptPreviewModal } from "@/components/PromptPreviewModal";
 import { Search } from "lucide-react";
 
 export const Route = createFileRoute("/library")({
+  validateSearch: (search: Record<string, unknown>): { open?: string } => ({
+    open: typeof search.open === "string" ? search.open : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "The Vault | Osman Visuals" },
@@ -30,6 +33,7 @@ export const Route = createFileRoute("/library")({
 
 function Library() {
   const [q, setQ] = useState("");
+  const { open } = Route.useSearch();
   const [cat, setCat] = useState<string>("All");
   const [preview, setPreview] = useState<Prompt | null>(null);
   const deferredQ = useDeferredValue(q);
@@ -46,7 +50,7 @@ function Library() {
     "Branding & Marketing",
     "Technology",
     "Architecture & Interior",
-    "Icons",
+    "Public Figures",
   ];
 
   const { data: prompts, isLoading } = useQuery({
@@ -58,6 +62,14 @@ function Library() {
     },
   });
 
+  // Auto-open a specific prompt's preview when arriving via ?open=<slug>
+  // (used by the Gallery page's "View Prompt" button).
+  useEffect(() => {
+    if (!open || !prompts || preview) return;
+    const match = prompts.find((p) => p.slug === open);
+    if (match) setPreview(match);
+  }, [open, prompts, preview]);
+  
   // use the fixed category list (CATEGORIES above) rather than deriving from prompts
   const displayedPrompts = useMemo(() => {
     if (!prompts) return [];
@@ -115,7 +127,7 @@ function Library() {
     <>
       <section className="border-b hairline">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 pt-20 pb-12">
-          <p className="eyebrow">Cat. IV — The Vault</p>
+          <p className="eyebrow">Cat. V — The Vault</p>
           <h1 className="mt-4 font-display text-5xl md:text-6xl text-bone leading-tight">
             The Creative Vault
           </h1>

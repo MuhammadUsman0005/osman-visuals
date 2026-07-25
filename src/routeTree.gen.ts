@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LicensingRouteImport } from './routes/licensing'
@@ -34,6 +35,11 @@ const AboutRoute = AboutRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuidesRoute = GuidesRouteImport.update({
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/gallery': typeof GalleryRoute
   '/guides': typeof GuidesRouteWithChildren
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/gallery': typeof GalleryRoute
   '/guides': typeof GuidesRouteWithChildren
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
@@ -108,6 +116,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/gallery': typeof GalleryRoute
   '/guides': typeof GuidesRouteWithChildren
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
@@ -123,6 +132,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/gallery'
     | '/guides'
     | '/library'
     | '/licensing'
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/gallery'
     | '/guides'
     | '/library'
     | '/licensing'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/gallery'
     | '/guides'
     | '/library'
     | '/licensing'
@@ -163,6 +175,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  GalleryRoute: typeof GalleryRoute
   GuidesRoute: typeof GuidesRouteWithChildren
   LibraryRoute: typeof LibraryRoute
   LicensingRoute: typeof LicensingRoute
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guides': {
@@ -280,6 +300,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  GalleryRoute: GalleryRoute,
   GuidesRoute: GuidesRouteWithChildren,
   LibraryRoute: LibraryRoute,
   LicensingRoute: LicensingRoute,
