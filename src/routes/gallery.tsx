@@ -72,7 +72,7 @@ function Gallery() {
 
       <section className="mx-auto max-w-7xl px-6 lg:px-10 py-12">
         {isLoading ? (
-          <div className="columns-2 sm:columns-3 lg:columns-4 gap-4 [column-fill:_balance]">
+          <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 [column-fill:_balance]">
             {Array.from({ length: 12 }).map((_, i) => (
               <div
                 key={i}
@@ -90,7 +90,7 @@ function Gallery() {
             </p>
           </div>
         ) : (
-          <div className="columns-2 sm:columns-3 lg:columns-4 gap-4 [column-fill:_balance]">
+          <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 [column-fill:_balance]">
             {withImages.map((p) => (
               <button
                 key={p.id}
@@ -143,7 +143,25 @@ function Gallery() {
                 <div>
                   <h2 className="font-display text-2xl text-bone">{active.title}</h2>
                   <p className="mt-1 eyebrow text-bone/50">
-                    {active.categories?.[0] ?? active.catalog_number}
+                    <div>
+                      {/* <h2 className="font-display text-2xl text-bone">{active.title}</h2> */}
+                      {active.categories && active.categories.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {active.categories.map((c) => (
+                            <span
+                              key={c}
+                              className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-1.5 py-0.5"
+                            >
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {/* Agar aapko catalog_numberfallback ke tor par dikhana hai toh usay div ke bahar ya sahi jagah place karein */}
+                      {!active.categories?.length && active.catalog_number && (
+                        <div className="text-sm text-bone/70 mt-2">{active.catalog_number}</div>
+                      )}
+                    </div>
                   </p>
                 </div>
                 <button

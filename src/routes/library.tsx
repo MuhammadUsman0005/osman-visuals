@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState, useDeferredValue, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,6 +34,7 @@ export const Route = createFileRoute("/library")({
 function Library() {
   const [q, setQ] = useState("");
   const { open } = Route.useSearch();
+  const navigate = useNavigate();
   const [cat, setCat] = useState<string>("All");
   const [preview, setPreview] = useState<Prompt | null>(null);
   const deferredQ = useDeferredValue(q);
@@ -233,7 +234,13 @@ function Library() {
         </div>
       </section>
 
-      <PromptPreviewModal prompt={preview} onClose={() => setPreview(null)} />
+     <PromptPreviewModal
+        prompt={preview}
+        onClose={() => {
+          setPreview(null);
+          if (open) navigate({ to: "/library", search: {} });
+        }}
+      />
     </>
   );
 }
