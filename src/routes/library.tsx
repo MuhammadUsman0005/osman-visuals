@@ -173,7 +173,7 @@ function Library() {
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search titles, prompts, tags…"
               maxLength={100}
-              className="w-full bg-surface border hairline pl-10 pr-10 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
+              className="w-full bg-surface border hairline pl-10 pr-10 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold [&::-webkit-search-cancel-button]:hidden"
             />
             {q && (
               <button
