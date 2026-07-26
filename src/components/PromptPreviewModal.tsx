@@ -1,9 +1,66 @@
 import { useEffect, useState } from "react";
-import { X, Copy, Check, Instagram, Lock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import {
+  X,
+  Copy,
+  Check,
+  Instagram,
+  Lock,
+  ChevronLeft,
+  ChevronRight,
+  ScanFace,
+  Aperture,
+  Sun,
+  Ban,
+  Images,
+  Sparkles,
+  ArrowRight,
+} from "lucide-react";
 import type { Prompt } from "@/components/PromptCard";
 import { onFollowedChange, persistUnlock, readFollowed } from "@/lib/instagram-unlock";
 
 const INSTAGRAM_URL = "https://instagram.com/osmanvisuals";
+
+const WORKFLOW_GUIDES = [
+  {
+    slug: "identity-preservation",
+    icon: ScanFace,
+    title: "Identity Preservation",
+    description:
+      "Keep the exact same face, hairstyle, and character identity across every generation.",
+  },
+  {
+    slug: "composition-camera",
+    icon: Aperture,
+    title: "Composition & Camera",
+    description:
+      "Framing, angles, focal length, and depth of field that make an image feel intentional.",
+  },
+  {
+    slug: "lighting-color",
+    icon: Sun,
+    title: "Lighting & Color",
+    description: "Cinematic and studio lighting, color harmony, shadow, and professional grading.",
+  },
+  {
+    slug: "negative-prompting",
+    icon: Ban,
+    title: "Negative Prompting",
+    description: "Remove unwanted artifacts, fix anatomy, and control generation quality.",
+  },
+  {
+    slug: "reference-images",
+    icon: Images,
+    title: "Reference Images",
+    description: "How reference photos shape identity, pose, clothing, and environment.",
+  },
+  {
+    slug: "final-refinement",
+    icon: Sparkles,
+    title: "Final Refinement",
+    description: "Upscaling, facial cleanup, texture detail, and finishing touches.",
+  },
+];
 
 export function PromptPreviewModal({
   prompt,
@@ -69,11 +126,11 @@ export function PromptPreviewModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-void/90 backdrop-blur-sm overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-void/90 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-300"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-6xl my-10 mx-4 overflow-visible"
+        className="relative w-full max-w-6xl my-10 mx-4 overflow-visible transform transition-all animate-in zoom-in-[0.95] slide-in-from-bottom-4 duration-300"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -223,6 +280,44 @@ export function PromptPreviewModal({
                         </>
                       )}
                     </button>
+
+                    <div className="mt-8 pt-6 border-t hairline">
+                      <p className="eyebrow">The Full Workflow</p>
+                      <h3 className="mt-3 font-display text-xl text-bone leading-snug">
+                        Prompt is only the blueprint.
+                      </h3>
+                      <p className="mt-3 text-sm text-bone/70 leading-relaxed">
+                        A great AI image is never created by the prompt alone. Professional results
+                        also depend on identity preservation, composition, camera direction,
+                        lighting, color grading, negative prompting, reference management, and final
+                        refinement.
+                      </p>
+                      <p className="mt-2 text-sm text-bone/70 leading-relaxed">
+                        Every image inside Osman Visuals is built using a complete creative
+                        workflow, not just a single prompt. Explore the guides below to master every
+                        part of the process.
+                      </p>
+
+                      <div className="mt-5 grid sm:grid-cols-2 gap-3">
+                        {WORKFLOW_GUIDES.map(({ slug, icon: Icon, title, description }) => (
+                          <Link
+                            key={slug}
+                            to="/guides/$slug"
+                            params={{ slug }}
+                            className="group border hairline bg-void p-4 flex flex-col gap-2 hover:border-gold/60 transition-colors"
+                          >
+                            <Icon className="w-5 h-5 text-gold" />
+                            <p className="font-display text-base text-bone leading-snug">{title}</p>
+                            <p className="text-xs text-bone/60 leading-relaxed flex-1">
+                              {description}
+                            </p>
+                            <span className="text-[10px] uppercase tracking-widest text-gold inline-flex items-center gap-1 group-hover:gap-1.5 transition-all">
+                              Read Guide <ArrowRight className="w-3 h-3" />
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   </>
                 ) : (
                   <>
@@ -234,7 +329,7 @@ export function PromptPreviewModal({
                         Follow on Instagram to unlock this archive instantly. No account required.
                       </p>
                       <a
-                        href={INSTAGRAM_URL}
+                        href="https://instagram.com/osmanvisuals"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => {
@@ -254,6 +349,7 @@ export function PromptPreviewModal({
                             ? "FOLLOW OSMANVISUALS"
                             : "FOLLOWED!"}
                       </a>
+
                       <button
                         onClick={confirmUnlock}
                         className={`mt-2 w-full py-3 text-xs uppercase tracking-widest font-medium transition-colors ${

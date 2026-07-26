@@ -58,11 +58,15 @@ function Gallery() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10 pt-20 pb-12">
           <p className="eyebrow">Cat. IV — The Gallery</p>
           <h1 className="mt-4 font-display text-5xl md:text-6xl text-bone leading-tight">
-            The work, not the words
+            See the Result. Unlock the Process.
           </h1>
           <p className="mt-4 text-bone/70 max-w-xl">
-            A pure visual showcase — no prompts, no descriptions. See the level of image this
-            archive produces, then unlock the exact prompt behind anything you like.
+            The Gallery is more than a collection of finished images. It is a showcase of what
+            becomes possible when creative direction, professional prompt engineering, and visual
+            storytelling work together. Every piece demonstrates the quality, consistency, and
+            realism that the Osman Visuals archive is built to deliver. When an image inspires you,
+            unlock the exact prompt and transform it into something uniquely your own using your
+            subject, your style, and your vision.
           </p>
         </div>
       </section>
@@ -92,28 +96,44 @@ function Gallery() {
               <button
                 key={p.id}
                 onClick={() => setActive(p)}
-                className="relative mb-4 block w-full break-inside-avoid border hairline overflow-hidden group"
+                className="relative mb-4 block w-full break-inside-avoid border hairline overflow-hidden group cursor-pointer"
                 aria-label={`View ${p.title}`}
               >
+                {/* 1. Zoom-in animation */}
                 <img
                   src={galleryImage(p)!}
                   alt={p.title}
                   loading="lazy"
-                  className="w-full h-auto object-cover group-hover:opacity-80 transition-opacity"
+                  className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                 />
 
                 <span
-                  className={`absolute top-2 right-2 text-[9px] sm:text-[10px] uppercase tracking-widest px-1.5 py-0.5 sm:px-2 sm:py-1 bg-void/80 backdrop-blur-sm border hairline ${
+                  className={`absolute top-2 right-2 text-[9px] sm:text-[10px] uppercase tracking-widest px-1.5 py-0.5 sm:px-2 sm:py-1 bg-void/80 backdrop-blur-sm border hairline z-20 ${
                     p.is_premium ? "text-gold" : "text-bone/80"
                   }`}
                 >
                   {p.is_premium ? "Exclusive" : "Free"}
                 </span>
 
-                <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-void/90 via-void/40 to-transparent pointer-events-none" />
-                <span className="absolute bottom-1.5 left-2 right-2 sm:bottom-2 sm:left-3 sm:right-3 text-left text-[11px] sm:text-xs text-bone font-medium leading-tight line-clamp-2 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                  {p.title}
-                </span>
+                {/* 2. Gradient Overlay: Mobile par visible, Desktop par sirf hover par */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-60 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10" />
+
+                {/* 3. Text & Username Container: Isme bhi lg:opacity-0 aur lg:group-hover:opacity-100 add kar diya hai */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 ease-out flex flex-col gap-1 z-20 items-start">
+                  <span className="text-left text-sx sm:text-base text-bone font-medium leading-tight line-clamp-2 drop-shadow-md">
+                    {p.title}
+                  </span>
+
+                  <a
+                    href="https://instagram.com/osmanvisuals"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-[10px] tracking-wider font-body text-gold/90 hover:text-gold hover:underline pointer-events-auto"
+                  >
+                    @osmanvisuals
+                  </a>
+                </div>
               </button>
             ))}
           </div>
@@ -122,12 +142,12 @@ function Gallery() {
 
       {active && (
         <div
-          className="fixed inset-0 z-50 bg-void/90 backdrop-blur-sm overflow-y-auto"
+          className="fixed inset-0 z-50 bg-void/90 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-300"
           onClick={() => setActive(null)}
         >
           <div className="min-h-full flex items-start justify-center p-4 py-10">
             <div
-              className="relative w-full max-w-2xl border hairline bg-surface"
+              className="relative w-full max-w-2xl border hairline bg-surface transform transition-all animate-in zoom-in-[0.95] slide-in-from-bottom-4 duration-300"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -156,12 +176,17 @@ function Gallery() {
                     {active.categories && active.categories.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {active.categories.map((c) => (
-                          <span
+                          <button
                             key={c}
-                            className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-1.5 py-0.5"
+                            onClick={() => {
+                              setActive(null);
+                              // Yahan 'as any' add kar diya hai taake TypeScript ka error na aaye
+                              navigate({ to: "/library", search: { category: c } } as any);
+                            }}
+                            className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-2 py-1 hover:bg-gold/10 hover:text-gold hover:border-gold/30 transition-colors cursor-pointer"
                           >
                             {c}
-                          </span>
+                          </button>
                         ))}
                       </div>
                     )}
@@ -175,9 +200,7 @@ function Gallery() {
                 </div>
 
                 {active.description && (
-                  <p className="mt-4 text-sm text-bone/70 leading-relaxed">
-                    {active.description}
-                  </p>
+                  <p className="mt-4 text-sm text-bone/70 leading-relaxed">{active.description}</p>
                 )}
               </div>
             </div>

@@ -4,11 +4,12 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PromptCard, type Prompt } from "@/components/PromptCard";
 import { PromptPreviewModal } from "@/components/PromptPreviewModal";
-import { Search } from "lucide-react";
+import { Search, X as XIcon } from "lucide-react";
 
 export const Route = createFileRoute("/library")({
-  validateSearch: (search: Record<string, unknown>): { open?: string } => ({
+  validateSearch: (search: Record<string, unknown>): { open?: string; category?: string } => ({
     open: typeof search.open === "string" ? search.open : undefined,
+    category: typeof search.category === "string" ? search.category : undefined,
   }),
   head: () => ({
     meta: [
@@ -35,10 +36,16 @@ function Library() {
   const [q, setQ] = useState("");
   const [activeSearch, setActiveSearch] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const { open } = Route.useSearch();
+  const { open, category } = Route.useSearch();
   const navigate = useNavigate();
   const [dismissedSlug, setDismissedSlug] = useState<string | null>(null);
   const [cat, setCat] = useState<string>("All");
+
+  // Jump straight to a category when arriving via ?category=<name>
+  // (used by category chips in the Vault preview / Gallery preview windows).
+  useEffect(() => {
+    if (category) setCat(category);
+  }, [category]);
   const [preview, setPreview] = useState<Prompt | null>(null);
 
   const CATEGORIES = [
@@ -166,14 +173,20 @@ function Library() {
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search titles, prompts, tags…"
               maxLength={100}
-              className="w-full bg-surface border hairline pl-10 pr-16 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
+              className="w-full bg-surface border hairline pl-10 pr-10 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
             />
             {q && (
               <button
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] uppercase tracking-widest text-gold hover:text-bone px-2 py-1"
+                type="button"
+                onClick={() => {
+                  setQ("");
+                  setActiveSearch("");
+                  searchInputRef.current?.focus();
+                }}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-bone/40 hover:text-bone/70 transition-colors"
               >
-                Search
+                <XIcon className="w-4 h-4" />
               </button>
             )}
           </form>
