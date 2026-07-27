@@ -38,7 +38,7 @@ type Resource = {
   is_premium: boolean;
 };
 
-export const Route = createFileRoute("/resources/$slug")({
+export const Route = createFileRoute("/resources_/$slug")({
   head: ({ params }) => ({
     meta: [
       { title: `Resource — Osman Visuals` },

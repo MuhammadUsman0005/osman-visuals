@@ -20,8 +20,8 @@ import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
-import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
-import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
+import { Route as GuidesSlugRouteImport } from './routes/guides_.$slug'
+import { Route as ResourcesSlugRouteImport } from './routes/resources_.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -79,14 +79,14 @@ const TermsRoute = TermsRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuidesSlugRoute = GuidesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => GuidesRoute,
+  id: '/guides_/$slug',
+  path: '/guides/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ResourcesSlugRoute = ResourcesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ResourcesRoute,
+  id: '/resources_/$slug',
+  path: '/resources/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -94,11 +94,11 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
-  '/guides': typeof GuidesRouteWithChildren
+  '/guides': typeof GuidesRoute
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
   '/refunds': typeof RefundsRoute
-  '/resources': typeof ResourcesRouteWithChildren
+  '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -109,11 +109,11 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
-  '/guides': typeof GuidesRouteWithChildren
+  '/guides': typeof GuidesRoute
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
   '/refunds': typeof RefundsRoute
-  '/resources': typeof ResourcesRouteWithChildren
+  '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -125,15 +125,15 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
-  '/guides': typeof GuidesRouteWithChildren
+  '/guides': typeof GuidesRoute
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
   '/refunds': typeof RefundsRoute
-  '/resources': typeof ResourcesRouteWithChildren
+  '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
-  '/guides/$slug': typeof GuidesSlugRoute
-  '/resources/$slug': typeof ResourcesSlugRoute
+  '/guides_/$slug': typeof GuidesSlugRoute
+  '/resources_/$slug': typeof ResourcesSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -179,8 +179,8 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/terms'
-    | '/guides/$slug'
-    | '/resources/$slug'
+    | '/guides_/$slug'
+    | '/resources_/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -188,13 +188,15 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   GalleryRoute: typeof GalleryRoute
-  GuidesRoute: typeof GuidesRouteWithChildren
+  GuidesRoute: typeof GuidesRoute
   LibraryRoute: typeof LibraryRoute
   LicensingRoute: typeof LicensingRoute
   RefundsRoute: typeof RefundsRoute
-  ResourcesRoute: typeof ResourcesRouteWithChildren
+  ResourcesRoute: typeof ResourcesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  GuidesSlugRoute: typeof GuidesSlugRoute
+  ResourcesSlugRoute: typeof ResourcesSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -276,58 +278,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/guides/$slug': {
-      id: '/guides/$slug'
-      path: '/$slug'
+    '/guides_/$slug': {
+      id: '/guides_/$slug'
+      path: '/guides/$slug'
       fullPath: '/guides/$slug'
       preLoaderRoute: typeof GuidesSlugRouteImport
-      parentRoute: typeof GuidesRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/resources/$slug': {
-      id: '/resources/$slug'
-      path: '/$slug'
+    '/resources_/$slug': {
+      id: '/resources_/$slug'
+      path: '/resources/$slug'
       fullPath: '/resources/$slug'
       preLoaderRoute: typeof ResourcesSlugRouteImport
-      parentRoute: typeof ResourcesRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface GuidesRouteChildren {
-  GuidesSlugRoute: typeof GuidesSlugRoute
-}
-
-const GuidesRouteChildren: GuidesRouteChildren = {
-  GuidesSlugRoute: GuidesSlugRoute,
-}
-
-const GuidesRouteWithChildren =
-  GuidesRoute._addFileChildren(GuidesRouteChildren)
-
-interface ResourcesRouteChildren {
-  ResourcesSlugRoute: typeof ResourcesSlugRoute
-}
-
-const ResourcesRouteChildren: ResourcesRouteChildren = {
-  ResourcesSlugRoute: ResourcesSlugRoute,
-}
-
-const ResourcesRouteWithChildren = ResourcesRoute._addFileChildren(
-  ResourcesRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   GalleryRoute: GalleryRoute,
-  GuidesRoute: GuidesRouteWithChildren,
+  GuidesRoute: GuidesRoute,
   LibraryRoute: LibraryRoute,
   LicensingRoute: LicensingRoute,
   RefundsRoute: RefundsRoute,
-  ResourcesRoute: ResourcesRouteWithChildren,
+  ResourcesRoute: ResourcesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  GuidesSlugRoute: GuidesSlugRoute,
+  ResourcesSlugRoute: ResourcesSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

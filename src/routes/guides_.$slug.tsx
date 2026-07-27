@@ -19,7 +19,7 @@ const CATEGORY_LABEL: Record<Guide["category"], string> = {
   tools_guide: "Tools",
 };
 
-export const Route = createFileRoute("/guides/$slug")({
+export const Route = createFileRoute("/guides_/$slug")({
   head: ({ params }) => ({
     meta: [
       { title: `Guide — Osman Visuals` },
