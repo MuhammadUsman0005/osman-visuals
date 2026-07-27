@@ -42,17 +42,16 @@ export const Route = createFileRoute("/guides")({
 
 function Guides() {
   const { data } = useQuery({
-    queryKey: ["guides"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("guides")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data as Guide[];
-    },
-  });
-
+  queryKey: ["guides"],
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from("guides")
+      .select("*")
+      .order("display_order", { ascending: true }); // <-- Yahan update karna hai
+    if (error) throw error;
+    return data as Guide[];
+  },
+});
   const featured = data?.find((g) => g.featured);
   const rest = data?.filter((g) => !g.featured) ?? [];
 

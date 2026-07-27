@@ -2,14 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  ArrowLeft,
-  Check,
-  Download,
-  Star,
-  Instagram,
-  Circle,
-} from "lucide-react";
+import { ArrowLeft, Check, Download, Star, Instagram, Circle } from "lucide-react";
 import {
   readFollowed,
   persistFollowed,
@@ -252,7 +245,7 @@ function ResourcePage() {
                   ) : (
                     <Circle className="w-4 h-4 text-bone/30" />
                   )}
-                  <span>Enter your email</span>
+                  <span>Enter your email to unlock instant access </span>
                 </li>
               </ul>
 
@@ -270,10 +263,10 @@ function ResourcePage() {
                   >
                     <Instagram className="w-3.5 h-3.5" />
                     {followClickCount === 0
-                      ? "Follow @osmanvisuals"
+                      ? "Follow osmanvisuals"
                       : followClickCount === 1
-                      ? "Tap Follow once more →"
-                      : "Followed — thanks!"}
+                        ? "Follow osmanvisuals"
+                        : "Followed!"}
                   </a>
                   <button
                     disabled={followClickCount < 2}
@@ -298,7 +291,7 @@ function ResourcePage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@studio.com"
+                    placeholder="Enter your email address"
                     maxLength={255}
                     className="flex-1 bg-void border hairline px-4 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
                   />
@@ -324,7 +317,7 @@ function ResourcePage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@studio.com"
+                  placeholder="Enter your email address"
                   maxLength={255}
                   className="flex-1 bg-void border hairline px-4 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
                 />
@@ -345,12 +338,21 @@ function ResourcePage() {
             <p className="eyebrow mb-6">Questions</p>
             <div className="divide-y hairline">
               {resource.faqs.map((f, i) => (
-                <details key={i} className="group py-4">
-                  <summary className="cursor-pointer list-none flex items-start justify-between gap-4 text-bone hover:text-gold">
+                <details key={i} className="group py-4 overflow-hidden">
+                  <summary className="cursor-pointer list-none flex items-start justify-between gap-4 text-bone hover:text-gold select-none">
                     <span className="font-display text-lg">{f.question}</span>
-                    <span className="text-gold/60 group-open:rotate-45 transition-transform">+</span>
+                    {/* Plus icon jo khulne par rotate aur color change karega */}
+                    <span className="text-gold/60 group-open:rotate-45 group-open:text-gold transition-transform duration-300 ease-in-out text-xl leading-none">
+                      +
+                    </span>
                   </summary>
-                  <p className="mt-3 text-bone/70 leading-relaxed">{f.answer}</p>
+
+                  {/* Smooth slide down animation container */}
+                  <div className="grid grid-rows-[0fr] group-open:grid-rows-[1fr] transition-all duration-300 ease-in-out">
+                    <div className="overflow-hidden">
+                      <p className="mt-3 text-bone/70 leading-relaxed pt-1 pb-2">{f.answer}</p>
+                    </div>
+                  </div>
                 </details>
               ))}
             </div>

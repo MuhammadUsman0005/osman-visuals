@@ -73,12 +73,11 @@ function Gallery() {
 
       <section className="mx-auto max-w-7xl px-6 lg:px-10 py-12">
         {isLoading ? (
-          <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 [column-fill:_balance]">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
               <div
                 key={i}
-                className="mb-4 break-inside-avoid bg-surface border hairline animate-pulse"
-                style={{ height: `${180 + (i % 3) * 70}px` }}
+                className="bg-surface border hairline aspect-[4/5] animate-pulse"
               />
             ))}
           </div>
@@ -91,16 +90,16 @@ function Gallery() {
             </p>
           </div>
         ) : (
-          <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 [column-fill:_balance]">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {withImages.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setActive(p)}
-                className="relative mb-4 block w-full break-inside-avoid border hairline overflow-hidden group cursor-pointer"
+                className="relative block w-full aspect-[4/5] border hairline overflow-hidden group cursor-pointer"
                 aria-label={`View ${p.title}`}
               >
                 {/* 1. Zoom-in animation */}
-                <img
+                <img  
                   src={galleryImage(p)!}
                   alt={p.title}
                   loading="lazy"

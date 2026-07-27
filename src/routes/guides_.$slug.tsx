@@ -1,9 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react"; // useState add karein
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Copy, Check } from "lucide-react"; // Copy aur Check icons add karein
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
+// Yeh function file mein upar kahin bhi rakh dein
+function CodeBlock({ children, ...props }: any) {
+  const [copied, setCopied] = useState(false);
+
+  // <code> tag ke andar se text nikalne ke liye
+  const rawText = children?.props?.children;
+  const textToCopy = Array.isArray(rawText) ? rawText.join("") : String(rawText || "");
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(textToCopy);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); // 2 second baad wapas Copy icon show hoga
+  };
+
+  return (
+    <div className="relative group my-6">
+      {/* Code Container */}
+      <pre
+        {...props}
+        className="bg-surface p-4 border hairline rounded overflow-x-auto text-sm pr-14"
+      >
+        {children}
+      </pre>
+
+      {/* Copy Button */}
+      <button
+        onClick={handleCopy}
+        className="absolute top-3 right-3 p-1.5 rounded bg-[#111111] border hairline text-bone/50 hover:text-gold transition-colors"
+        title="Copy prompt"
+      >
+        {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+      </button>
+    </div>
+  );
+}
 type Guide = {
   id: string;
   slug: string;
@@ -30,25 +67,6 @@ export const Route = createFileRoute("/guides_/$slug")({
   }),
   component: GuidePage,
 });
-
-function renderMarkdown(md: string) {
-  // Minimal renderer: ## headings, paragraphs.
-  const blocks = md.split(/\n\n+/);
-  return blocks.map((b, i) => {
-    if (b.startsWith("## ")) {
-      return (
-        <h2 key={i} className="font-display text-3xl text-bone mt-12 mb-4">
-          {b.replace(/^##\s+/, "")}
-        </h2>
-      );
-    }
-    return (
-      <p key={i} className="text-bone/75 leading-relaxed mb-5 text-[17px]">
-        {b}
-      </p>
-    );
-  });
-}
 
 function GuidePage() {
   const { slug } = Route.useParams();
@@ -81,6 +99,7 @@ function GuidePage() {
         .from("guides")
         .select("id, slug, title, category, read_time")
         .neq("slug", slug)
+        .order("display_order", { ascending: true }) // <-- Yeh line add karein
         .limit(3);
       if (error) throw error;
       return data;
@@ -126,7 +145,34 @@ function GuidePage() {
         <h1 className="mt-4 font-display text-4xl md:text-5xl text-bone leading-tight">
           {guide.title}
         </h1>
-        <div className="mt-10 border-t hairline pt-10">{renderMarkdown(guide.body)}</div>
+
+        {/* Yahan ReactMarkdown laga diya hai */}
+        <div
+          className="mt-10 border-t hairline pt-10 text-bone/80 space-y-4 leading-relaxed 
+  [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-2 
+  [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-2 
+  [&_h2]:font-display [&_h2]:text-3xl [&_h2]:text-bone [&_h2]:mt-10 [&_h2]:mb-4 
+  [&_blockquote]:border-l-2 [&_blockquote]:border-gold [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-bone/90 [&_blockquote]:my-6
+  [&_code]:font-mono [&_code]:text-gold [&_code]:text-sm
+  [&_a]:text-gold [&_a]:underline hover:[&_a]:text-bone
+  [&_img]:w-full [&_img]:border [&_img]:hairline [&_img]:my-8
+  [&_table]:w-full [&_table]:my-8 [&_table]:border-collapse [&_table]:text-sm
+  [&_th]:border-b [&_th]:border-gold/30 [&_th]:p-3 [&_th]:text-left [&_th]:text-bone [&_th]:font-display [&_th]:text-lg
+  [&_td]:border-b [&_td]:border-bone/10 [&_td]:p-3"
+        >
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ pre: CodeBlock }}>
+            {guide.body}
+          </ReactMarkdown>
+        </div>
+        <div className="mt-16 pt-8 border-t hairline flex items-center">
+          <Link
+            to="/guides"
+            className="group flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-bone/50 hover:text-gold transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            Back to Guides
+          </Link>
+        </div>
       </article>
 
       {related && related.length > 0 && (
