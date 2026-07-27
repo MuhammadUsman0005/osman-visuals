@@ -50,11 +50,17 @@ function About() {
             storytellers produce high quality visuals with consistency and precision.
           </p>
 
-          {/* Credentials strip */}
-          <div className="mt-6 flex flex-wrap items-center">
-            <span className="eyebrow">BS ARTIFICIAL INTELLIGENCE STUDENT</span>
-            <span className="eyebrow pl-4 border-l hairline">FOUNDED 2026</span>
-            <span className="eyebrow pl-4 border-l hairline">PREMIUM PROMPTS & RESOURCES</span>
+         {/* Credentials strip */}
+          <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-5">
+            <span className="eyebrow border-l hairline pl-3 sm:border-l-0 sm:pl-0">
+              BS ARTIFICIAL INTELLIGENCE STUDENT
+            </span>
+            <span className="eyebrow border-l hairline pl-3 sm:pl-5">
+              FOUNDED 2026
+            </span>
+            <span className="eyebrow border-l hairline pl-3 sm:pl-5">
+              PREMIUM PROMPTS & RESOURCES
+            </span>
           </div>
         </div>
       </div>

@@ -19,6 +19,7 @@ import { Route as LicensingRouteImport } from './routes/licensing'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
 
@@ -72,6 +73,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuidesSlugRoute = GuidesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/resources/$slug': typeof ResourcesSlugRoute
 }
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/resources/$slug': typeof ResourcesSlugRoute
 }
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/resources/$slug': typeof ResourcesSlugRoute
 }
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/refunds'
     | '/resources'
     | '/sitemap.xml'
+    | '/terms'
     | '/guides/$slug'
     | '/resources/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/refunds'
     | '/resources'
     | '/sitemap.xml'
+    | '/terms'
     | '/guides/$slug'
     | '/resources/$slug'
   id:
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/refunds'
     | '/resources'
     | '/sitemap.xml'
+    | '/terms'
     | '/guides/$slug'
     | '/resources/$slug'
   fileRoutesById: FileRoutesById
@@ -182,6 +194,7 @@ export interface RootRouteChildren {
   RefundsRoute: typeof RefundsRoute
   ResourcesRoute: typeof ResourcesRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -256,6 +269,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides/$slug': {
       id: '/guides/$slug'
       path: '/$slug'
@@ -307,6 +327,7 @@ const rootRouteChildren: RootRouteChildren = {
   RefundsRoute: RefundsRoute,
   ResourcesRoute: ResourcesRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

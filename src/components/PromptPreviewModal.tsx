@@ -368,6 +368,16 @@ export function PromptPreviewModal({
                   </>
                 )}
               </div>
+              <div className="mt-auto pt-8">
+                <Link
+                  to="/gallery"
+                  onClick={onClose}
+                  className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest text-bone/50 hover:text-gold transition-colors"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                  Back to Gallery
+                </Link>
+              </div>
             </div>
           </div>
         </div>

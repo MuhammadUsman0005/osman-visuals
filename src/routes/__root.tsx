@@ -262,8 +262,13 @@ function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link to="/terms" className="hover:text-gold">
+               Terms & Conditions
+              </Link>
+            </li>
+            <li>
               <Link to="/refunds" className="hover:text-gold">
-                Refund policy
+                Privacy Policy
               </Link>
             </li>
           </ul>
