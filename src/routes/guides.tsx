@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowUpRight } from "lucide-react";
@@ -23,7 +23,7 @@ const CATEGORY_LABEL: Record<Guide["category"], string> = {
 export const Route = createFileRoute("/guides")({
   head: () => ({
     meta: [
-      { title: "Guides — Osman Visuals" },
+      { title: "Guides | Osman Visuals" },
       {
         name: "description",
         content: "Guides on prompting, identity preservation, and the AI tools we actually use.",
@@ -62,10 +62,14 @@ function Guides() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10 pt-20 pb-12">
           <p className="eyebrow">Cat. VII — Guides</p>
           <h1 className="mt-4 font-display text-5xl md:text-6xl text-bone leading-tight">
-            The manual.
+            Master the Craft.
           </h1>
           <p className="mt-4 text-bone/70 max-w-xl">
-            Prompting tutorials, identity preservation, and the tools we return to.
+            Go beyond prompts and learn the complete workflow behind professional AI imagery.
+            Explore expert guides covering identity preservation, prompt engineering, composition,
+            lighting, camera direction, color grading, reference management, negative prompting, and
+            advanced creative techniques that help produce consistent, cinematic, and professional
+            quality results.
           </p>
         </div>
       </section>
@@ -120,6 +124,7 @@ function Guides() {
           ))}
         </div>
       </section>
+      <Outlet />
     </>
   );
 }

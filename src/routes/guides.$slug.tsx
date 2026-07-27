@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -51,6 +52,9 @@ function renderMarkdown(md: string) {
 
 function GuidePage() {
   const { slug } = Route.useParams();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
 
   const {
     data: guide,

@@ -13,7 +13,7 @@ const schema = z.object({
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Osman Visuals" },
+      { title: "Contact | Osman Visuals" },
       {
         name: "description",
         content:

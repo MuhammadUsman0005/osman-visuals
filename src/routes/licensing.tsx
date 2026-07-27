@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/licensing")({
   head: () => ({
     meta: [
-      { title: "Licensing Agreement — Osman Visuals" },
+      { title: "Licensing Agreement | Osman Visuals" },
       {
         name: "description",
         content:

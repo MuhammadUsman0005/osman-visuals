@@ -49,7 +49,7 @@ function StarRating({ value }: { value: number | null }) {
 export const Route = createFileRoute("/resources")({
   head: () => ({
     meta: [
-      { title: "Resources — Osman Visuals" },
+      { title: "Resources | Osman Visuals" },
       {
         name: "description",
         content:

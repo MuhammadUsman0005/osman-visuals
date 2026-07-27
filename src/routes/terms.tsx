@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
-      { title: "Terms & Conditions — Osman Visuals" },
+      { title: "Terms & Conditions | Osman Visuals" },
       {
         name: "description",
         content:
@@ -32,15 +32,14 @@ function TermsAndConditions() {
       <p className="mt-4 text-sm text-bone/50">Last Updated: July 2026</p>
 
       <div className="mt-10 border-t hairline pt-10 space-y-10 text-[15px] md:text-base leading-relaxed">
-        
         {/* Intro */}
         <div className="space-y-4">
           <p>Welcome to Osman Visuals.</p>
           <p>
-            These Terms & Conditions govern your access to and use of the Osman Visuals website, 
-            including The Vault, digital products, educational resources, prompt libraries, downloads, 
-            and all related services. By accessing or using this website, you agree to these Terms & Conditions. 
-            If you do not agree, please do not use this website.
+            These Terms & Conditions govern your access to and use of the Osman Visuals website,
+            including The Vault, digital products, educational resources, prompt libraries,
+            downloads, and all related services. By accessing or using this website, you agree to
+            these Terms & Conditions. If you do not agree, please do not use this website.
           </p>
         </div>
 
@@ -48,15 +47,19 @@ function TermsAndConditions() {
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">1. Acceptance of Terms</h2>
           <p>
-            By using Osman Visuals, creating an account, downloading resources, or purchasing digital 
-            products, you confirm that you have read, understood, and agreed to these Terms & Conditions.
+            By using Osman Visuals, creating an account, downloading resources, or purchasing
+            digital products, you confirm that you have read, understood, and agreed to these Terms
+            & Conditions.
           </p>
         </section>
 
         {/* 2. About Osman Visuals */}
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">2. About Osman Visuals</h2>
-          <p className="mb-2">Osman Visuals is a digital platform focused on AI creativity and visual design. Our services may include:</p>
+          <p className="mb-2">
+            Osman Visuals is a digital platform focused on AI creativity and visual design. Our
+            services may include:
+          </p>
           <ul className="list-disc pl-5 mb-4 space-y-1.5 marker:text-gold/50">
             <li>AI Prompt Packs</li>
             <li>Premium Prompt Libraries</li>
@@ -80,16 +83,19 @@ function TermsAndConditions() {
             <li>Keeping your account information accurate.</li>
             <li>All activities performed under your account.</li>
           </ul>
-          <p>We reserve the right to suspend or terminate accounts involved in fraud, abuse, or violations of these Terms.</p>
+          <p>
+            We reserve the right to suspend or terminate accounts involved in fraud, abuse, or
+            violations of these Terms.
+          </p>
         </section>
 
         {/* 4. Digital Products */}
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">4. Digital Products</h2>
           <p>
-            All products sold on Osman Visuals are digital. No physical items will be shipped. 
-            After successful payment, eligible products become available for download or access 
-            according to the product description.
+            All products sold on Osman Visuals are digital. No physical items will be shipped. After
+            successful payment, eligible products become available for download or access according
+            to the product description.
           </p>
         </section>
 
@@ -97,13 +103,17 @@ function TermsAndConditions() {
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">5. License</h2>
           <p className="mb-4">
-            Unless otherwise stated, every purchase grants you a personal, non-exclusive, non-transferable license.
+            Unless otherwise stated, every purchase grants you a personal, non-exclusive,
+            non-transferable license.
           </p>
-          
+
           <h3 className="text-bone font-medium mb-2">You may:</h3>
           <ul className="list-disc pl-5 mb-6 space-y-1.5 marker:text-gold/50">
             <li>Use prompts for personal projects.</li>
-            <li>Use prompts in commercial creative work that results in original outputs, where permitted by the product license.</li>
+            <li>
+              Use prompts in commercial creative work that results in original outputs, where
+              permitted by the product license.
+            </li>
             <li>Modify prompts for your own workflow.</li>
           </ul>
 
@@ -117,7 +127,9 @@ function TermsAndConditions() {
             <li>Claim our prompts as your own work.</li>
             <li>Remove copyright or ownership notices.</li>
           </ul>
-          <p className="italic text-bone/60">Purchasing a product does not transfer ownership of the intellectual property.</p>
+          <p className="italic text-bone/60">
+            Purchasing a product does not transfer ownership of the intellectual property.
+          </p>
         </section>
 
         {/* 6. Intellectual Property */}
@@ -139,8 +151,9 @@ function TermsAndConditions() {
             <li>Creative Assets</li>
           </ul>
           <p>
-            is owned by Osman Visuals or used under appropriate rights and is protected by copyright 
-            and intellectual property laws. Unauthorized copying or redistribution is strictly prohibited.
+            is owned by Osman Visuals or used under appropriate rights and is protected by copyright
+            and intellectual property laws. Unauthorized copying or redistribution is strictly
+            prohibited.
           </p>
         </section>
 
@@ -148,10 +161,11 @@ function TermsAndConditions() {
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">7. AI Generated Content</h2>
           <p>
-            Many images displayed on Osman Visuals are created using AI image generation technologies 
-            combined with original prompt engineering, editing, creative direction, and post processing. 
-            Gallery images are provided for inspiration, education, and portfolio purposes. Because AI 
-            models may evolve over time, identical results cannot be guaranteed.
+            Many images displayed on Osman Visuals are created using AI image generation
+            technologies combined with original prompt engineering, editing, creative direction, and
+            post processing. Gallery images are provided for inspiration, education, and portfolio
+            purposes. Because AI models may evolve over time, identical results cannot be
+            guaranteed.
           </p>
         </section>
 
@@ -159,8 +173,9 @@ function TermsAndConditions() {
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">8. Educational Content</h2>
           <p>
-            Guides, tutorials, workflows, and educational materials are intended to help users improve 
-            their creative skills. They should not be considered professional legal, financial, or technical advice.
+            Guides, tutorials, workflows, and educational materials are intended to help users
+            improve their creative skills. They should not be considered professional legal,
+            financial, or technical advice.
           </p>
         </section>
 
@@ -168,7 +183,7 @@ function TermsAndConditions() {
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">9. Pricing</h2>
           <p>
-            Prices may change without prior notice. Changes do not affect completed purchases. 
+            Prices may change without prior notice. Changes do not affect completed purchases.
             Promotions, discounts, and limited time offers may end at any time.
           </p>
         </section>
@@ -177,8 +192,9 @@ function TermsAndConditions() {
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">10. Refund Policy</h2>
           <p className="mb-2">
-            Due to the nature of digital products, all sales are generally final once the product has 
-            been delivered or downloaded. However, we may review refund requests in exceptional situations, including:
+            Due to the nature of digital products, all sales are generally final once the product
+            has been delivered or downloaded. However, we may review refund requests in exceptional
+            situations, including:
           </p>
           <ul className="list-disc pl-5 mb-4 space-y-1.5 marker:text-gold/50">
             <li>Duplicate purchases.</li>
@@ -193,9 +209,9 @@ function TermsAndConditions() {
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">11. Availability</h2>
           <p>
-            We strive to keep Osman Visuals available at all times. However, we do not guarantee 
-            uninterrupted access. Maintenance, updates, technical issues, or circumstances beyond our 
-            control may temporarily affect availability.
+            We strive to keep Osman Visuals available at all times. However, we do not guarantee
+            uninterrupted access. Maintenance, updates, technical issues, or circumstances beyond
+            our control may temporarily affect availability.
           </p>
         </section>
 
@@ -218,9 +234,10 @@ function TermsAndConditions() {
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">13. Third Party Services</h2>
           <p>
-            Our website may integrate with trusted third party providers such as payment processors, 
-            hosting services, authentication providers, analytics platforms, and cloud services. Your use 
-            of those services may also be subject to their respective terms and privacy policies.
+            Our website may integrate with trusted third party providers such as payment processors,
+            hosting services, authentication providers, analytics platforms, and cloud services.
+            Your use of those services may also be subject to their respective terms and privacy
+            policies.
           </p>
         </section>
 
@@ -228,7 +245,7 @@ function TermsAndConditions() {
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">14. Limitation of Liability</h2>
           <p className="mb-2">
-            Osman Visuals is provided on an "as available" and "as is" basis. While we strive for 
+            Osman Visuals is provided on an "as available" and "as is" basis. While we strive for
             accuracy and quality, we do not guarantee that:
           </p>
           <ul className="list-disc pl-5 mb-4 space-y-1.5 marker:text-gold/50">
@@ -238,7 +255,7 @@ function TermsAndConditions() {
             <li>The website will always operate without interruption.</li>
           </ul>
           <p>
-            To the maximum extent permitted by law, Osman Visuals shall not be liable for indirect, 
+            To the maximum extent permitted by law, Osman Visuals shall not be liable for indirect,
             incidental, or consequential damages arising from the use of our website or products.
           </p>
         </section>
@@ -246,7 +263,9 @@ function TermsAndConditions() {
         {/* 15. Termination */}
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">15. Termination</h2>
-          <p className="mb-2">We reserve the right to suspend or permanently terminate access to users who:</p>
+          <p className="mb-2">
+            We reserve the right to suspend or permanently terminate access to users who:
+          </p>
           <ul className="list-disc pl-5 mb-4 space-y-1.5 marker:text-gold/50">
             <li>Violate these Terms.</li>
             <li>Abuse our services.</li>
@@ -254,16 +273,18 @@ function TermsAndConditions() {
             <li>Redistribute our products without authorization.</li>
             <li>Attempt to compromise website security.</li>
           </ul>
-          <p className="font-medium text-bone">Termination does not remove existing intellectual property protections.</p>
+          <p className="font-medium text-bone">
+            Termination does not remove existing intellectual property protections.
+          </p>
         </section>
 
         {/* 16. Changes to These Terms */}
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">16. Changes to These Terms</h2>
           <p>
-            We may update these Terms & Conditions at any time. Continued use of the website after 
-            updates constitutes acceptance of the revised Terms. The "Last Updated" date will indicate 
-            the latest revision.
+            We may update these Terms & Conditions at any time. Continued use of the website after
+            updates constitutes acceptance of the revised Terms. The "Last Updated" date will
+            indicate the latest revision.
           </p>
         </section>
 
@@ -271,45 +292,47 @@ function TermsAndConditions() {
         <section>
           <h2 className="font-display text-2xl text-bone mb-4">17. Contact</h2>
           <p className="mb-6">
-            If you have any questions about these Terms, your personal data, or how your information 
+            If you have any questions about these Terms, your personal data, or how your information
             is handled, feel free to{" "}
-            <Link 
-              to="/contact" 
+            <Link
+              to="/contact"
               className="text-gold font-medium hover:underline hover:text-gold/80 transition-colors"
             >
               contact
             </Link>{" "}
             us. We're happy to assist and will respond as soon as possible.
           </p>
-          
+
           {/* Contact Card */}
           <div className="bg-surface border hairline p-6 inline-block w-full sm:w-auto">
-            <p className="font-display text-xl text-bone mb-3">Osman Visuals</p>
-            <div className="space-y-2 text-sm">
-              <p>
-                <span className="text-bone/50 w-20 inline-block uppercase tracking-widest text-[11px]">Email</span>
-                <a 
-                  href="mailto:usman.artificial552@gmail.com" 
-                  className="hover:text-gold transition-colors"
+            <p className="font-display text-xl text-bone mb-4">Osman Visuals</p>
+            <div className="space-y-4 text-sm">
+              {/* Email */}
+              <div className="flex flex-col space-y-1">
+                <span className="text-bone/50 uppercase tracking-widest text-[11px]">Email</span>
+                <a
+                  href="mailto:usman.artificial552@gmail.com"
+                  className="text-bone hover:text-gold transition-colors break-all"
                 >
                   usman.artificial552@gmail.com
                 </a>
-              </p>
-              <p>
-                <span className="text-bone/50 w-20 inline-block uppercase tracking-widest text-[11px]">Website</span>
-                <a 
-                  href="https://osman-visuals.vercel.app/" 
-                  target="_blank" 
+              </div>
+
+              {/* Website */}
+              <div className="flex flex-col space-y-1">
+                <span className="text-bone/50 uppercase tracking-widest text-[11px]">Website</span>
+                <a
+                  href="https://osman-visuals.vercel.app/"
+                  target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-gold transition-colors"
+                  className="text-bone hover:text-gold transition-colors break-all"
                 >
                   https://osman-visuals.vercel.app
                 </a>
-              </p>
+              </div>
             </div>
           </div>
         </section>
-
       </div>
     </article>
   );
