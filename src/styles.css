@@ -4,20 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -69,17 +55,64 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* ☀️ LIGHT THEME (Adjusted for High Contrast & Editorial Feel) */
 :root {
   --radius: 0.125rem;
-  /* Brand raw values */
+  
+  /* Brand Colors */
+  --void: #F3F2EE;             /* Warm off-white background (allows white cards to pop) */
+  --surface: #FFFFFF;          /* Pure white cards */
+  --bone: #1A1917;             /* Deep black-charcoal for ultra-sharp text */
+  --gold: #9E722F;             /* Rich dark gold for light mode visibility */
+  --gold-hairline: rgba(26, 25, 23, 0.12); /* Visible card & component borders */
+  --ink: #1A1917;
+
+  /* Semantic mapping for light mode */
+  --background: var(--void);
+  --foreground: var(--bone);
+  --card: var(--surface);
+  --card-foreground: var(--bone);
+  --popover: var(--surface);
+  --popover-foreground: var(--bone);
+  --primary: var(--gold);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--surface);
+  --secondary-foreground: var(--bone);
+  --muted: #E8E7E2;
+  --muted-foreground: #525048; /* Darker secondary text for easy reading */
+  --accent: var(--gold);
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --border: var(--gold-hairline);
+  --input: rgba(26, 25, 23, 0.15);
+  --ring: var(--gold);
+  --chart-1: #9E722F;
+  --chart-2: #2563EB;
+  --chart-3: #16A34A;
+  --chart-4: #D97706;
+  --chart-5: #9333EA;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1A1917;
+  --sidebar-primary: #9E722F;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #E8E7E2;
+  --sidebar-accent-foreground: #1A1917;
+  --sidebar-border: #DEDCD5;
+  --sidebar-ring: #9E722F;
+}
+
+/* 🌙 DARK THEME (Original Dark Studio Style) */
+.dark {
+  /* Dark Brand Colors */
   --void: #0B0B0C;
   --surface: #17171A;
   --bone: #F6F3EC;
   --gold: #B8965A;
-  --gold-hairline: rgba(184,150,90,0.25);
+  --gold-hairline: rgba(184, 150, 90, 0.25);
   --ink: #0B0B0C;
 
-  /* Semantic mapping — dark by default (Osman Visuals is a dark editorial site) */
+  /* Semantic mapping for dark mode */
   --background: var(--void);
   --foreground: var(--bone);
   --card: var(--surface);
@@ -97,48 +130,13 @@
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: var(--gold-hairline);
-  --input: rgba(246,243,236,0.12);
+  --input: rgba(246, 243, 236, 0.12);
   --ring: var(--gold);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
-}
-
-.dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.208 0.042 265.755);
   --sidebar-foreground: oklch(0.984 0.003 247.858);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -194,4 +192,80 @@
   @media (prefers-reduced-motion: reduce) {
     .reveal { animation: none; opacity: 1; transform: none; }
   }
+}
+
+/* ==========================================================
+   ONLY LIGHT MODE OVERRIDES (Dark Mode par zero effect hoga)
+   ========================================================== */
+
+/* 1. Navbar Page Links: Light mode mein dark aur bold, Dark mode untouched */
+html:not(.dark) nav a {
+  color: #1A1917 !important; /* Deep solid dark charcoal */
+  opacity: 1 !important;     /* 70% opacity khatam taake bilkul dark ho */
+  font-weight: 600;
+}
+
+html:not(.dark) nav a:hover {
+  color: #9E722F !important; /* Dark Gold hover effect */
+}
+
+/* 2. Hero Banner: Light mode mein white parda kam taake portrait photo visible ho */
+html:not(.dark) .absolute.bg-gradient-to-r {
+  opacity: 0.65 !important;
+}
+
+/* ==========================================================
+   LIGHT MODE PROMPT CARD READABILITY FIX
+   ========================================================== */
+
+/* 1. Cards Border & Subtle Depth (Cards background se alag ho ke pop karenge) */
+html:not(.dark) .bg-surface {
+  background-color: #ffffff !important;
+  border-color: rgba(26, 25, 23, 0.16) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* Soft shadow for contrast */
+}
+
+/* 2. Card Body Text / Prompt Description (Deep readable charcoal color) */
+html:not(.dark) .bg-surface p,
+html:not(.dark) .bg-surface .text-bone\/70,
+html:not(.dark) .bg-surface .text-bone\/60,
+html:not(.dark) .bg-surface .text-bone\/50 {
+  color: #33322e !important; /* Dark readable text */
+  opacity: 1 !important;
+}
+
+/* 3. AI Model Names (ChatGPT, Midjourney, etc.) */
+html:not(.dark) .bg-surface span.text-bone\/60,
+html:not(.dark) .bg-surface span.text-bone\/50,
+html:not(.dark) .bg-surface .text-xs {
+  color: #57554e !important;
+  opacity: 1 !important;
+}
+
+/* 4. Category Tag Buttons & Bottom Action Borders */
+html:not(.dark) .bg-surface .border,
+html:not(.dark) .bg-surface .hairline,
+html:not(.dark) .bg-surface button {
+  border-color: rgba(26, 25, 23, 0.2) !important;
+  color: #1a1917 !important;
+}
+
+/* 5. Gold Eyebrows & Numbers (NO. 001, FREE, EXCLUSIVE) */
+html:not(.dark) .bg-surface .eyebrow,
+html:not(.dark) .bg-surface .text-gold {
+  color: #9e722f !important;
+  font-weight: 600;
+}
+/* ==========================================================
+   LIGHT MODE CARD HOVER BORDER FIX
+   ========================================================== */
+
+/* Card par hover karne par Gold Border + Subtle Shadow show hoga */
+html:not(.dark) .bg-surface:hover,
+html:not(.dark) .group:hover .bg-surface,
+html:not(.dark) article:hover,
+html:not(.dark) .bg-surface.group:hover {
+  border-color: #9e722f !important; /* Rich Dark Gold border on hover */
+  box-shadow: 0 6px 20px rgba(158, 114, 47, 0.15) !important; /* Subtle gold shadow */
+  transition: all 0.25s ease-in-out;
 }

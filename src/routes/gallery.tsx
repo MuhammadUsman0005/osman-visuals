@@ -100,6 +100,34 @@ function Gallery() {
       </section>
 
       <section className="mx-auto max-w-7xl px-6 lg:px-10 py-12">
+        {/* Selected Category Title & Clear Filter Banner */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 border-b hairline pb-4">
+          <div>
+            <p className="eyebrow">Gallery View</p>
+            <h2 className="font-display text-2xl md:text-3xl text-bone mt-1 flex items-center gap-3">
+              <span>{catFilter}</span>
+              {activeSearch && (
+                <span className="text-gold text-base font-sans font-normal opacity-90">
+                  — Search: "{activeSearch}"
+                </span>
+              )}
+            </h2>
+          </div>
+
+          {/* Reset filter button */}
+          {(catFilter !== "All" || activeSearch) && (
+            <button
+              onClick={() => {
+                setCatFilter("All");
+                setActiveSearch("");
+              }}
+              className="text-xs uppercase tracking-widest text-gold hover:text-bone border border-gold-hairline hover:border-gold px-3.5 py-1.5 rounded-full transition-all"
+            >
+              Clear Filter ×
+            </button>
+          )}
+        </div>
+
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (

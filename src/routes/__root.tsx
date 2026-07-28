@@ -7,12 +7,49 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { MobileNav } from "../components/MobileNav";
-import { Instagram } from "lucide-react";
+import { Instagram, Moon, Sun } from "lucide-react";
+
+// Theme Switcher Component
+function ThemeToggle() {
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("theme");
+      if (saved) return saved === "dark";
+    }
+    return true; // Default dark mode
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDark]);
+
+  return (
+    <button
+      onClick={() => setIsDark((prev) => !prev)}
+      type="button"
+      aria-label="Toggle theme"
+      className="p-2 rounded-full border hairline bg-surface text-bone hover:text-gold transition-colors flex items-center justify-center cursor-pointer"
+    >
+      {isDark ? (
+        <Sun className="w-4 h-4 text-gold" />
+      ) : (
+        <Moon className="w-4 h-4 text-bone" />
+      )}
+    </button>
+  );
+}
 
 function NotFoundComponent() {
   return (
@@ -141,7 +178,7 @@ function RootComponent() {
 
 function SiteChrome({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-void text-bone">
+    <div className="min-h-screen flex flex-col bg-void text-bone transition-colors duration-300">
       <SiteHeader />
       <main className="flex-1">{children}</main>
       <SiteFooter />
@@ -158,24 +195,47 @@ function SiteHeader() {
     { to: "/about", label: "About" },
     { to: "/contact", label: "Contact" },
   ] as const;
+
   return (
-    <header className="border-b hairline bg-void/80 backdrop-blur sticky top-0 z-40">
+    <header className="border-b hairline bg-surface/80 backdrop-blur sticky top-0 z-40 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-baseline gap-2 group">
-          <span className="font-display text-xl tracking-tight text-bone group-hover:text-gold transition-colors">
-            Osman Visuals
-          </span>
-          <span className="eyebrow hidden sm:inline">THE STUDIO</span>
-        </Link>
-        <MobileNav links={links} />
+        {/* Left: Logo */}
+        <div className="flex-1 flex justify-start">
+          <Link to="/" className="flex items-baseline gap-2 group">
+            <span className="font-display text-xl tracking-tight text-bone group-hover:text-gold transition-colors">
+              Osman Visuals
+            </span>
+            <span className="eyebrow hidden sm:inline">THE STUDIO</span>
+          </Link>
+        </div>
+
+        {/* Center: Desktop Nav Links */}
+        <nav className="hidden md:flex items-center gap-8 justify-center">
+          {links.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="text-xs uppercase tracking-widest text-bone/70 hover:text-gold transition-colors [&.active]:text-gold font-medium"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Right: Theme Toggle & Mobile Menu */}
+        <div className="flex-1 flex items-center justify-end gap-3">
+          <ThemeToggle />
+          <div className="md:hidden">
+            <MobileNav links={links} />
+          </div>
+        </div>
       </div>
     </header>
   );
 }
-
 function SiteFooter() {
   return (
-    <footer className="mt-24 border-t hairline bg-void">
+    <footer className="mt-24 border-t hairline bg-surface/90 backdrop-blur-md transition-colors duration-300 shadow-inner">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 py-12 grid gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
           <p className="font-display text-2xl text-bone">Osman Visuals</p>
@@ -222,22 +282,22 @@ function SiteFooter() {
           <p className="eyebrow mb-3">Explore</p>
           <ul className="space-y-2 text-sm text-bone/70">
             <li>
-              <Link to="/gallery" className="hover:text-gold">
+              <Link to="/gallery" className="hover:text-gold transition-colors">
                 Gallery
               </Link>
             </li>
             <li>
-              <Link to="/library" className="hover:text-gold">
+              <Link to="/library" className="hover:text-gold transition-colors">
                 Vault
               </Link>
             </li>
             <li>
-              <Link to="/resources" className="hover:text-gold">
+              <Link to="/resources" className="hover:text-gold transition-colors">
                 Resources
               </Link>
             </li>
             <li>
-              <Link to="/guides" className="hover:text-gold">
+              <Link to="/guides" className="hover:text-gold transition-colors">
                 Guides
               </Link>
             </li>
@@ -247,34 +307,34 @@ function SiteFooter() {
           <p className="eyebrow mb-3">Studio</p>
           <ul className="space-y-2 text-sm text-bone/70">
             <li>
-              <Link to="/about" className="hover:text-gold">
+              <Link to="/about" className="hover:text-gold transition-colors">
                 About
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="hover:text-gold">
+              <Link to="/contact" className="hover:text-gold transition-colors">
                 Contact
               </Link>
             </li>
             <li>
-              <Link to="/licensing" className="hover:text-gold">
+              <Link to="/licensing" className="hover:text-gold transition-colors">
                 Licensing
               </Link>
             </li>
             <li>
-              <Link to="/terms" className="hover:text-gold">
-               Terms & Conditions
+              <Link to="/terms" className="hover:text-gold transition-colors">
+                Terms & Conditions
               </Link>
             </li>
             <li>
-              <Link to="/refunds" className="hover:text-gold">
+              <Link to="/refunds" className="hover:text-gold transition-colors">
                 Privacy Policy
               </Link>
             </li>
           </ul>
         </div>
       </div>
-      <div className="border-t hairline">
+      <div className="border-t hairline bg-void/30">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-5 flex items-center justify-between text-xs text-bone/50">
           <span>© {new Date().getFullYear()} Osman Visuals. All rights reserved.</span>
           <span className="eyebrow">Cat. MMXXVI</span>

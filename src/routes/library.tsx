@@ -158,31 +158,44 @@ function Library() {
       </section>
 
       <section className="mx-auto max-w-7xl px-6 lg:px-10 py-12">
-        <div className="flex flex-col gap-6">
+        {/* Clean SearchBar container without extra category buttons */}
+        <div className="w-full">
           <SearchBar
             suggestionSource={suggestionSource}
             onSubmit={(term) => setActiveSearch(term)}
             onCategorySelect={(c) => setCat(c)}
           />
-
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((c) => (
-              <button
-                key={c}
-                onClick={() => setCat(c)}
-                className={`px-4 py-2 text-xs uppercase tracking-widest border transition-colors ${
-                  cat === c
-                    ? "border-gold text-gold bg-gold/5"
-                    : "border-gold-hairline text-bone/60 hover:text-bone hover:border-bone/30"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
         </div>
 
         <div className="mt-10">
+          {/* Selected Category Heading & Search Term Display */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-8 border-b hairline pb-4">
+            <div>
+              <p className="eyebrow">Current View</p>
+              <h2 className="font-display text-2xl md:text-3xl text-bone mt-1 flex items-center gap-3">
+                <span>{cat}</span>
+                {activeSearch && (
+                  <span className="text-gold text-base font-sans font-normal opacity-90">
+                    — Search: "{activeSearch}"
+                  </span>
+                )}
+              </h2>
+            </div>
+
+            {/* Reset button if a category or search term is applied */}
+            {(cat !== "All" || activeSearch) && (
+              <button
+                onClick={() => {
+                  setCat("All");
+                  setActiveSearch("");
+                }}
+                className="text-xs uppercase tracking-widest text-gold hover:text-bone border border-gold-hairline hover:border-gold px-3.5 py-1.5 rounded-full transition-all"
+              >
+                Clear Filter ×
+              </button>
+            )}
+          </div>
+
           {isLoading ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (

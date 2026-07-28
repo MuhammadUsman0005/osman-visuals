@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
-// Category thumbnails live in the public "category-thumbs" Supabase bucket.
-// File names must match exactly (lowercase, hyphenated).
 const THUMB_BASE =
   "https://dixabllfqgytqhvujhdq.supabase.co/storage/v1/object/public/category-thumbs/";
 
@@ -27,8 +25,6 @@ export function SearchBar({
   onCategorySelect,
 }: {
   placeholder?: string;
-  // Flat list of searchable strings (titles, tags, categories) to derive
-  // live suggestions from as the visitor types.
   suggestionSource: string[];
   onSubmit: (term: string) => void;
   onCategorySelect: (category: string) => void;
@@ -37,19 +33,25 @@ export function SearchBar({
   const [term, setTerm] = useState("");
   const [lastSubmitted, setLastSubmitted] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  // Close dropdown on outside click or Escape key
   useEffect(() => {
-    if (!open) return;
-    const t = setTimeout(() => inputRef.current?.focus(), 50);
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") setOpen(false);
     }
+    document.addEventListener("mousedown", handleClickOutside);
     window.addEventListener("keydown", onKey);
     return () => {
-      clearTimeout(t);
+      document.removeEventListener("mousedown", handleClickOutside);
       window.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, []);
 
   const suggestions = useMemo(() => {
     const t = term.trim().toLowerCase();
@@ -73,118 +75,105 @@ export function SearchBar({
   }
 
   return (
-    <>
-      <button
-        onClick={() => setOpen(true)}
-        className="relative w-full max-w-md flex items-center bg-surface border hairline pl-10 pr-10 py-3 text-left"
+    <div ref={containerRef} className="relative w-full max-w-2xl mx-auto my-6">
+      {/* Search Input Bar (Centered, Rounded, Premium Look) */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          submit(term);
+        }}
+        className="relative flex items-center bg-surface border hairline rounded-full shadow-lg p-1.5 focus-within:border-gold transition-all duration-300"
       >
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-bone/40" />
-        <span className={`text-sm truncate ${lastSubmitted ? "text-bone" : "text-bone/30"}`}>
-          {lastSubmitted || placeholder}
-        </span>
-        {lastSubmitted && (
-          <span
-            role="button"
-            tabIndex={0}
+        <Search className="w-5 h-5 ml-3.5 text-bone/40 shrink-0" />
+        
+        <input
+          ref={inputRef}
+          type="search"
+          value={term}
+          onFocus={() => setOpen(true)}
+          onChange={(e) => {
+            setTerm(e.target.value);
+            if (!open) setOpen(true);
+          }}
+          placeholder={placeholder}
+          maxLength={100}
+          className="w-full bg-transparent px-3 py-2 text-sm text-bone placeholder:text-bone/40 focus:outline-none [&::-webkit-search-cancel-button]:hidden"
+        />
+
+        {/* Clear Button */}
+        {term && (
+          <button
+            type="button"
+            onClick={() => setTerm("")}
             aria-label="Clear search"
-            onClick={(e) => {
-              e.stopPropagation();
-              submit("");
-            }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-bone/40 hover:text-bone/70"
+            className="p-1 text-bone/40 hover:text-bone mr-1 transition-colors"
           >
             <X className="w-4 h-4" />
-          </span>
+          </button>
         )}
-      </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-50 bg-void/90 backdrop-blur-sm flex items-start justify-center p-4 py-10 overflow-y-auto"
-          onClick={() => setOpen(false)}
+        {/* Premium Search Button at the End */}
+        <button
+          type="submit"
+          className="bg-gold hover:bg-gold/90 text-void font-semibold text-xs tracking-wider uppercase px-5 py-2.5 rounded-full transition-all duration-300 shrink-0 flex items-center gap-1.5 shadow-md"
         >
-          <div
-            className="w-full max-w-xl bg-surface border hairline p-5"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                submit(term);
-              }}
-              className="relative"
-            >
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-bone/40" />
-              <input
-                ref={inputRef}
-                type="search"
-                enterKeyHint="search"
-                value={term}
-                onChange={(e) => setTerm(e.target.value)}
-                placeholder={placeholder}
-                maxLength={100}
-                className="w-full bg-void border hairline pl-10 pr-10 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
-              />
-              {term && (
-                <button
-                  type="button"
-                  onClick={() => setTerm("")}
-                  aria-label="Clear search"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-bone/40 hover:text-bone/70"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </form>
+          <Search className="w-3.5 h-3.5" />
+          <span>Search</span>
+        </button>
+      </form>
 
-            {term ? (
-              <div className="mt-4">
-                {suggestions.length > 0 ? (
-                  <ul className="divide-y divide-gold-hairline">
-                    {suggestions.map((s) => (
-                      <li key={s}>
-                        <button
-                          onClick={() => submit(s)}
-                          className="w-full text-left py-2.5 text-sm text-bone/80 hover:text-gold transition-colors flex items-center gap-2"
-                        >
-                          <Search className="w-3.5 h-3.5 text-bone/30 shrink-0" />
-                          <span className="truncate">{s}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-bone/40 py-3">Press Enter to search "{term}"</p>
-                )}
-              </div>
-            ) : (
-              <div className="mt-5">
-                <p className="eyebrow mb-3">Categories</p>
-                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
-                  {CATEGORY_THUMBS.map((c) => (
-                    <button
-                      key={c.label}
-                      onClick={() => selectCategory(c.label)}
-                      className="flex flex-col items-center gap-1.5 group"
-                    >
-                      <span className="w-12 h-12 sm:w-14 sm:h-14 border hairline overflow-hidden group-hover:border-gold/60 transition-colors">
-                        <img
-                          src={THUMB_BASE + c.file}
-                          alt={c.label}
-                          className="w-full h-full object-cover"
-                        />
-                      </span>
-                      <span className="text-[9px] text-bone/60 text-center leading-tight group-hover:text-gold transition-colors line-clamp-2">
-                        {c.label}
-                      </span>
-                    </button>
+      {/* Dropdown Window (Positioned directly under the search bar) */}
+      {open && (
+        <div className="absolute top-full left-0 right-0 mt-3 z-50 bg-surface border hairline rounded-2xl shadow-2xl p-5 backdrop-blur-md animate-in fade-in zoom-in-95 duration-200">
+          {term ? (
+            <div>
+              {suggestions.length > 0 ? (
+                <ul className="divide-y divide-gold-hairline">
+                  {suggestions.map((s) => (
+                    <li key={s}>
+                      <button
+                        onClick={() => submit(s)}
+                        className="w-full text-left py-2.5 text-sm text-bone/80 hover:text-gold transition-colors flex items-center gap-2"
+                      >
+                        <Search className="w-3.5 h-3.5 text-bone/30 shrink-0" />
+                        <span className="truncate">{s}</span>
+                      </button>
+                    </li>
                   ))}
-                </div>
+                </ul>
+              ) : (
+                <p className="text-sm text-bone/40 py-2">
+                  Press Enter or click Search for "{term}"
+                </p>
+              )}
+            </div>
+          ) : (
+            <div>
+              <p className="eyebrow mb-3">Categories</p>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 max-h-[280px] overflow-y-auto pr-1 custom-scrollbar">
+                {CATEGORY_THUMBS.map((c) => (
+                  <button
+                    key={c.label}
+                    onClick={() => selectCategory(c.label)}
+                    className="flex flex-col items-center gap-1.5 group text-center"
+                  >
+                    <span className="w-12 h-12 border hairline rounded-xl overflow-hidden group-hover:border-gold transition-colors">
+                      <img
+                        src={THUMB_BASE + c.file}
+                        alt={c.label}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </span>
+                    <span className="text-[10px] text-bone/70 leading-tight group-hover:text-gold transition-colors line-clamp-2">
+                      {c.label}
+                    </span>
+                  </button>
+                ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
-    </>
+    </div>
   );
 }

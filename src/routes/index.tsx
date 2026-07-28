@@ -92,7 +92,7 @@ function Home() {
               to="/guides"
               className="text-sm text-bone/80 hover:text-gold border-b border-gold-hairline hover:border-gold pb-0.5"
             >
-              The Identity Framework
+             The Knowledge Archive
             </Link>
           </div>
         </div>
