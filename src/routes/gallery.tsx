@@ -4,6 +4,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Prompt } from "@/components/PromptCard";
+import { SearchBar } from "@/components/SearchBar";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -46,7 +47,27 @@ function Gallery() {
   });
 
   const withImages = (prompts ?? []).filter((p) => Boolean(galleryImage(p)));
+  const [activeSearch, setActiveSearch] = useState("");
+  const [catFilter, setCatFilter] = useState<string>("All");
 
+  const filteredImages = withImages.filter((p) => {
+    if (catFilter !== "All") {
+      if (!p.categories || !p.categories.includes(catFilter)) return false;
+    }
+    const term = activeSearch.trim().toLowerCase();
+    if (!term) return true;
+    const inTitle = p.title.toLowerCase().includes(term);
+    const inTags = Array.isArray(p.tags) && p.tags.some((t) => t.toLowerCase().includes(term));
+    const inCats =
+      Array.isArray(p.categories) && p.categories.some((c) => c.toLowerCase().includes(term));
+    return inTitle || inTags || inCats;
+  });
+
+  const suggestionSource = withImages.flatMap((p) => [
+    p.title,
+    ...(p.tags ?? []),
+    ...(p.categories ?? []),
+  ]);
   function viewPrompt(p: Prompt) {
     setActive(null);
     navigate({ to: "/library", search: { open: p.slug } });
@@ -68,30 +89,38 @@ function Gallery() {
             unlock the exact prompt and transform it into something uniquely your own using your
             subject, your style, and your vision.
           </p>
+          <div className="mt-8 flex justify-center">
+            <SearchBar
+              suggestionSource={suggestionSource}
+              onSubmit={(term) => setActiveSearch(term)}
+              onCategorySelect={(c) => setCatFilter(c)}
+            />
+          </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-6 lg:px-10 py-12">
         {isLoading ? (
-         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-surface border hairline aspect-[4/5] animate-pulse"
-              />
+              <div key={i} className="bg-surface border hairline aspect-[4/5] animate-pulse" />
             ))}
           </div>
-        ) : withImages.length === 0 ? (
+        ) : filteredImages.length === 0 ? (
           <div className="border hairline bg-surface py-24 text-center">
             <p className="eyebrow">Empty wall</p>
-            <p className="mt-3 font-display text-2xl text-bone">No plates hung yet.</p>
+            <p className="mt-3 font-display text-2xl text-bone">
+              {withImages.length === 0 ? "No plates hung yet." : "Nothing matches that search yet."}
+            </p>
             <p className="mt-2 text-sm text-bone/60">
-              Add preview images to prompts in the Vault and they'll appear here automatically.
+              {withImages.length === 0
+                ? "Add preview images to prompts in the Vault and they'll appear here automatically."
+                : "Try a broader category or a shorter term."}
             </p>
           </div>
         ) : (
-         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {withImages.map((p) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filteredImages.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setActive(p)}
@@ -99,7 +128,7 @@ function Gallery() {
                 aria-label={`View ${p.title}`}
               >
                 {/* 1. Zoom-in animation */}
-                <img  
+                <img
                   src={galleryImage(p)!}
                   alt={p.title}
                   loading="lazy"
@@ -180,7 +209,7 @@ function Gallery() {
                             onClick={() => {
                               setActive(null);
                               // Yahan 'as any' add kar diya hai taake TypeScript ka error na aaye
-                              navigate({ to: "/library", search: { category: c } } as any);
+                              navigate({ to: "/library", search: { category: c } });
                             }}
                             className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-2 py-1 hover:bg-gold/10 hover:text-gold hover:border-gold/30 transition-colors cursor-pointer"
                           >

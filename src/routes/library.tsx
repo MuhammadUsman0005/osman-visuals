@@ -1,10 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PromptCard, type Prompt } from "@/components/PromptCard";
 import { PromptPreviewModal } from "@/components/PromptPreviewModal";
-import { Search, X as XIcon } from "lucide-react";
+import { SearchBar } from "@/components/SearchBar";
 
 export const Route = createFileRoute("/library")({
   validateSearch: (search: Record<string, unknown>): { open?: string; category?: string } => ({
@@ -33,9 +33,7 @@ export const Route = createFileRoute("/library")({
 });
 
 function Library() {
-  const [q, setQ] = useState("");
   const [activeSearch, setActiveSearch] = useState("");
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const { open, category } = Route.useSearch();
   const navigate = useNavigate();
   const [dismissedSlug, setDismissedSlug] = useState<string | null>(null);
@@ -72,6 +70,11 @@ function Library() {
     },
   });
 
+  // Flat list of titles/tags/categories used to power live search suggestions.
+  const suggestionSource = useMemo(
+    () => (prompts ?? []).flatMap((p) => [p.title, ...(p.tags ?? []), ...(p.categories ?? [])]),
+    [prompts],
+  );
   // Auto-open a specific prompt's preview when arriving via ?open=<slug>
   // (used by the Gallery page's "View Prompt" button). dismissedSlug guards
   // against a race with navigate() clearing the URL — without it, closing
@@ -156,40 +159,11 @@ function Library() {
 
       <section className="mx-auto max-w-7xl px-6 lg:px-10 py-12">
         <div className="flex flex-col gap-6">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setActiveSearch(q);
-              searchInputRef.current?.blur();
-            }}
-            className="relative max-w-md"
-          >
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-bone/40" />
-            <input
-              ref={searchInputRef}
-              type="search"
-              enterKeyHint="search"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search titles, prompts, tags…"
-              maxLength={100}
-              className="w-full bg-surface border hairline pl-10 pr-10 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold [&::-webkit-search-cancel-button]:hidden"
-            />
-            {q && (
-              <button
-                type="button"
-                onClick={() => {
-                  setQ("");
-                  setActiveSearch("");
-                  searchInputRef.current?.focus();
-                }}
-                aria-label="Clear search"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-bone/40 hover:text-bone/70 transition-colors"
-              >
-                <XIcon className="w-4 h-4" />
-              </button>
-            )}
-          </form>
+          <SearchBar
+            suggestionSource={suggestionSource}
+            onSubmit={(term) => setActiveSearch(term)}
+            onCategorySelect={(c) => setCat(c)}
+          />
 
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((c) => (
