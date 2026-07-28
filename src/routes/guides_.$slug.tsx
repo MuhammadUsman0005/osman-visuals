@@ -59,7 +59,7 @@ const CATEGORY_LABEL: Record<Guide["category"], string> = {
 export const Route = createFileRoute("/guides_/$slug")({
   head: ({ params }) => ({
     meta: [
-      { title: `Guide — Osman Visuals` },
+      { title: `Guide | Osman Visuals` },
       { property: "og:url", content: `/guides/${params.slug}` },
       { property: "og:type", content: "article" },
     ],

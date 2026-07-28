@@ -108,18 +108,18 @@ function Library() {
   // Pagination state: page and pageSize responsive to window width
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(() => {
-    if (typeof window === "undefined") return 42;
+    if (typeof window === "undefined") return 48;
     const w = window.innerWidth;
-    if (w >= 1024) return 42;
-    if (w >= 768) return 21;
-    return 9;
+    if (w >= 1024) return 48;
+    if (w >= 768) return 24;
+    return 15;
   });
 
   // update pageSize on resize
   useEffect(() => {
     function update() {
       const w = window.innerWidth;
-      const newSize = w >= 1024 ? 42 : w >= 768 ? 21 : 9;
+      const newSize = w >= 1024 ? 48 : w >= 768 ? 24 : 15;
       setPageSize(newSize);
     }
     update();

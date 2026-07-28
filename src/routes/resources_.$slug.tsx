@@ -34,7 +34,7 @@ type Resource = {
 export const Route = createFileRoute("/resources_/$slug")({
   head: ({ params }) => ({
     meta: [
-      { title: `Resource — Osman Visuals` },
+      { title: `Resource | Osman Visuals` },
       { property: "og:url", content: `/resources/${params.slug}` },
       { property: "og:type", content: "article" },
     ],
@@ -338,20 +338,18 @@ function ResourcePage() {
             <p className="eyebrow mb-6">Questions</p>
             <div className="divide-y hairline">
               {resource.faqs.map((f, i) => (
-                <details key={i} className="group py-4 overflow-hidden">
-                  <summary className="cursor-pointer list-none flex items-start justify-between gap-4 text-bone hover:text-gold select-none">
+                <details key={i} className="group py-4">
+                  {/* Safari default marker hatane ke liye [&::-webkit-details-marker]:hidden add kiya gaya hai */}
+                  <summary className="cursor-pointer list-none flex items-start justify-between gap-4 text-bone hover:text-gold select-none [&::-webkit-details-marker]:hidden">
                     <span className="font-display text-lg">{f.question}</span>
-                    {/* Plus icon jo khulne par rotate aur color change karega */}
                     <span className="text-gold/60 group-open:rotate-45 group-open:text-gold transition-transform duration-300 ease-in-out text-xl leading-none">
                       +
                     </span>
                   </summary>
 
-                  {/* Smooth slide down animation container */}
-                  <div className="grid grid-rows-[0fr] group-open:grid-rows-[1fr] transition-all duration-300 ease-in-out">
-                    <div className="overflow-hidden">
-                      <p className="mt-3 text-bone/70 leading-relaxed pt-1 pb-2">{f.answer}</p>
-                    </div>
+                  {/* Mobile aur Desktop dono par smooth slide down animation */}
+                  <div className="max-h-0 overflow-hidden opacity-0 group-open:max-h-[500px] group-open:opacity-100 transition-all duration-500 ease-in-out">
+                    <p className="mt-3 text-bone/70 leading-relaxed pt-1 pb-2">{f.answer}</p>
                   </div>
                 </details>
               ))}
