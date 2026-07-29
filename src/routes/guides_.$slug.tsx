@@ -29,14 +29,17 @@ function CodeBlock({ children, ...props }: any) {
       >
         {children}
       </pre>
-
       {/* Copy Button */}
       <button
         onClick={handleCopy}
-        className="absolute top-3 right-3 p-1.5 rounded bg-[#111111] border hairline text-bone/50 hover:text-gold transition-colors"
-        title="Copy prompt"
+        className="absolute top-2.5 right-2.5 p-2 rounded border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-200 hover:text-gold dark:hover:text-gold hover:border-gold/60 shadow-sm transition-all flex items-center justify-center"
+        title="Copy code"
       >
-        {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+        {copied ? (
+          <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+        ) : (
+          <Copy className="w-4 h-4" />
+        )}
       </button>
     </div>
   );
@@ -122,7 +125,7 @@ function GuidePage() {
         <h1 className="mt-3 font-display text-4xl text-bone">This guide isn't filed here.</h1>
         <Link
           to="/guides"
-          className="mt-6 inline-block border-b border-gold text-bone hover:text-gold"
+          className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest text-bone/50 hover:text-gold transition-colors font-bold"
         >
           Back to guides
         </Link>
@@ -135,7 +138,7 @@ function GuidePage() {
       <article className="mx-auto max-w-3xl px-6 lg:px-10 pt-16 pb-20">
         <Link
           to="/guides"
-          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-bone/60 hover:text-gold mb-10"
+          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-bone/60 hover:text-gold mb-10 font-bold"
         >
           <ArrowLeft className="w-3.5 h-3.5" /> Back to guides
         </Link>
@@ -167,7 +170,7 @@ function GuidePage() {
         <div className="mt-16 pt-8 border-t hairline flex items-center">
           <Link
             to="/guides"
-            className="group flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-bone/50 hover:text-gold transition-colors"
+            className="group flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-bone/60 hover:text-gold transition-colors"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             Back to Guides

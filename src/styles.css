@@ -51,23 +51,46 @@
   --color-gold: var(--gold);
   --color-gold-hairline: var(--gold-hairline);
   --color-ink: var(--ink);
+  /* Independent, theme-proof tokens for content sitting ON TOP OF PHOTOGRAPHS
+     (Gallery image titles, carousel controls). These never change with the
+     site theme — a photo always needs a dark scrim + light text regardless
+     of whether the page around it is in light or dark mode. Keeping these
+     as their own tokens is what stops "fix one thing, break another" — they
+     share nothing with --bone/--void/--gold, so tuning UI-surface colors can
+     never accidentally touch these, and vice versa. */
+  --color-on-photo-text: var(--on-photo-text);
+  --color-on-photo-gold: var(--on-photo-gold);
+  --color-on-photo-chip: var(--on-photo-chip);
+  --color-on-photo-dot: var(--on-photo-dot);
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
-/* ☀️ LIGHT THEME (Adjusted for High Contrast & Editorial Feel) */
+/* Theme-independent tokens (same value in both light and dark — see note
+   above). Declared once at :root, outside the light/dark blocks below, so
+   neither theme's overrides can touch them. */
+:root {
+  --on-photo-text: #f6f3ec;
+  --on-photo-gold: #d8b67c;
+  --on-photo-chip: rgba(11, 11, 12, 0.75);
+  --on-photo-dot: rgba(246, 243, 236, 0.35);
+}
+
+/* ☀️ LIGHT THEME — warm ivory paper + white cards, editorial and premium */
 :root {
   --radius: 0.125rem;
-  
-  /* Brand Colors */
-  --void: #F3F2EE;             /* Warm off-white background (allows white cards to pop) */
-  --surface: #FFFFFF;          /* Pure white cards */
-  --bone: #1A1917;             /* Deep black-charcoal for ultra-sharp text */
-  --gold: #9E722F;             /* Rich dark gold for light mode visibility */
-  --gold-hairline: rgba(26, 25, 23, 0.12); /* Visible card & component borders */
-  --ink: #1A1917;
 
-  /* Semantic mapping for light mode */
+  --void: #f0eeec;    /* Soft Warm Ivory Page Background */
+  --surface: #ffffff;
+  /* pure white cards, pop against the ivory */
+  --bone: #000000;
+  /* near-black warm ink for primary text */
+  --gold: #8a6a32;
+  /* refined antique bronze-gold, AA on white */
+  --gold-hairline: rgba(30, 28, 25, 0.15);
+  /* neutral charcoal hairline */
+  --ink: #1e1c19;
+
   --background: var(--void);
   --foreground: var(--bone);
   --card: var(--surface);
@@ -75,44 +98,42 @@
   --popover: var(--surface);
   --popover-foreground: var(--bone);
   --primary: var(--gold);
-  --primary-foreground: #FFFFFF;
+  --primary-foreground: #ffffff;
   --secondary: var(--surface);
   --secondary-foreground: var(--bone);
-  --muted: #E8E7E2;
-  --muted-foreground: #525048; /* Darker secondary text for easy reading */
+  --muted: #ece9e2;
+  --muted-foreground: #383630;
   --accent: var(--gold);
-  --accent-foreground: #FFFFFF;
-  --destructive: #DC2626;
-  --destructive-foreground: #FFFFFF;
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
   --border: var(--gold-hairline);
-  --input: rgba(26, 25, 23, 0.15);
+  --input: rgba(30, 28, 25, 0.15);
   --ring: var(--gold);
-  --chart-1: #9E722F;
-  --chart-2: #2563EB;
-  --chart-3: #16A34A;
-  --chart-4: #D97706;
-  --chart-5: #9333EA;
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #1A1917;
-  --sidebar-primary: #9E722F;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #E8E7E2;
-  --sidebar-accent-foreground: #1A1917;
-  --sidebar-border: #DEDCD5;
-  --sidebar-ring: #9E722F;
+  --chart-1: #8a6a32;
+  --chart-2: #2563eb;
+  --chart-3: #16a34a;
+  --chart-4: #d97706;
+  --chart-5: #9333ea;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1e1c19;
+  --sidebar-primary: #8a6a32;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ece9e2;
+  --sidebar-accent-foreground: #1e1c19;
+  --sidebar-border: #ded9d0;
+  --sidebar-ring: #8a6a32;
 }
 
-/* 🌙 DARK THEME (Original Dark Studio Style) */
+/* 🌙 DARK THEME (unchanged — untouched per request) */
 .dark {
-  /* Dark Brand Colors */
-  --void: #0B0B0C;
-  --surface: #17171A;
-  --bone: #F6F3EC;
-  --gold: #B8965A;
+  --void: #0b0b0c;
+  --surface: #17171a;
+  --bone: #f6f3ec;
+  --gold: #b8965a;
   --gold-hairline: rgba(184, 150, 90, 0.25);
-  --ink: #0B0B0C;
+  --ink: #0b0b0c;
 
-  /* Semantic mapping for dark mode */
   --background: var(--void);
   --foreground: var(--bone);
   --card: var(--surface);
@@ -160,7 +181,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, .font-display {
+  h1,
+  h2,
+  h3,
+  .font-display {
     font-family: var(--font-display);
     font-optical-sizing: auto;
     letter-spacing: -0.01em;
@@ -186,86 +210,31 @@
   }
 
   @keyframes reveal-up {
-    to { opacity: 1; transform: translateY(0); }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .reveal { animation: none; opacity: 1; transform: none; }
+    .reveal {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
   }
+
+  @layer base {
+
+    /* Soft shadow for Light Mode cards only */
+    html:not(.dark) .bg-surface {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    }
+  }
+  /* Sabhi buttons, links aur clickable roles par hand cursor apply karne ke liye */
+button,
+a,
+[role="button"] {
+  cursor: pointer;
 }
-
-/* ==========================================================
-   ONLY LIGHT MODE OVERRIDES (Dark Mode par zero effect hoga)
-   ========================================================== */
-
-/* 1. Navbar Page Links: Light mode mein dark aur bold, Dark mode untouched */
-html:not(.dark) nav a {
-  color: #1A1917 !important; /* Deep solid dark charcoal */
-  opacity: 1 !important;     /* 70% opacity khatam taake bilkul dark ho */
-  font-weight: 600;
-}
-
-html:not(.dark) nav a:hover {
-  color: #9E722F !important; /* Dark Gold hover effect */
-}
-
-/* 2. Hero Banner: Light mode mein white parda kam taake portrait photo visible ho */
-html:not(.dark) .absolute.bg-gradient-to-r {
-  opacity: 0.65 !important;
-}
-
-/* ==========================================================
-   LIGHT MODE PROMPT CARD READABILITY FIX
-   ========================================================== */
-
-/* 1. Cards Border & Subtle Depth (Cards background se alag ho ke pop karenge) */
-html:not(.dark) .bg-surface {
-  background-color: #ffffff !important;
-  border-color: rgba(26, 25, 23, 0.16) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* Soft shadow for contrast */
-}
-
-/* 2. Card Body Text / Prompt Description (Deep readable charcoal color) */
-html:not(.dark) .bg-surface p,
-html:not(.dark) .bg-surface .text-bone\/70,
-html:not(.dark) .bg-surface .text-bone\/60,
-html:not(.dark) .bg-surface .text-bone\/50 {
-  color: #33322e !important; /* Dark readable text */
-  opacity: 1 !important;
-}
-
-/* 3. AI Model Names (ChatGPT, Midjourney, etc.) */
-html:not(.dark) .bg-surface span.text-bone\/60,
-html:not(.dark) .bg-surface span.text-bone\/50,
-html:not(.dark) .bg-surface .text-xs {
-  color: #57554e !important;
-  opacity: 1 !important;
-}
-
-/* 4. Category Tag Buttons & Bottom Action Borders */
-html:not(.dark) .bg-surface .border,
-html:not(.dark) .bg-surface .hairline,
-html:not(.dark) .bg-surface button {
-  border-color: rgba(26, 25, 23, 0.2) !important;
-  color: #1a1917 !important;
-}
-
-/* 5. Gold Eyebrows & Numbers (NO. 001, FREE, EXCLUSIVE) */
-html:not(.dark) .bg-surface .eyebrow,
-html:not(.dark) .bg-surface .text-gold {
-  color: #9e722f !important;
-  font-weight: 600;
-}
-/* ==========================================================
-   LIGHT MODE CARD HOVER BORDER FIX
-   ========================================================== */
-
-/* Card par hover karne par Gold Border + Subtle Shadow show hoga */
-html:not(.dark) .bg-surface:hover,
-html:not(.dark) .group:hover .bg-surface,
-html:not(.dark) article:hover,
-html:not(.dark) .bg-surface.group:hover {
-  border-color: #9e722f !important; /* Rich Dark Gold border on hover */
-  box-shadow: 0 6px 20px rgba(158, 114, 47, 0.15) !important; /* Subtle gold shadow */
-  transition: all 0.25s ease-in-out;
 }

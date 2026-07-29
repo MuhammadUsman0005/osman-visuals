@@ -126,28 +126,27 @@ export function PromptPreviewModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-void/90 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-300"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-[2px] overflow-y-auto animate-in fade-in duration-300 p-4"
       onClick={onClose}
     >
+      {/* Modal Card Div */}
       <div
-        className="relative w-full max-w-6xl my-10 mx-4 overflow-visible transform transition-all animate-in zoom-in-[0.95] slide-in-from-bottom-4 duration-300"
+        className="relative w-full max-w-5xl rounded-2xl overflow-hidden bg-surface border border-black/10 dark:border-white/10 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        aria-label={prompt.title}
       >
         <button
           onClick={(e) => {
             e.stopPropagation();
             onClose();
           }}
-          className="absolute -right-2 -top-2 z-[60] text-bone/70 hover:text-bone bg-void/80 border hairline p-1.5"
+          className="absolute top-0 right-0 z-[60] w-8 h-8 flex items-center justify-center rounded-md border hairline bg-surface hover:bg-stone-200 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-200 transition-colors"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
         </button>
 
-        <div className="border hairline bg-surface">
+        {/* NAYA CODE */}
+        <div className="border hairline bg-surface rounded-2xl overflow-hidden">
           <div className="grid w-full lg:grid-cols-[4fr_5fr]">
             <div className="aspect-[4/5] w-full bg-void border-b hairline overflow-hidden lg:border-b-0 lg:border-r hairline relative">
               {/* Image carousel (up to 3 images) */}
@@ -183,10 +182,10 @@ export function PromptPreviewModal({
                             setCurrentImageIndex((i) => (i - 1 + images.length) % images.length);
                           }}
                           aria-label="Previous image"
-                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-void/70 border hairline p-2 rounded-full flex items-center justify-center touch-manipulation"
+                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-on-photo-chip border hairline p-2 rounded-full flex items-center justify-center touch-manipulation"
                           style={{ width: 36, height: 36 }}
                         >
-                          <ChevronLeft className="w-4 h-4 text-bone" />
+                          <ChevronLeft className="w-4 h-4 text-on-photo-text" />
                         </button>
 
                         <button
@@ -195,10 +194,10 @@ export function PromptPreviewModal({
                             setCurrentImageIndex((i) => (i + 1) % images.length);
                           }}
                           aria-label="Next image"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-void/70 border hairline p-2 rounded-full flex items-center justify-center touch-manipulation"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-on-photo-chip border hairline p-2 rounded-full flex items-center justify-center touch-manipulation"
                           style={{ width: 36, height: 36 }}
                         >
-                          <ChevronRight className="w-4 h-4 text-bone" />
+                          <ChevronRight className="w-4 h-4 text-on-photo-text" />
                         </button>
 
                         <div className="absolute left-0 right-0 bottom-3 flex items-center justify-center gap-2">
@@ -206,7 +205,7 @@ export function PromptPreviewModal({
                             <span
                               key={idx}
                               className={`w-2 h-2 rounded-full ${
-                                idx === currentImageIndex ? "bg-gold" : "bg-bone/30"
+                                idx === currentImageIndex ? "bg-on-photo-gold" : "bg-on-photo-dot"
                               }`}
                             />
                           ))}
@@ -243,7 +242,7 @@ export function PromptPreviewModal({
                   {prompt.categories.slice(0, 3).map((c) => (
                     <span
                       key={c}
-                      className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-1.5 py-0.5"
+                      className="text-[10px] uppercase tracking-widest text-stone-700 dark:text-bone/60 border border-stone-300 dark:border-bone/20 px-1.5 py-0.5 font-medium"
                     >
                       {c}
                     </span>
@@ -361,8 +360,12 @@ export function PromptPreviewModal({
                         VERIFY & UNLOCK PROMPT
                       </button>
                     </div>
-                    {warning && <p className="mt-3 text-sm text-rose-300 text-left">{warning}</p>}
-                    <p className="mt-3 text-[11px] text-bone/40 text-left">
+                    {warning && (
+                      <p className="mt-3 text-sm text-red-800 dark:text-rose-300 font-medium text-left">
+                        {warning}
+                      </p>
+                    )}
+                    <p className="mt-3 text-[12px] text-bone/60 text-left">
                       Access is securely saved on this device.
                     </p>
                   </>
@@ -372,7 +375,7 @@ export function PromptPreviewModal({
                 <Link
                   to="/gallery"
                   onClick={onClose}
-                  className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest text-bone/50 hover:text-gold transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest text-bone/60 hover:text-gold transition-colors font-bold"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   Back to Gallery

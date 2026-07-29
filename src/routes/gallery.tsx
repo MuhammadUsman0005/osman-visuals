@@ -164,19 +164,19 @@ function Gallery() {
                 />
 
                 <span
-                  className={`absolute top-2 right-2 text-[9px] sm:text-[10px] uppercase tracking-widest px-1.5 py-0.5 sm:px-2 sm:py-1 bg-void/80 backdrop-blur-sm border hairline z-20 ${
-                    p.is_premium ? "text-gold" : "text-bone/80"
+                  className={`absolute top-2 right-2 text-[9px] sm:text-[10px] uppercase tracking-widest px-1.5 py-0.5 sm:px-2 sm:py-1 bg-on-photo-chip backdrop-blur-sm border hairline z-20 ${
+                    p.is_premium ? "text-on-photo-gold" : "text-on-photo-text/80"
                   }`}
                 >
                   {p.is_premium ? "Exclusive" : "Free"}
                 </span>
 
-                {/* 2. Gradient Overlay: Mobile par visible, Desktop par sirf hover par */}
+                {/* 2. Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-60 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10" />
 
-                {/* 3. Text & Username Container: Isme bhi lg:opacity-0 aur lg:group-hover:opacity-100 add kar diya hai */}
+                {/* 3. Text & Username Container */}
                 <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 ease-out flex flex-col gap-1 z-20 items-start">
-                  <span className="text-left text-sx sm:text-base text-bone font-medium leading-tight line-clamp-2 drop-shadow-md">
+                  <span className="text-left text-sx sm:text-base text-on-photo-text font-medium leading-tight line-clamp-2 drop-shadow-md">
                     {p.title}
                   </span>
 
@@ -185,7 +185,7 @@ function Gallery() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="text-[10px] tracking-wider font-body text-gold/90 hover:text-gold hover:underline pointer-events-auto"
+                    className="text-[10px] tracking-wider font-body text-on-photo-gold hover:text-on-photo-text hover:underline pointer-events-auto"
                   >
                     @osmanvisuals
                   </a>
@@ -196,69 +196,67 @@ function Gallery() {
         )}
       </section>
 
+      {/* FLOATING MODAL WITH PREVIEW BACKDROP */}
       {active && (
         <div
-          className="fixed inset-0 z-50 bg-void/90 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-300"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px] p-4 overflow-y-auto animate-in fade-in duration-300"
           onClick={() => setActive(null)}
         >
-          <div className="min-h-full flex items-start justify-center p-4 py-10">
-            <div
-              className="relative w-full max-w-2xl border hairline bg-surface transform transition-all animate-in zoom-in-[0.95] slide-in-from-bottom-4 duration-300"
-              onClick={(e) => e.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-label={active.title}
+          <div
+            className="relative w-full max-w-2xl rounded-2xl overflow-hidden border hairline bg-surface shadow-2xl transform transition-all animate-in zoom-in-[0.95] slide-in-from-bottom-4 duration-300"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={active.title}
+          >
+            <button
+              onClick={() => setActive(null)}
+              className="absolute right-3 top-3 z-10 text-bone/60 hover:text-bone bg-void/60 border hairline p-1.5"
+              aria-label="Close"
             >
-              <button
-                onClick={() => setActive(null)}
-                className="absolute right-3 top-3 z-10 text-bone/60 hover:text-bone bg-void/60 border hairline p-1.5"
-                aria-label="Close"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <X className="w-4 h-4" />
+            </button>
 
-              <div className="w-full bg-void border-b hairline">
-                <img
-                  src={galleryImage(active)!}
-                  alt={active.title}
-                  className="w-full h-auto max-h-[70vh] object-contain mx-auto"
-                />
-              </div>
+            <div className="w-full bg-void border-b hairline">
+              <img
+                src={galleryImage(active)!}
+                alt={active.title}
+                className="w-full h-auto max-h-[70vh] object-contain mx-auto"
+              />
+            </div>
 
-              <div className="px-5 py-5 sm:px-6 sm:py-6">
-                <div className="flex items-start justify-between gap-4 flex-wrap">
-                  <div>
-                    <h2 className="font-display text-xl sm:text-2xl text-bone">{active.title}</h2>
-                    {active.categories && active.categories.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-2">
-                        {active.categories.map((c) => (
-                          <button
-                            key={c}
-                            onClick={() => {
-                              setActive(null);
-                              // Yahan 'as any' add kar diya hai taake TypeScript ka error na aaye
-                              navigate({ to: "/library", search: { category: c } });
-                            }}
-                            className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-2 py-1 hover:bg-gold/10 hover:text-gold hover:border-gold/30 transition-colors cursor-pointer"
-                          >
-                            {c}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => viewPrompt(active)}
-                    className="shrink-0 inline-flex items-center gap-2 bg-gold text-void px-5 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
-                  >
-                    View Prompt
-                  </button>
+            <div className="px-5 py-5 sm:px-6 sm:py-6">
+              <div className="flex items-start justify-between gap-4 flex-wrap">
+                <div>
+                  <h2 className="font-display text-xl sm:text-2xl text-bone">{active.title}</h2>
+                  {active.categories && active.categories.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {active.categories.map((c) => (
+                        <button
+                          key={c}
+                          onClick={() => {
+                            setActive(null);
+                            navigate({ to: "/library", search: { category: c } });
+                          }}
+                          className="text-[10px] uppercase tracking-widest text-stone-700 dark:text-bone/60 border border-stone-300 hover:bg-gold/10 hover:text-gold hover:border-gold/30 transition-colors cursor-pointer dark:border-bone/20 px-1.5 py-0.5 font-medium"
+                        >
+                          {c}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-
-                {active.description && (
-                  <p className="mt-4 text-sm text-bone/70 leading-relaxed">{active.description}</p>
-                )}
+                <button
+                  onClick={() => viewPrompt(active)}
+                  className="shrink-0 inline-flex items-center gap-2 bg-gold text-void px-5 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
+                >
+                  View Prompt
+                </button>
               </div>
+
+              {active.description && (
+                <p className="mt-4 text-sm text-bone/70 leading-relaxed">{active.description}</p>
+              )}
             </div>
           </div>
         </div>

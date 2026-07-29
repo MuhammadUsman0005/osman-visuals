@@ -149,7 +149,7 @@ function ResourcePage() {
         <h1 className="mt-3 font-display text-4xl text-bone">This resource isn't filed here.</h1>
         <Link
           to="/resources"
-          className="mt-6 inline-block border-b border-gold text-bone hover:text-gold"
+          className="mt-6 inline-block border-b border-gold text-bone/60 hover:text-gold"
         >
           Back to resources
         </Link>

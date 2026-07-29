@@ -58,7 +58,7 @@ function Home() {
             height={1920}
             className="w-full h-full object-cover object-right opacity-70"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-void via-void/85 to-void/10" />
+         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent pointer-events-none" />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 pt-24 pb-32 md:pt-36 md:pb-48">
           <p className="eyebrow reveal">NO. 001 — OSMAN'S ARCHIVE</p>

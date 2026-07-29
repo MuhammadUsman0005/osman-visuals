@@ -85,7 +85,7 @@ export function PromptCard({
             {prompt.categories.slice(0, 3).map((c) => (
               <span
                 key={c}
-                className="text-[10px] uppercase tracking-widest text-bone/50 border hairline px-1.5 py-0.5"
+                className="text-[10px] uppercase tracking-widest text-stone-700 dark:text-bone/60 border border-stone-300 dark:border-bone/20 px-1.5 py-0.5 font-medium"
               >
                 {c}
               </span>
