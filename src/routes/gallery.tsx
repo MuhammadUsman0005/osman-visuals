@@ -197,70 +197,78 @@ function Gallery() {
       </section>
 
       {/* FLOATING MODAL WITH PREVIEW BACKDROP */}
-      {active && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px] p-4 overflow-y-auto animate-in fade-in duration-300"
+    {/* FLOATING MODAL WITH PREVIEW BACKDROP */}
+{active && (
+  /* 1. Outer Container: Fixed position + Scrollbar */
+  <div
+    className="fixed inset-0 z-50 overflow-y-auto bg-black/40 backdrop-blur-[2px] animate-in fade-in duration-300"
+    onClick={() => setActive(null)}
+  >
+    {/* 2. Inner Wrapper: Flexible height, vertical center & padding */}
+    <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
+      
+      {/* 3. Modal Card */}
+      <div
+        className="relative w-full max-w-2xl rounded-2xl overflow-hidden border hairline bg-surface shadow-2xl transform transition-all animate-in zoom-in-[0.95] slide-in-from-bottom-4 duration-300"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label={active.title}
+      >
+        <button
           onClick={() => setActive(null)}
+          className="absolute right-3 top-3 z-10 text-bone/60 hover:text-bone bg-void/60 border hairline p-1.5"
+          aria-label="Close"
         >
-          <div
-            className="relative w-full max-w-2xl rounded-2xl overflow-hidden border hairline bg-surface shadow-2xl transform transition-all animate-in zoom-in-[0.95] slide-in-from-bottom-4 duration-300"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={active.title}
-          >
-            <button
-              onClick={() => setActive(null)}
-              className="absolute right-3 top-3 z-10 text-bone/60 hover:text-bone bg-void/60 border hairline p-1.5"
-              aria-label="Close"
-            >
-              <X className="w-4 h-4" />
-            </button>
+          <X className="w-4 h-4" />
+        </button>
 
-            <div className="w-full bg-void border-b hairline">
-              <img
-                src={galleryImage(active)!}
-                alt={active.title}
-                className="w-full h-auto max-h-[70vh] object-contain mx-auto"
-              />
-            </div>
+<div className="w-full max-h-[55vh] bg-black border-b hairline flex items-center justify-center overflow-hidden p-2">
+  <img
+    src={galleryImage(active)!}
+    alt={active.title}
+    className="w-full h-auto max-h-[50vh] object-contain mx-auto"
+  />
+</div>
 
-            <div className="px-5 py-5 sm:px-6 sm:py-6">
-              <div className="flex items-start justify-between gap-4 flex-wrap">
-                <div>
-                  <h2 className="font-display text-xl sm:text-2xl text-bone">{active.title}</h2>
-                  {active.categories && active.categories.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mt-2">
-                      {active.categories.map((c) => (
-                        <button
-                          key={c}
-                          onClick={() => {
-                            setActive(null);
-                            navigate({ to: "/library", search: { category: c } });
-                          }}
-                          className="text-[10px] uppercase tracking-widest text-stone-700 dark:text-bone/60 border border-stone-300 hover:bg-gold/10 hover:text-gold hover:border-gold/30 transition-colors cursor-pointer dark:border-bone/20 px-1.5 py-0.5 font-medium"
-                        >
-                          {c}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+        <div className="px-5 py-5 sm:px-6 sm:py-6">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h2 className="font-display text-xl sm:text-2xl text-bone">{active.title}</h2>
+              {active.categories && active.categories.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {active.categories.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => {
+                        setActive(null);
+                        navigate({ to: "/library", search: { category: c } });
+                      }}
+                      className="text-[10px] uppercase tracking-widest text-stone-700 dark:text-bone/60 border border-stone-300 hover:bg-gold/10 hover:text-gold hover:border-gold/30 transition-colors cursor-pointer dark:border-bone/20 px-1.5 py-0.5 font-medium"
+                    >
+                      {c}
+                    </button>
+                  ))}
                 </div>
-                <button
-                  onClick={() => viewPrompt(active)}
-                  className="shrink-0 inline-flex items-center gap-2 bg-gold text-void px-5 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
-                >
-                  View Prompt
-                </button>
-              </div>
-
-              {active.description && (
-                <p className="mt-4 text-sm text-bone/70 leading-relaxed">{active.description}</p>
               )}
             </div>
+            <button
+              onClick={() => viewPrompt(active)}
+              className="shrink-0 inline-flex items-center gap-2 bg-gold text-void px-5 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
+            >
+              View Prompt
+            </button>
           </div>
+
+          {active.description && (
+            <p className="mt-4 text-sm text-bone/70 leading-relaxed">{active.description}</p>
+          )}
         </div>
-      )}
+      </div>
+
+    </div>
+  </div>
+)}
     </>
   );
 }
