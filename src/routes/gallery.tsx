@@ -199,73 +199,92 @@ function Gallery() {
       {/* FLOATING MODAL WITH PREVIEW BACKDROP */}
     {/* FLOATING MODAL WITH PREVIEW BACKDROP */}
 {active && (
-  /* 1. Outer Container: Fixed position + Scrollbar */
   <div
-    className="fixed inset-0 z-50 overflow-y-auto bg-black/40 backdrop-blur-[2px] animate-in fade-in duration-300"
+    className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-[2px] animate-in fade-in duration-300"
     onClick={() => setActive(null)}
   >
-    {/* 2. Inner Wrapper: Flexible height, vertical center & padding */}
-    <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
+    <div className="flex min-h-full items-center justify-center p-3 sm:p-6 my-auto">
       
-      {/* 3. Modal Card */}
+      {/* Outer Modal Card - Now wider (max-w-4xl) to support two columns */}
       <div
-        className="relative w-full max-w-2xl rounded-2xl overflow-hidden border hairline bg-surface shadow-2xl transform transition-all animate-in zoom-in-[0.95] slide-in-from-bottom-4 duration-300"
+        className="relative w-full max-w-4xl my-auto rounded-2xl overflow-hidden bg-void border hairline shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-label={active.title}
       >
+        {/* Close Button - Match Prompt Preview styling */}
         <button
           onClick={() => setActive(null)}
-          className="absolute right-3 top-3 z-10 text-bone/60 hover:text-bone bg-void/60 border hairline p-1.5"
+          className="absolute top-3 right-3 z-[60] w-8 h-8 flex items-center justify-center rounded-md border hairline bg-void/80 backdrop-blur-md hover:bg-surface text-bone transition-colors"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
         </button>
 
-<div className="w-full max-h-[55vh] bg-black border-b hairline flex items-center justify-center overflow-hidden p-2">
-  <img
-    src={galleryImage(active)!}
-    alt={active.title}
-    className="w-full h-auto max-h-[50vh] object-contain mx-auto"
-  />
-</div>
-
-        <div className="px-5 py-5 sm:px-6 sm:py-6">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <h2 className="font-display text-xl sm:text-2xl text-bone">{active.title}</h2>
-              {active.categories && active.categories.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {active.categories.map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => {
-                        setActive(null);
-                        navigate({ to: "/library", search: { category: c } });
-                      }}
-                      className="text-[10px] uppercase tracking-widest text-stone-700 dark:text-bone/60 border border-stone-300 hover:bg-gold/10 hover:text-gold hover:border-gold/30 transition-colors cursor-pointer dark:border-bone/20 px-1.5 py-0.5 font-medium"
-                    >
-                      {c}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            <button
-              onClick={() => viewPrompt(active)}
-              className="shrink-0 inline-flex items-center gap-2 bg-gold text-void px-5 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors"
-            >
-              View Prompt
-            </button>
+        {/* 2-Column Grid System */}
+        <div className="grid w-full lg:grid-cols-2 bg-void overflow-hidden">
+          
+          {/* Left Side: STRICT 4:5 ASPECT RATIO IMAGE CONTAINER */}
+          <div className="aspect-[4/5] w-full bg-black relative flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r hairline">
+            <img
+              src={galleryImage(active)!}
+              alt={active.title}
+              className="w-full h-full object-cover"
+            />
           </div>
 
-          {active.description && (
-            <p className="mt-4 text-sm text-bone/70 leading-relaxed">{active.description}</p>
-          )}
+          {/* Right Side: Scrollable Content Column */}
+     {/* Right Side: Scrollable Content Column */}
+          <div className="h-full w-full px-6 py-8 max-h-[60vh] lg:max-h-none overflow-y-auto flex flex-col bg-surface">
+            
+            <h2 className="font-display text-2xl md:text-3xl text-bone leading-tight">
+              {active.title}
+            </h2>
+
+            {active.categories && active.categories.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-4">
+                {active.categories.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => {
+                      setActive(null);
+                      navigate({ to: "/library", search: { category: c } });
+                    }}
+                    className="text-[10px] uppercase tracking-widest text-stone-700 dark:text-bone/60 border border-stone-300 hover:bg-gold/10 hover:text-gold hover:border-gold/30 transition-colors cursor-pointer dark:border-bone/20 px-1.5 py-0.5 font-medium"
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div className="mt-6">
+              <p className="eyebrow mb-2">About this piece</p>
+              {active.description ? (
+                <p className="text-sm text-bone/70 leading-relaxed">
+                  {active.description}
+                </p>
+              ) : (
+                <p className="text-sm text-bone/40 italic">
+                  No description available for this piece.
+                </p>
+              )}
+            </div>
+
+           {/* Action Button - Flows immediately after description and aligns RIGHT */}
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => viewPrompt(active)}
+                className="inline-flex items-center justify-center gap-2 bg-gold text-void px-6 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors rounded-full"
+              >
+                View Full Prompt
+              </button>
+            </div>
+            
+          </div>
         </div>
       </div>
-
     </div>
   </div>
 )}

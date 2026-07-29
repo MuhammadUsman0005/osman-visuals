@@ -149,74 +149,80 @@ export function PromptPreviewModal({
 
           <div className="border hairline bg-surface rounded-2xl overflow-hidden">
             <div className="grid w-full lg:grid-cols-[4fr_5fr]">
-              <div className="aspect-[4/5] w-full bg-void border-b hairline overflow-hidden lg:border-b-0 lg:border-r hairline relative">
-                {/* Image carousel */}
-                {(() => {
-                  const images =
-                    prompt.preview_image_urls && prompt.preview_image_urls.length
-                      ? prompt.preview_image_urls.slice(0, 3)
-                      : prompt.preview_image_url
-                        ? [prompt.preview_image_url]
-                        : [];
-                  if (images.length === 0) {
-                    return (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <div className="text-center">
-                          <p className="eyebrow">{prompt.catalog_number}</p>
-                          <p className="mt-2 font-display text-2xl text-bone/40">No plate filed</p>
-                        </div>
-                      </div>
-                    );
-                  }
+              {/* Left Side: Fluid Edge-to-Edge Image Container (Matches Gallery behavior) */}
+          <div className="w-full bg-black relative flex flex-col items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r hairline">
+            {(() => {
+              const images =
+                prompt.preview_image_urls && prompt.preview_image_urls.length
+                  ? prompt.preview_image_urls.slice(0, 3)
+                  : prompt.preview_image_url
+                    ? [prompt.preview_image_url]
+                    : [];
 
-                  const imgSrc = images[currentImageIndex % images.length];
+              if (images.length === 0) {
+                return (
+                  <div className="w-full aspect-[4/5] flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="eyebrow">{prompt.catalog_number}</p>
+                      <p className="mt-2 font-display text-2xl text-bone/40">No plate filed</p>
+                    </div>
+                  </div>
+                );
+              }
 
-                  return (
+              const imgSrc = images[currentImageIndex % images.length];
+
+              return (
+                <div className="relative w-full">
+                  {/* Image automatically scales perfectly with window zoom/resize */}
+                  <img
+                    src={imgSrc}
+                    alt={prompt.title}
+                    className="w-full h-auto block m-0 p-0 object-cover"
+                  />
+
+                  {images.length > 1 && (
                     <>
-                      <img src={imgSrc} alt={prompt.title} className="w-full h-full object-cover" />
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentImageIndex((i) => (i - 1 + images.length) % images.length);
+                        }}
+                        aria-label="Previous image"
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-on-photo-chip border hairline p-2 rounded-full flex items-center justify-center touch-manipulation z-10"
+                        style={{ width: 36, height: 36 }}
+                      >
+                        <ChevronLeft className="w-4 h-4 text-on-photo-text" />
+                      </button>
 
-                      {images.length > 1 && (
-                        <>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setCurrentImageIndex((i) => (i - 1 + images.length) % images.length);
-                            }}
-                            aria-label="Previous image"
-                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-on-photo-chip border hairline p-2 rounded-full flex items-center justify-center touch-manipulation"
-                            style={{ width: 36, height: 36 }}
-                          >
-                            <ChevronLeft className="w-4 h-4 text-on-photo-text" />
-                          </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentImageIndex((i) => (i + 1) % images.length);
+                        }}
+                        aria-label="Next image"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-on-photo-chip border hairline p-2 rounded-full flex items-center justify-center touch-manipulation z-10"
+                        style={{ width: 36, height: 36 }}
+                      >
+                        <ChevronRight className="w-4 h-4 text-on-photo-text" />
+                      </button>
 
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setCurrentImageIndex((i) => (i + 1) % images.length);
-                            }}
-                            aria-label="Next image"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-on-photo-chip border hairline p-2 rounded-full flex items-center justify-center touch-manipulation"
-                            style={{ width: 36, height: 36 }}
-                          >
-                            <ChevronRight className="w-4 h-4 text-on-photo-text" />
-                          </button>
-
-                          <div className="absolute left-0 right-0 bottom-3 flex items-center justify-center gap-2">
-                            {images.map((_, idx) => (
-                              <span
-                                key={idx}
-                                className={`w-2 h-2 rounded-full ${
-                                  idx === currentImageIndex ? "bg-on-photo-gold" : "bg-on-photo-dot"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </>
-                      )}
+                      <div className="absolute left-0 right-0 bottom-3 flex items-center justify-center gap-2 z-10">
+                        {images.map((_, idx) => (
+                          <span
+                            key={idx}
+                            className={`w-2 h-2 rounded-full ${
+                              idx === currentImageIndex ? "bg-on-photo-gold" : "bg-on-photo-dot"
+                            }`}
+                          />
+                        ))}
+                      </div>
                     </>
-                  );
-                })()}
-              </div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
 
               <div className="px-6 py-6 lg:max-h-[85vh] lg:overflow-y-auto flex flex-col">
                 <div className="flex items-center justify-between gap-4">
