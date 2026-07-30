@@ -20,6 +20,7 @@ import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as GuidesSlugRouteImport } from './routes/guides_.$slug'
 import { Route as ResourcesSlugRouteImport } from './routes/resources_.$slug'
 
@@ -78,6 +79,11 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuidesSlugRoute = GuidesSlugRouteImport.update({
   id: '/guides_/$slug',
   path: '/guides/$slug',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/resources/$slug': typeof ResourcesSlugRoute
 }
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/resources/$slug': typeof ResourcesSlugRoute
 }
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/guides_/$slug': typeof GuidesSlugRoute
   '/resources_/$slug': typeof ResourcesSlugRoute
 }
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/terms'
+    | '/auth/callback'
     | '/guides/$slug'
     | '/resources/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/terms'
+    | '/auth/callback'
     | '/guides/$slug'
     | '/resources/$slug'
   id:
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/terms'
+    | '/auth/callback'
     | '/guides_/$slug'
     | '/resources_/$slug'
   fileRoutesById: FileRoutesById
@@ -195,6 +207,7 @@ export interface RootRouteChildren {
   ResourcesRoute: typeof ResourcesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   ResourcesSlugRoute: typeof ResourcesSlugRoute
 }
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides_/$slug': {
       id: '/guides_/$slug'
       path: '/guides/$slug'
@@ -307,6 +327,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResourcesRoute: ResourcesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   ResourcesSlugRoute: ResourcesSlugRoute,
 }
