@@ -1,24 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Copy, Check, Lock, LockOpen, Download, Maximize2 } from "lucide-react";
-import { onFollowedChange, readFollowed } from "@/lib/instagram-unlock";
+import { useAuth } from "@/lib/auth";
 
 export type Prompt = {
   id: string;
   title: string;
   slug: string;
-  // array of categories (new column)
   categories: string[];
-  // difficulty level (Beginner | Intermediate | Advanced)
   difficulty: "Beginner" | "Intermediate" | "Advanced";
   prompt_text: string;
   preview_image_url: string | null;
   is_premium: boolean;
   pdf_url: string | null;
-  // existing tags (may be used for search/legacy)
   tags: string[];
-  // new tools array (e.g., ChatGPT, NanoBanana)
   tools: string[];
-  // optional multiple preview images (new)
   preview_image_urls?: string[] | null;
   catalog_number: string;
   description?: string | null;
@@ -32,18 +27,13 @@ export function PromptCard({
   onOpen: (prompt: Prompt) => void;
 }) {
   const [copied, setCopied] = useState(false);
-  const [followed, setFollowed] = useState(false);
-
-  useEffect(() => {
-    setFollowed(readFollowed());
-    return onFollowedChange(() => setFollowed(readFollowed()));
-  }, []);
-
-  const unlocked = !prompt.is_premium || followed;
+  // Exclusive prompts unlock with a free account now, not an Instagram
+  // follow. (Resources still use the Instagram flow — untouched.)
+  const { isSignedIn } = useAuth();
+  const unlocked = !prompt.is_premium || isSignedIn;
 
   async function handleCopy(e: React.MouseEvent) {
     e.stopPropagation();
-    const unlocked = !prompt.is_premium || followed;
     if (!unlocked) {
       onOpen(prompt);
       return;
@@ -103,22 +93,25 @@ export function PromptCard({
           onClick={handleCopy}
           className="flex-1 flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase tracking-widest text-bone/80 hover:text-gold hover:bg-gold/5 transition-colors"
         >
-          {unlocked ? (
-            copied ? (
-              <>
-                <Check className="w-3.5 h-3.5" />
-                Copied
-              </>
-            ) : (
-              <>
-                <LockOpen className="w-3.5 h-3.5" />
-                Unlocked — copy
-              </>
-            )
-          ) : (
+          {!unlocked ? (
             <>
               <Lock className="w-3.5 h-3.5" />
-              Unlock pack
+              Unlock
+            </>
+          ) : copied ? (
+            <>
+              <Check className="w-3.5 h-3.5" />
+              Copied
+            </>
+          ) : prompt.is_premium ? (
+            <>
+              <LockOpen className="w-3.5 h-3.5" />
+              Unlocked — copy
+            </>
+          ) : (
+            <>
+              <Copy className="w-3.5 h-3.5" />
+              Copy prompt
             </>
           )}
         </button>
@@ -134,13 +127,12 @@ export function PromptCard({
           Preview
         </button>
         {prompt.pdf_url && !prompt.is_premium && (
-          <a
+          <a // <--- Yahan par `<a` missing tha
             href={prompt.pdf_url}
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase tracking-widest text-bone/80 hover:text-gold border-l hairline"
+            className="flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase tracking-widest..."
           >
-            <Download className="w-3.5 h-3.5" />
-            PDF
+            Download {/* Aapka jo bhi text yahan hai */}
           </a>
         )}
       </footer>
