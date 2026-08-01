@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
@@ -10,9 +11,12 @@ type NavLink = {
 
 interface MobileNavProps {
   links: readonly NavLink[];
+  extraLinks?: readonly NavLink[];
+  languageSlot?: ReactNode;
+  authSlot?: ReactNode;
 }
 
-export function MobileNav({ links }: MobileNavProps) {
+export function MobileNav({ links, extraLinks = [], languageSlot, authSlot }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLinkClick = () => {
@@ -21,7 +25,6 @@ export function MobileNav({ links }: MobileNavProps) {
 
   return (
     <>
-      {/* Hamburger Menu Button - Only visible on mobile */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden p-2 text-bone hover:text-gold transition-colors"
@@ -31,7 +34,6 @@ export function MobileNav({ links }: MobileNavProps) {
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Overlay - Only visible when drawer is open */}
       {isOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 md:hidden"
@@ -40,10 +42,9 @@ export function MobileNav({ links }: MobileNavProps) {
         />
       )}
 
-      {/* Side Drawer - Slides in from left on mobile */}
       <nav
         className={cn(
-          "fixed left-0 top-16 z-50 h-[calc(100vh-4rem)] w-64 bg-surface border-r hairline overflow-y-auto transition-transform duration-300 ease-in-out md:hidden",
+          "fixed left-0 top-16 z-50 h-[calc(100vh-4rem)] w-72 bg-surface border-r hairline overflow-y-auto transition-transform duration-300 ease-in-out md:hidden",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
@@ -61,10 +62,28 @@ export function MobileNav({ links }: MobileNavProps) {
               {link.label}
             </Link>
           ))}
+
+          {extraLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              onClick={handleLinkClick}
+              className="px-3 py-3 text-sm text-bone/70 hover:text-bone hover:bg-surface/50 rounded transition-all"
+              activeProps={{
+                className: "text-gold bg-surface/50",
+              }}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          <div className="mt-4 grid gap-3 border-t border-gold/15 pt-4">
+            {languageSlot}
+            {authSlot}
+          </div>
         </div>
       </nav>
 
-      {/* Desktop Navigation - Only visible on medium screens and up */}
       <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm">
         {links.map((link) => (
           <Link

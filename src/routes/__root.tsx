@@ -8,11 +8,15 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { MobileNav } from "../components/MobileNav";
 import { Instagram, Moon, Sun } from "lucide-react";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { AuthModalButton } from "@/components/AuthModal";
+import "@/lib/i18n";
 
 // Theme Switcher Component
 function ThemeToggle() {
@@ -24,7 +28,7 @@ function ThemeToggle() {
     return true; // Default dark mode
   });
 
-  useEffect(() => {
+useEffect(() => {
     const root = document.documentElement;
     if (isDark) {
       root.classList.add("dark");
@@ -40,12 +44,14 @@ function ThemeToggle() {
       onClick={() => setIsDark((prev) => !prev)}
       type="button"
       aria-label="Toggle theme"
-      className="p-2 rounded-full border hairline bg-surface text-bone hover:text-gold transition-colors flex items-center justify-center cursor-pointer"
+      // Yahan maine rounded-md ko rounded-full kar diya hai (Circle ke liye)
+      className="group inline-flex h-8 w-8 items-center justify-center rounded-full border border-gold-hairline bg-surface text-bone transition-all duration-200 hover:border-gold/70 hover:bg-gold/5 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
     >
+      {/* Yahan maine isDark par Moon aur light par Sun kar diya hai (Ulta kar diya) */}
       {isDark ? (
-        <Sun className="w-4 h-4 text-gold" />
+        <Moon className="w-4 h-4 text-gold transition-transform duration-200 group-hover:scale-105" />
       ) : (
-        <Moon className="w-4 h-4 text-bone" />
+        <Sun className="w-4 h-4 text-bone transition-transform duration-200 group-hover:scale-105" />
       )}
     </button>
   );
@@ -187,20 +193,20 @@ function SiteChrome({ children }: { children: ReactNode }) {
 }
 
 function SiteHeader() {
+  const { t } = useTranslation();
   const links = [
-    { to: "/gallery", label: "Gallery" },
-    { to: "/library", label: "Vault" },
-    { to: "/resources", label: "Resources" },
-    { to: "/guides", label: "Guides" },
-    { to: "/about", label: "About" },
-    { to: "/contact", label: "Contact" },
+    { to: "/gallery", label: t("nav.gallery") },
+    { to: "/library", label: t("nav.library") },
+    { to: "/resources", label: t("nav.resources") },
+    { to: "/guides", label: t("nav.guides") },
+    { to: "/about", label: t("nav.about") },
   ] as const;
+  const mobileExtraLinks = [{ to: "/contact", label: t("nav.contact") }] as const;
 
   return (
     <header className="border-b hairline bg-surface/80 backdrop-blur sticky top-0 z-40 transition-colors duration-300">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 h-16 flex items-center justify-between">
-        {/* Left: Logo */}
-        <div className="flex-1 flex justify-start">
+      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-4 md:px-6 lg:px-10">
+        <div className="flex items-center justify-start">
           <Link to="/" className="flex items-baseline gap-2 group">
             <span className="font-display text-xl tracking-tight text-bone group-hover:text-gold transition-colors">
               Osman Visuals
@@ -209,8 +215,7 @@ function SiteHeader() {
           </Link>
         </div>
 
-        {/* Center: Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-8 justify-center">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 justify-center">
           {links.map((link) => (
             <Link
               key={link.to}
@@ -222,11 +227,21 @@ function SiteHeader() {
           ))}
         </nav>
 
-        {/* Right: Theme Toggle & Mobile Menu */}
-        <div className="flex-1 flex items-center justify-end gap-3">
+      <div className="flex items-center justify-end gap-2 md:gap-3">
+          {/* YAHAN ORDER CHANGE KIYA HAI: Pehle AuthModal (Sign In), Phir Language */}
+          <div className="hidden md:flex items-center gap-2">
+            <AuthModalButton />
+            <LanguageSwitcher />
+          </div>
           <ThemeToggle />
+          
           <div className="md:hidden">
-            <MobileNav links={links} />
+            <MobileNav
+              links={links}
+              extraLinks={mobileExtraLinks}
+              languageSlot={<LanguageSwitcher className="w-full" />}
+              authSlot={<AuthModalButton className="w-full" />}
+            />
           </div>
         </div>
       </div>

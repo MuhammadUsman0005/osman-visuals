@@ -127,12 +127,13 @@ export function PromptCard({
           Preview
         </button>
         {prompt.pdf_url && !prompt.is_premium && (
-          <a // <--- Yahan par `<a` missing tha
+          <a
             href={prompt.pdf_url}
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase tracking-widest..."
+            className="flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase tracking-widest text-bone/80 hover:text-gold border-l hairline"
           >
-            Download {/* Aapka jo bhi text yahan hai */}
+            <Download className="w-3.5 h-3.5" />
+            Download
           </a>
         )}
       </footer>

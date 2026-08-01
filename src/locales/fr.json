@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "gallery": "Galerie",
+    "library": "Bibliothèque",
+    "resources": "Ressources",
+    "guides": "Guides",
+    "about": "À propos",
+    "contact": "Contact",
+    "language": "Langue"
+  },
+  "auth": {
+    "createAccount": "Créer un compte",
+    "signIn": "Se connecter",
+    "continueGoogle": "Continuer avec Google",
+    "continueGithub": "Continuer avec GitHub",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié",
+    "submit": "Se connecter",
+    "create": "Créer un compte",
+    "agreement": "En continuant, vous acceptez les conditions du studio et la politique de confidentialité.",
+    "recovering": "Vérifiez votre boîte de réception pour réinitialiser votre mot de passe.",
+    "error": "Nous n'avons pas pu terminer cette demande. Veuillez réessayer.",
+    "emailSent": "Vérifiez votre boîte de réception pour un lien de connexion sécurisé."
+  },
+  "languages": {
+    "en": "Anglais",
+    "ur": "Ourdou",
+    "ar": "Arabe",
+    "tr": "Turc",
+    "es": "Espagnol",
+    "fr": "Français",
+    "de": "Allemand"
+  }
+}

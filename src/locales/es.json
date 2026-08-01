@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "gallery": "Galería",
+    "library": "Biblioteca",
+    "resources": "Recursos",
+    "guides": "Guías",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "language": "Idioma"
+  },
+  "auth": {
+    "createAccount": "Crear cuenta",
+    "signIn": "Iniciar sesión",
+    "continueGoogle": "Continuar con Google",
+    "continueGithub": "Continuar con GitHub",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "submit": "Iniciar sesión",
+    "create": "Crear cuenta",
+    "agreement": "Al continuar, aceptas los términos del estudio y la política de privacidad.",
+    "recovering": "Revisa tu bandeja de entrada para restablecer tu contraseña.",
+    "error": "No pudimos completar esa solicitud. Inténtalo de nuevo.",
+    "emailSent": "Revisa tu correo para ver el enlace seguro de acceso."
+  },
+  "languages": {
+    "en": "Inglés",
+    "ur": "Urdu",
+    "ar": "Árabe",
+    "tr": "Turco",
+    "es": "Español",
+    "fr": "Francés",
+    "de": "Alemán"
+  }
+}

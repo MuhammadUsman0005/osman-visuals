@@ -17,6 +17,31 @@ export async function signInWithGoogle(next: string) {
   if (error) throw error;
 }
 
+export async function signInWithGithub(next: string) {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "github",
+    options: { redirectTo: buildRedirectTo(next) },
+  });
+  if (error) throw error;
+}
+
+export async function signInWithPassword(email: string, password: string) {
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+}
+
+export async function signUpWithPassword(email: string, password: string) {
+  const { error } = await supabase.auth.signUp({ email, password });
+  if (error) throw error;
+}
+
+export async function resetPasswordForEmail(email: string, next: string) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: buildRedirectTo(next),
+  });
+  if (error) throw error;
+}
+
 // Passwordless email login — sends a one-time magic link, no password to
 // manage. Matches the frictionless feel of the OAuth options.
 export async function signInWithEmail(email: string, next: string) {

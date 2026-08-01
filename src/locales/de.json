@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "gallery": "Galerie",
+    "library": "Bibliothek",
+    "resources": "Ressourcen",
+    "guides": "Anleitungen",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "language": "Sprache"
+  },
+  "auth": {
+    "createAccount": "Konto erstellen",
+    "signIn": "Anmelden",
+    "continueGoogle": "Mit Google fortfahren",
+    "continueGithub": "Mit GitHub fortfahren",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen",
+    "submit": "Anmelden",
+    "create": "Konto erstellen",
+    "agreement": "Indem Sie fortfahren, akzeptieren Sie die Studio-Bedingungen und die Datenschutzrichtlinie.",
+    "recovering": "Prüfen Sie Ihr Postfach, um Ihr Passwort zurückzusetzen.",
+    "error": "Wir konnten diese Anfrage nicht abschließen. Bitte versuchen Sie es erneut.",
+    "emailSent": "Prüfen Sie Ihr Postfach für einen sicheren Anmeldelink."
+  },
+  "languages": {
+    "en": "Englisch",
+    "ur": "Urdu",
+    "ar": "Arabisch",
+    "tr": "Türkisch",
+    "es": "Spanisch",
+    "fr": "Französisch",
+    "de": "Deutsch"
+  }
+}

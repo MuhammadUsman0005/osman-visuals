@@ -4,8 +4,9 @@ import {
   X,
   Copy,
   Check,
-  Instagram,
   Lock,
+  Mail,
+  Loader2,
   ChevronLeft,
   ChevronRight,
   ScanFace,
@@ -17,9 +18,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import type { Prompt } from "@/components/PromptCard";
-import { onFollowedChange, persistUnlock, readFollowed } from "@/lib/instagram-unlock";
-
-const INSTAGRAM_URL = "https://instagram.com/osmanvisuals";
+import { useAuth, signInWithGoogle, signInWithEmail } from "@/lib/auth";
 
 const WORKFLOW_GUIDES = [
   {
@@ -69,27 +68,23 @@ export function PromptPreviewModal({
   prompt: Prompt | null;
   onClose: () => void;
 }) {
-  const [unlocked, setUnlocked] = useState(false);
-  const [followed, setFollowed] = useState(false);
-  const [followClickCount, setFollowClickCount] = useState(0);
+  const { isSignedIn } = useAuth();
   const [copied, setCopied] = useState(false);
-  const [warning, setWarning] = useState<string | false>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [email, setEmail] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const unlocked = !prompt?.is_premium || isSignedIn;
 
   useEffect(() => {
     if (!prompt) return;
     setCopied(false);
-    setWarning(false);
-    setFollowClickCount(0);
     setCurrentImageIndex(0);
-    const currentFollowed = readFollowed();
-    setFollowed(currentFollowed);
-    setUnlocked(!prompt.is_premium || currentFollowed);
-    return onFollowedChange(() => {
-      const updatedFollowed = readFollowed();
-      setFollowed(updatedFollowed);
-      setUnlocked(!prompt.is_premium || updatedFollowed);
-    });
+    setSent(false);
+    setAuthError(null);
   }, [prompt]);
 
   useEffect(() => {
@@ -113,15 +108,29 @@ export function PromptPreviewModal({
     }
   }
 
-  function confirmUnlock() {
-    const canUnlock = followed || followClickCount >= 2;
-    if (!canUnlock) {
-      setWarning("Please follow @osmanvisuals to unlock this prompt.");
-      return;
+  async function handleGoogle() {
+    setAuthError(null);
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle(`/library?open=${prompt!.slug}`);
+    } catch {
+      setAuthError("Couldn't start Google sign-in. Please try again.");
+      setGoogleLoading(false);
     }
-    persistUnlock();
-    setUnlocked(true);
-    setWarning(false);
+  }
+
+  async function handleEmail(e: React.FormEvent) {
+    e.preventDefault();
+    setAuthError(null);
+    setSending(true);
+    try {
+      await signInWithEmail(email, `/library?open=${prompt!.slug}`);
+      setSent(true);
+    } catch {
+      setAuthError("Couldn't send the link. Check the address and try again.");
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -129,9 +138,7 @@ export function PromptPreviewModal({
       className="fixed inset-0 z-50 overflow-y-auto bg-black/40 backdrop-blur-[2px] animate-in fade-in duration-300"
       onClick={onClose}
     >
-      {/* Inner Flex Wrapper for Vertical Centering & Scroll Control */}
       <div className="flex min-h-full items-center justify-center p-3 sm:p-6 my-auto">
-        {/* Modal Card Div */}
         <div
           className="relative w-full max-w-5xl my-auto rounded-2xl overflow-hidden bg-surface border border-black/10 dark:border-white/10 shadow-2xl"
           onClick={(e) => e.stopPropagation()}
@@ -149,80 +156,78 @@ export function PromptPreviewModal({
 
           <div className="border hairline bg-surface rounded-2xl overflow-hidden">
             <div className="grid w-full lg:grid-cols-[4fr_5fr]">
-              {/* Left Side: Fluid Edge-to-Edge Image Container (Matches Gallery behavior) */}
-          <div className="w-full bg-black relative flex flex-col items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r hairline">
-            {(() => {
-              const images =
-                prompt.preview_image_urls && prompt.preview_image_urls.length
-                  ? prompt.preview_image_urls.slice(0, 3)
-                  : prompt.preview_image_url
-                    ? [prompt.preview_image_url]
-                    : [];
+              <div className="w-full bg-black relative flex flex-col items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r hairline">
+                {(() => {
+                  const images =
+                    prompt.preview_image_urls && prompt.preview_image_urls.length
+                      ? prompt.preview_image_urls.slice(0, 3)
+                      : prompt.preview_image_url
+                        ? [prompt.preview_image_url]
+                        : [];
 
-              if (images.length === 0) {
-                return (
-                  <div className="w-full aspect-[4/5] flex items-center justify-center">
-                    <div className="text-center">
-                      <p className="eyebrow">{prompt.catalog_number}</p>
-                      <p className="mt-2 font-display text-2xl text-bone/40">No plate filed</p>
-                    </div>
-                  </div>
-                );
-              }
-
-              const imgSrc = images[currentImageIndex % images.length];
-
-              return (
-                <div className="relative w-full">
-                  {/* Image automatically scales perfectly with window zoom/resize */}
-                  <img
-                    src={imgSrc}
-                    alt={prompt.title}
-                    className="w-full h-auto block m-0 p-0 object-cover"
-                  />
-
-                  {images.length > 1 && (
-                    <>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCurrentImageIndex((i) => (i - 1 + images.length) % images.length);
-                        }}
-                        aria-label="Previous image"
-                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-on-photo-chip border hairline p-2 rounded-full flex items-center justify-center touch-manipulation z-10"
-                        style={{ width: 36, height: 36 }}
-                      >
-                        <ChevronLeft className="w-4 h-4 text-on-photo-text" />
-                      </button>
-
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCurrentImageIndex((i) => (i + 1) % images.length);
-                        }}
-                        aria-label="Next image"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-on-photo-chip border hairline p-2 rounded-full flex items-center justify-center touch-manipulation z-10"
-                        style={{ width: 36, height: 36 }}
-                      >
-                        <ChevronRight className="w-4 h-4 text-on-photo-text" />
-                      </button>
-
-                      <div className="absolute left-0 right-0 bottom-3 flex items-center justify-center gap-2 z-10">
-                        {images.map((_, idx) => (
-                          <span
-                            key={idx}
-                            className={`w-2 h-2 rounded-full ${
-                              idx === currentImageIndex ? "bg-on-photo-gold" : "bg-on-photo-dot"
-                            }`}
-                          />
-                        ))}
+                  if (images.length === 0) {
+                    return (
+                      <div className="w-full aspect-[4/5] flex items-center justify-center">
+                        <div className="text-center">
+                          <p className="eyebrow">{prompt.catalog_number}</p>
+                          <p className="mt-2 font-display text-2xl text-bone/40">No plate filed</p>
+                        </div>
                       </div>
-                    </>
-                  )}
-                </div>
-              );
-            })()}
-          </div>
+                    );
+                  }
+
+                  const imgSrc = images[currentImageIndex % images.length];
+
+                  return (
+                    <div className="relative w-full">
+                      <img
+                        src={imgSrc}
+                        alt={prompt.title}
+                        className="w-full h-auto block m-0 p-0 object-cover"
+                      />
+
+                      {images.length > 1 && (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentImageIndex((i) => (i - 1 + images.length) % images.length);
+                            }}
+                            aria-label="Previous image"
+                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-on-photo-chip border hairline p-2 rounded-full flex items-center justify-center touch-manipulation z-10"
+                            style={{ width: 36, height: 36 }}
+                          >
+                            <ChevronLeft className="w-4 h-4 text-on-photo-text" />
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentImageIndex((i) => (i + 1) % images.length);
+                            }}
+                            aria-label="Next image"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-on-photo-chip border hairline p-2 rounded-full flex items-center justify-center touch-manipulation z-10"
+                            style={{ width: 36, height: 36 }}
+                          >
+                            <ChevronRight className="w-4 h-4 text-on-photo-text" />
+                          </button>
+
+                          <div className="absolute left-0 right-0 bottom-3 flex items-center justify-center gap-2 z-10">
+                            {images.map((_, idx) => (
+                              <span
+                                key={idx}
+                                className={`w-2 h-2 rounded-full ${
+                                  idx === currentImageIndex ? "bg-on-photo-gold" : "bg-on-photo-dot"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
 
               <div className="px-6 py-6 lg:max-h-[85vh] lg:overflow-y-auto flex flex-col">
                 <div className="flex items-center justify-between gap-4">
@@ -293,15 +298,15 @@ export function PromptPreviewModal({
                           Prompt is only the blueprint.
                         </h3>
                         <p className="mt-3 text-sm text-bone/70 leading-relaxed">
-                          A great AI image is never created by the prompt alone. Professional results
-                          also depend on identity preservation, composition, camera direction,
-                          lighting, color grading, negative prompting, reference management, and final
-                          refinement.
+                          A great AI image is never created by the prompt alone. Professional
+                          results also depend on identity preservation, composition, camera
+                          direction, lighting, color grading, negative prompting, reference
+                          management, and final refinement.
                         </p>
                         <p className="mt-2 text-sm text-bone/70 leading-relaxed">
                           Every image inside Osman Visuals is built using a complete creative
-                          workflow, not just a single prompt. Explore the guides below to master every
-                          part of the process.
+                          workflow, not just a single prompt. Explore the guides below to master
+                          every part of the process.
                         </p>
 
                         <div className="mt-5 grid sm:grid-cols-2 gap-3">
@@ -313,7 +318,9 @@ export function PromptPreviewModal({
                               className="group border hairline bg-void p-4 flex flex-col gap-2 hover:border-gold/60 transition-colors"
                             >
                               <Icon className="w-5 h-5 text-gold" />
-                              <p className="font-display text-base text-bone leading-snug">{title}</p>
+                              <p className="font-display text-base text-bone leading-snug">
+                                {title}
+                              </p>
                               <p className="text-xs text-bone/60 leading-relaxed flex-1">
                                 {description}
                               </p>
@@ -329,51 +336,69 @@ export function PromptPreviewModal({
                     <>
                       <div className="border hairline bg-void p-6 mt-6 w-full">
                         <div className="flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
-                          <Lock className="w-3.5 h-3.5" /> PRIVATE ARCHIVE ACCESS
+                          <Lock className="w-3.5 h-3.5" /> EXCLUSIVE PROMPT
                         </div>
-                        <p className="mt-3 text-sm text-bone/70 leading-relaxed">
-                          Follow on Instagram to unlock this archive instantly. No account required.
+                        <p className="mt-3 font-display text-lg text-bone">
+                          Create an Account to Continue
                         </p>
-                        <a
-                          href={INSTAGRAM_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => {
-                            setFollowClickCount((c) => {
-                              const next = c + 1;
-                              setFollowed(next >= 2 ? true : readFollowed());
-                              setWarning(false);
-                              return next;
-                            });
-                          }}
-                          className="mt-5 w-full flex items-center justify-center gap-2 border border-gold text-gold py-3 px-4 text-xs uppercase tracking-widest font-medium text-center hover:bg-gold/5 transition-colors whitespace-normal"
-                        >
-                          <Instagram className="w-3.5 h-3.5 shrink-0" />
-                          {followClickCount === 0
-                            ? "FOLLOW OSMANVISUALS"
-                            : followClickCount === 1
-                              ? "FOLLOW OSMANVISUALS"
-                              : "FOLLOWED!"}
-                        </a>
+                        <p className="mt-2 text-sm text-bone/70 leading-relaxed">
+                          This prompt is part of the exclusive collection. Create your free account
+                          to unlock premium prompt previews and access future exclusive resources.
+                        </p>
 
-                        <button
-                          onClick={confirmUnlock}
-                          className={`mt-2 w-full py-3 text-xs uppercase tracking-widest font-medium transition-colors ${
-                            followed || followClickCount >= 2
-                              ? "bg-gold text-void hover:bg-gold/90"
-                              : "bg-bone/10 text-bone/60 hover:bg-bone/15"
-                          }`}
-                        >
-                          VERIFY & UNLOCK PROMPT
-                        </button>
+                        {sent ? (
+                          <div className="mt-5 text-center py-2">
+                            <Mail className="w-5 h-5 text-gold mx-auto" />
+                            <p className="mt-2 text-sm text-bone">Check your email</p>
+                            <p className="mt-1 text-xs text-bone/60">
+                              We sent a sign-in link to {email}.
+                            </p>
+                          </div>
+                        ) : (
+                          <>
+                            <button
+                              onClick={handleGoogle}
+                              disabled={googleLoading}
+                              className="mt-5 w-full flex items-center justify-center gap-2 bg-gold text-void py-3 px-4 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors disabled:opacity-60"
+                            >
+                              {googleLoading ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : null}
+                              Continue with Google
+                            </button>
+
+                            <form onSubmit={handleEmail} className="mt-3 flex flex-col gap-2">
+                              <input
+                                type="email"
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="you@email.com"
+                                className="w-full bg-surface border hairline px-3 py-2.5 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
+                              />
+                              <button
+                                type="submit"
+                                disabled={sending}
+                                className="w-full flex items-center justify-center gap-2 border border-gold text-gold py-2.5 px-4 text-xs uppercase tracking-widest font-medium hover:bg-gold/5 transition-colors disabled:opacity-60"
+                              >
+                                {sending ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <Mail className="w-3.5 h-3.5" />
+                                )}
+                                Continue with Email
+                              </button>
+                            </form>
+                          </>
+                        )}
                       </div>
-                      {warning && (
+                      {authError && (
                         <p className="mt-3 text-sm text-red-800 dark:text-rose-300 font-medium text-left">
-                          {warning}
+                          {authError}
                         </p>
                       )}
                       <p className="mt-3 text-[12px] text-bone/60 text-left">
-                        Access is securely saved on this device.
+                        Free forever. No spam, ever.
                       </p>
                     </>
                   )}

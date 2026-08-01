@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "gallery": "Galeri",
+    "library": "Kütüphane",
+    "resources": "Kaynaklar",
+    "guides": "Rehberler",
+    "about": "Hakkında",
+    "contact": "İletişim",
+    "language": "Dil"
+  },
+  "auth": {
+    "createAccount": "Hesap Oluştur",
+    "signIn": "Giriş Yap",
+    "continueGoogle": "Google ile Devam Et",
+    "continueGithub": "GitHub ile Devam Et",
+    "email": "E-posta",
+    "password": "Şifre",
+    "forgotPassword": "Şifremi Unuttum",
+    "submit": "Giriş Yap",
+    "create": "Hesap Oluştur",
+    "agreement": "Devam ederek stüdyo şartlarını ve gizlilik politikasını kabul ediyorsunuz.",
+    "recovering": "Şifrenizi sıfırlamak için gelen kutunuzu kontrol edin.",
+    "error": "İsteği tamamlayamadık. Lütfen tekrar deneyin.",
+    "emailSent": "Güvenli giriş bağlantısı için gelen kutunuzu kontrol edin."
+  },
+  "languages": {
+    "en": "İngilizce",
+    "ur": "Urduca",
+    "ar": "Arapça",
+    "tr": "Türkçe",
+    "es": "İspanyolca",
+    "fr": "Fransızca",
+    "de": "Almanca"
+  }
+}

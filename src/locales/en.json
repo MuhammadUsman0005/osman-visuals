@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "gallery": "Gallery",
+    "library": "Library",
+    "resources": "Resources",
+    "guides": "Guides",
+    "about": "About",
+    "contact": "Contact",
+    "language": "Language"
+  },
+  "auth": {
+    "createAccount": "Sign In",
+    "signIn": "Sign In",
+    "continueGoogle": "Continue with Google",
+    "continueGithub": "Continue with GitHub",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password",
+    "submit": "Sign In",
+    "create": "Create Account",
+    "agreement": "By continuing, you agree to the studio terms and privacy policy.",
+    "recovering": "Check your inbox to reset your password.",
+    "error": "We couldn't complete that request. Please try again.",
+    "emailSent": "Check your inbox for a secure sign-in link."
+  },
+  "languages": {
+    "en": "English",
+    "ur": "Urdu",
+    "ar": "Arabic",
+    "tr": "Turkish",
+    "es": "Spanish",
+    "fr": "French",
+    "de": "German"
+  }
+}

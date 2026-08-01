@@ -5,6 +5,8 @@ import { X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Prompt } from "@/components/PromptCard";
 import { SearchBar } from "@/components/SearchBar";
+import { useAuth } from "@/lib/auth";
+
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -35,6 +37,7 @@ function galleryImage(p: Prompt): string | null {
 
 function Gallery() {
   const navigate = useNavigate();
+  const { isSignedIn } = useAuth();
   const [active, setActive] = useState<Prompt | null>(null);
 
   const { data: prompts, isLoading } = useQuery({
@@ -70,6 +73,10 @@ function Gallery() {
   ]);
   function viewPrompt(p: Prompt) {
     setActive(null);
+    if (p.is_premium && !isSignedIn) {
+      navigate({ to: "/unlock", search: { next: `/library?open=${p.slug}` } });
+      return;
+    }
     navigate({ to: "/library", search: { open: p.slug } });
   }
 
