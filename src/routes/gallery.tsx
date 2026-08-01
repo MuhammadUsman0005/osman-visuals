@@ -73,10 +73,6 @@ function Gallery() {
   ]);
   function viewPrompt(p: Prompt) {
     setActive(null);
-    if (p.is_premium && !isSignedIn) {
-      navigate({ to: "/unlock", search: { next: `/library?open=${p.slug}` } });
-      return;
-    }
     navigate({ to: "/library", search: { open: p.slug } });
   }
 
@@ -280,21 +276,30 @@ function Gallery() {
             </div>
 
            {/* Action Button - Flows immediately after description and aligns RIGHT */}
+           {/* Action Button - Flows immediately after description and aligns RIGHT */}
             <div className="mt-6 flex justify-end">
               <button
-                onClick={() => viewPrompt(active)}
-                className="inline-flex items-center justify-center gap-2 bg-gold text-void px-6 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors rounded-full"
-              >
-                View Full Prompt
-              </button>
+  onClick={() => {
+    if (active.is_premium && !isSignedIn) {
+      // Seedha /unlock page par bhejein with proper next URL pointing to library with open slug
+      const returnUrl = encodeURIComponent(`/library?open=${active.slug}`);
+      window.location.href = `/unlock?next=${returnUrl}`;
+      return;
+    }
+    viewPrompt(active);
+  }}
+  className="inline-flex items-center justify-center gap-2 bg-gold text-void px-6 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors rounded-full"
+>
+  View Full Prompt
+</button>
             </div>
             
           </div>
         </div>
-      </div>
     </div>
-  </div>
+    </div>
+    </div>
 )}
-    </>
-  );
+      </>
+    );
 }

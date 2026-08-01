@@ -4,9 +4,7 @@ import {
   X,
   Copy,
   Check,
-  Lock,
-  Mail,
-  Loader2,
+  Instagram,
   ChevronLeft,
   ChevronRight,
   ScanFace,
@@ -16,9 +14,11 @@ import {
   Images,
   Sparkles,
   ArrowRight,
+  Circle,
 } from "lucide-react";
 import type { Prompt } from "@/components/PromptCard";
-import { useAuth, signInWithGoogle, signInWithEmail } from "@/lib/auth";
+import { useAuth } from "@/lib/auth";
+import { onFollowedChange, persistFollowed, readFollowed } from "@/lib/instagram-unlock";
 
 const WORKFLOW_GUIDES = [
   {
@@ -71,20 +71,32 @@ export function PromptPreviewModal({
   const { isSignedIn } = useAuth();
   const [copied, setCopied] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [email, setEmail] = useState("");
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
-  const [googleLoading, setGoogleLoading] = useState(false);
+  const [followed, setFollowed] = useState(false);
+  const [followClickCount, setFollowClickCount] = useState(0);
+  const [warning, setWarning] = useState<string | false>(false);
 
-  const unlocked = !prompt?.is_premium || isSignedIn;
+  const unlocked = !prompt?.is_premium || (isSignedIn && followed);
+  const showExclusiveIntro = prompt?.is_premium && !isSignedIn;
+  const showPostAuthUnlock = prompt?.is_premium && isSignedIn && !unlocked;
 
   useEffect(() => {
     if (!prompt) return;
     setCopied(false);
     setCurrentImageIndex(0);
-    setSent(false);
-    setAuthError(null);
+    setWarning(false);
+    const initialFollowed = readFollowed();
+    setFollowed(initialFollowed);
+    setFollowClickCount(initialFollowed ? 2 : 0);
+  }, [prompt]);
+
+  useEffect(() => {
+    if (!prompt) return;
+    const unsubscribe = onFollowedChange(() => {
+      const currentFollowed = readFollowed();
+      setFollowed(currentFollowed);
+      setFollowClickCount(currentFollowed ? 2 : 0);
+    });
+    return unsubscribe;
   }, [prompt]);
 
   useEffect(() => {
@@ -99,39 +111,16 @@ export function PromptPreviewModal({
   if (!prompt) return null;
 
   async function copy() {
-    try {
-      await navigator.clipboard.writeText(prompt!.prompt_text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
-    } catch {
-      /* clipboard unavailable */
-    }
+  if (!prompt) return; // <--- Yeh line yahan add kar dein
+  
+  try {
+    await navigator.clipboard.writeText(prompt.prompt_text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1600);
+  } catch {
+    /* clipboard unavailable */
   }
-
-  async function handleGoogle() {
-    setAuthError(null);
-    setGoogleLoading(true);
-    try {
-      await signInWithGoogle(`/library?open=${prompt!.slug}`);
-    } catch {
-      setAuthError("Couldn't start Google sign-in. Please try again.");
-      setGoogleLoading(false);
-    }
-  }
-
-  async function handleEmail(e: React.FormEvent) {
-    e.preventDefault();
-    setAuthError(null);
-    setSending(true);
-    try {
-      await signInWithEmail(email, `/library?open=${prompt!.slug}`);
-      setSent(true);
-    } catch {
-      setAuthError("Couldn't send the link. Check the address and try again.");
-    } finally {
-      setSending(false);
-    }
-  }
+}
 
   return (
     <div
@@ -232,7 +221,7 @@ export function PromptPreviewModal({
               <div className="px-6 py-6 lg:max-h-[85vh] lg:overflow-y-auto flex flex-col">
                 <div className="flex items-center justify-between gap-4">
                   <span className="eyebrow">
-                    {prompt.catalog_number} — {prompt.difficulty}
+                    {prompt.catalog_number} · {prompt.difficulty}
                   </span>
                   <span
                     className={`eyebrow shrink-0 ${prompt.is_premium ? "text-gold" : "text-bone/50"}`}
@@ -264,6 +253,35 @@ export function PromptPreviewModal({
                         +{prompt.categories.length - 3}
                       </span>
                     )}
+                  </div>
+                )}
+
+                {showExclusiveIntro && (
+                  <div className="mt-6 space-y-6">
+                    <section>
+                      <p className="eyebrow mb-2">About this Piece</p>
+                      <p className="text-sm text-bone/70 leading-relaxed">
+                        {prompt.description ||
+                          "A premium prompt preview from the Osman Visuals archive. Use the full lock-and-unlock flow to reveal the exact blueprint."}
+                      </p>
+                    </section>
+
+                    <div className="flex justify-end">
+                      {/* FIXED: Changed to Link that goes to the unlock page */}
+                      <Link
+                        to="/unlock"
+                        search={{
+                          next: `/library?open=${prompt.slug}`,
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClose();
+                        }}
+                        className="inline-flex items-center justify-center gap-2 bg-gold text-void px-6 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors rounded-full"
+                      >
+                        View Full Prompt
+                      </Link>
+                    </div>
                   </div>
                 )}
 
@@ -332,77 +350,58 @@ export function PromptPreviewModal({
                         </div>
                       </div>
                     </>
-                  ) : (
-                    <>
-                      <div className="border hairline bg-void p-6 mt-6 w-full">
-                        <div className="flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
-                          <Lock className="w-3.5 h-3.5" /> EXCLUSIVE PROMPT
-                        </div>
-                        <p className="mt-3 font-display text-lg text-bone">
-                          Create an Account to Continue
-                        </p>
-                        <p className="mt-2 text-sm text-bone/70 leading-relaxed">
-                          This prompt is part of the exclusive collection. Create your free account
-                          to unlock premium prompt previews and access future exclusive resources.
-                        </p>
+                  ) : showPostAuthUnlock ? (
+                    <div className="border hairline bg-void p-6 mt-6 w-full">
+                      <p className="eyebrow">Unlock this prompt</p>
+                      <ul className="mt-4 space-y-3">
+                        <li className="flex items-center gap-3 text-sm text-bone/80">
+                          {followed ? (
+                            <Check className="w-4 h-4 text-gold" />
+                          ) : (
+                            <Circle className="w-4 h-4 text-bone/30" />
+                          )}
+                          <span>Follow @osmanvisuals on Instagram</span>
+                        </li>
+                      </ul>
 
-                        {sent ? (
-                          <div className="mt-5 text-center py-2">
-                            <Mail className="w-5 h-5 text-gold mx-auto" />
-                            <p className="mt-2 text-sm text-bone">Check your email</p>
-                            <p className="mt-1 text-xs text-bone/60">
-                              We sent a sign-in link to {email}.
-                            </p>
-                          </div>
-                        ) : (
-                          <>
-                            <button
-                              onClick={handleGoogle}
-                              disabled={googleLoading}
-                              className="mt-5 w-full flex items-center justify-center gap-2 bg-gold text-void py-3 px-4 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors disabled:opacity-60"
-                            >
-                              {googleLoading ? (
-                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                              ) : null}
-                              Continue with Google
-                            </button>
-
-                            <form onSubmit={handleEmail} className="mt-3 flex flex-col gap-2">
-                              <input
-                                type="email"
-                                required
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="you@email.com"
-                                className="w-full bg-surface border hairline px-3 py-2.5 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
-                              />
-                              <button
-                                type="submit"
-                                disabled={sending}
-                                className="w-full flex items-center justify-center gap-2 border border-gold text-gold py-2.5 px-4 text-xs uppercase tracking-widest font-medium hover:bg-gold/5 transition-colors disabled:opacity-60"
-                              >
-                                {sending ? (
-                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                ) : (
-                                  <Mail className="w-3.5 h-3.5" />
-                                )}
-                                Continue with Email
-                              </button>
-                            </form>
-                          </>
-                        )}
+                      <div className="mt-5 flex flex-col gap-2">
+                        <a
+                          href="https://instagram.com/osmanvisuals"
+                          target="_blank"
+                          rel="noopener"
+                          onClick={() => {
+                            setFollowClickCount((count) => Math.min(2, count + 1));
+                            setWarning(false);
+                          }}
+                          className="inline-flex items-center justify-center gap-2 border hairline px-4 py-3 text-xs uppercase tracking-widest text-bone hover:text-gold hover:border-gold/60"
+                        >
+                          <Instagram className="w-3.5 h-3.5" />
+                          {followClickCount === 0
+                            ? "Follow osmanvisuals"
+                            : followClickCount === 1
+                              ? "Follow osmanvisuals"
+                              : "Followed!"}
+                        </a>
+                        <button
+                          type="button"
+                          disabled={followClickCount < 2}
+                          onClick={() => {
+                            if (followClickCount < 2) {
+                              setWarning("Tap 'Follow' once more before unlocking.");
+                              return;
+                            }
+                            persistFollowed();
+                          }}
+                          className="inline-flex items-center justify-center gap-2 border border-gold text-gold px-4 py-3 text-xs uppercase tracking-widest hover:bg-gold/5 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          I've followed — confirm
+                        </button>
+                        {warning && <p className="text-xs text-rose-400">{warning}</p>}
                       </div>
-                      {authError && (
-                        <p className="mt-3 text-sm text-red-800 dark:text-rose-300 font-medium text-left">
-                          {authError}
-                        </p>
-                      )}
-                      <p className="mt-3 text-[12px] text-bone/60 text-left">
-                        Free forever. No spam, ever.
-                      </p>
-                    </>
-                  )}
+                    </div>
+                  ) : null}
                 </div>
+
                 <div className="mt-auto pt-8">
                   <Link
                     to="/gallery"
