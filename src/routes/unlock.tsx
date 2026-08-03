@@ -9,26 +9,26 @@ const SLIDE_TEXTS = [
     eyebrow: "WELCOME TO OSMAN VISUALS",
     heading: "Where premium prompts become extraordinary images.",
     paragraph:
-      "A carefully curated archive of cinematic prompts, professional workflows, and creative resources built for artists who demand exceptional quality."
+      "A carefully curated archive of cinematic prompts, professional workflows, and creative resources built for artists who demand exceptional quality.",
   },
   {
     eyebrow: "CHARACTER CONSISTENCY",
     heading: "The same identity. Every scene.",
     paragraph:
-      "Create portraits, fashion campaigns, action sequences, and cinematic worlds while preserving the exact same character from image to image."
+      "Create portraits, fashion campaigns, action sequences, and cinematic worlds while preserving the exact same character from image to image.",
   },
   {
     eyebrow: "CREATIVE SYSTEM",
     heading: "Built for professionals.",
     paragraph:
-      "Go beyond prompting with expert guides, lighting techniques, camera language, reference workflows, and production ready creative resources."
+      "Go beyond prompting with expert guides, lighting techniques, camera language, reference workflows, and production ready creative resources.",
   },
   {
     eyebrow: "YOUR CREATIVE VAULT",
     heading: "Unlock your complete toolkit.",
     paragraph:
-      "Preview premium prompt packs, save your favorites, sync your library across devices, and get early access to every new release."
-  }
+      "Preview premium prompt packs, save your favorites, sync your library across devices, and get early access to every new release.",
+  },
 ];
 
 const BENEFITS = [
@@ -41,18 +41,18 @@ const BENEFITS = [
 
 // Yahan apni 12 images ke paths set kar diye gaye hain
 const SHOWCASE_IMAGES = [
-  "/src/assets/plate-01.jpg",
-  "/src/assets/plate-02.jpg",
-  "/src/assets/plate-04.webp",
-  "/src/assets/plate-07.jpg",
-  "/src/assets/plate-10.jpg",
-  "/src/assets/plate-06.webp",
-  "/src/assets/plate-08.jpg",
-  "/src/assets/plate-05.webp",
-  "/src/assets/plate-09.jpg",
-  "/src/assets/plate-12.jpg",
-  "/src/assets/plate-03.webp",
-  "/src/assets/plate-13.jpg",
+  "/public/images/plate-01.jpg",
+  "/public/images/plate-02.jpg",
+  "/public/images/plate-04.webp",
+  "/public/images/plate-07.jpg",
+  "/public/images/plate-10.jpg",
+  "/public/images/plate-06.webp",
+  "/public/images/plate-08.jpg",
+  "/public/images/plate-05.webp",
+  "/public/images/plate-09.jpg",
+  "/public/images/plate-12.jpg",
+  "/public/images/plate-03.webp",
+  "/public/images/plate-13.jpg",
 ];
 
 export const Route = createFileRoute("/unlock")({
@@ -75,7 +75,7 @@ function Unlock() {
   const { next } = Route.useSearch();
   const { isSignedIn, loading } = useAuth();
   const destination = next && next.startsWith("/") ? next : "/library";
-  
+
   // Slideshow ke liye state
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -89,10 +89,10 @@ function Unlock() {
   // Slideshow timer effect (Har 5 second baad image change hogi)
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
-        prevIndex === SHOWCASE_IMAGES.length - 1 ? 0 : prevIndex + 1
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === SHOWCASE_IMAGES.length - 1 ? 0 : prevIndex + 1,
       );
-    }, 5000); 
+    }, 5000);
 
     return () => clearInterval(timer);
   }, []);
@@ -100,12 +100,10 @@ function Unlock() {
   // ERROR FIXED 1: Yahan 'return' keyword lagaya gaya hay aur Grid wrapper add kiya hay
   return (
     <div className="grid lg:grid-cols-2 min-h-screen bg-void w-full">
-      
       {/* --- LEFT SIDE: SLIDESHOW IMAGES & ANIMATED TEXT --- */}
       {/* --- LEFT SIDE: SLIDESHOW IMAGES & ANIMATED TEXT --- */}
       {/* Change 1: 'h-screen sticky top-0' add kiya hay taake ye apni jagah fixed rahay aur scroll na ho */}
       <div className="relative hidden lg:block h-screen sticky top-0 overflow-hidden bg-surface">
-        
         {/* Images Loop */}
         {SHOWCASE_IMAGES.map((img, index) => (
           <img
@@ -130,17 +128,15 @@ function Unlock() {
               const isActive = index === currentTextIndex;
 
               return (
-                <div 
+                <div
                   key={index}
                   className={`absolute bottom-0 left-0 right-0 transition-all duration-1000 ease-in-out ${
-                    isActive 
-                      ? "opacity-100 translate-y-0" 
-                      : "opacity-0 translate-y-6"   
+                    isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                   }`}
                 >
-                 <p className="inline-block bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-gold/30 text-[10px] uppercase tracking-widest text-gold mb-4 font-bold shadow-lg">
-  {slide.eyebrow}
-</p>
+                  <p className="inline-block bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-gold/30 text-[10px] uppercase tracking-widest text-gold mb-4 font-bold shadow-lg">
+                    {slide.eyebrow}
+                  </p>
                   <h2 className="text-4xl font-display text-bone leading-tight text-balance">
                     {slide.heading}
                   </h2>
@@ -151,16 +147,14 @@ function Unlock() {
               );
             })}
           </div>
-          
+
           {/* Slideshow Indicators (12 Dots) */}
           <div className="mt-10 flex items-center gap-4">
             {SHOWCASE_IMAGES.map((_, index) => (
-              <div 
+              <div
                 key={index}
                 className={`h-0.5 rounded-full transition-all duration-500 ${
-                  index === currentImageIndex 
-                    ? "w-12 bg-bone" 
-                    : "w-6 bg-bone/30"
+                  index === currentImageIndex ? "w-12 bg-bone" : "w-6 bg-bone/30"
                 }`}
               />
             ))}
@@ -171,20 +165,14 @@ function Unlock() {
       {/* --- RIGHT SIDE: NORMAL SCROLLABLE CONTENT --- */}
       <div className="flex min-h-screen items-center justify-center p-6 sm:p-12 overflow-y-auto">
         <div className="w-full max-w-md py-12 text-center">
-          
           {/* Centered Logo */}
-          <Link 
-            to="/" 
-            className="flex justify-center w-full mb-8 group no-underline"
-          >
+          <Link to="/" className="flex justify-center w-full mb-8 group no-underline">
             <div className="border-l-2 border-gold/30 pl-4 py-1 text-left group-hover:border-gold transition-colors duration-300">
               <span className="font-display text-2xl tracking-tighter text-bone group-hover:text-gold transition-colors duration-300">
                 <span className="font-bold">Osman </span>
                 <span className="font-light opacity-80">Visuals</span>
               </span>
-              <p className="text-xs text-bone/50 tracking-wider -mt-1 font-light">
-                Studio access
-              </p>
+              <p className="text-xs text-bone/50 tracking-wider -mt-1 font-light">Studio access</p>
             </div>
           </Link>
 
@@ -192,10 +180,11 @@ function Unlock() {
           <h1 className="font-display text-3xl md:text-4xl text-bone leading-tight text-center">
             Create Your Account
           </h1>
-          
+
           {/* Centered Subtitle Paragraph */}
           <p className="mt-4 text-sm text-bone/70 leading-relaxed text-center max-w-sm mx-auto">
-            Create your free account to unlock premium prompts, exclusive visuals, downloadable resources, and future releases.
+            Create your free account to unlock premium prompts, exclusive visuals, downloadable
+            resources, and future releases.
           </p>
 
           {/* Perfectly Centered Checklist Container */}
@@ -221,22 +210,23 @@ function Unlock() {
             <Link to="/terms" className="underline hover:text-gold">
               Terms of Use
             </Link>{" "}
-            and{" "}
-            {/* ERROR FIXED 4: /refunds ki jagah /privacy kar diya hay */}
+            and {/* ERROR FIXED 4: /refunds ki jagah /privacy kar diya hay */}
             <Link to="/refunds" className="underline hover:text-gold">
               Privacy Policy
-            </Link>.
+            </Link>
+            .
           </p>
 
           <p className="mt-8 text-center">
-            <Link to="/library" className="text-xs text-bone/40 hover:text-bone/70 transition-colors">
+            <Link
+              to="/library"
+              className="text-xs text-bone/40 hover:text-bone/70 transition-colors"
+            >
               ← Back to the Vault
             </Link>
           </p>
-
         </div>
       </div>
-      
     </div>
   );
 }
