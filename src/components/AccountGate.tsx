@@ -49,48 +49,61 @@ export function AccountGate({ next }: { next: string }) {
 
   return (
     <>
-      <button
-        onClick={handleGoogle}
-        disabled={googleLoading}
-        className="w-full inline-flex items-center justify-center gap-2 bg-gold text-void py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors disabled:opacity-60"
-      >
-        {googleLoading ? (
-          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-        ) : (
-          <GoogleMark className="w-3.5 h-3.5" />
-        )}
-        Continue with Google
-      </button>
+    {/* Parent container: 'max-w-xs mx-auto' lagane se teeno boxes ki width tora kam ho jayegi */}
+<div className="w-full max-w-xs mx-auto space-y-4">
+  
+  {/* 1. Google Button */}
+  <button
+    type="button"
+    onClick={handleGoogle}
+    disabled={googleLoading}
+    className="w-full inline-flex items-center justify-center gap-3 bg-gold text-void py-3 text-xs tracking-widest font-bold rounded-xl hover:bg-gold/90 transition-colors disabled:opacity-60"
+  >
+    {googleLoading ? (
+      <Loader2 className="w-4 h-4 animate-spin" />
+    ) : (
+      <GoogleMark className="w-4 h-4" />
+    )}
+    CONTINUE WITH GOOGLE
+  </button>
 
-      <div className="flex items-center gap-3 my-5">
-        <div className="h-px flex-1 bg-gold-hairline" />
-        <span className="text-[10px] uppercase tracking-widest text-bone/40">or</span>
-        <div className="h-px flex-1 bg-gold-hairline" />
-      </div>
+  {/* Divider (OR) */}
+  <div className="relative flex items-center justify-center py-2">
+    <div className="absolute inset-0 flex items-center">
+      <div className="w-full border-t border-bone/10" />
+    </div>
+    <span className="relative bg-void px-3 text-[10px] uppercase tracking-widest text-bone/40 font-mono">
+      OR
+    </span>
+  </div>
 
-      <form onSubmit={handleEmail} className="flex flex-col gap-3">
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@email.com"
-          className="w-full bg-void border hairline px-4 py-3 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold"
-        />
-        <button
-          type="submit"
-          disabled={sending}
-          className="w-full inline-flex items-center justify-center gap-2 border border-gold text-gold py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/5 transition-colors disabled:opacity-60"
-        >
-          {sending ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-          ) : (
-            <Mail className="w-3.5 h-3.5" />
-          )}
-          Continue with Email
-        </button>
-      </form>
+  {/* Email Form */}
+  <form onSubmit={handleEmail} className="space-y-3">
+    {/* 2. Email Input Box */}
+    <input
+      type="email"
+      placeholder="Enter your email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      className="w-full px-4 py-3 bg-transparent border border-bone/20 rounded-xl text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:border-gold transition-colors"
+    />
 
+    {/* 3. Email Button */}
+    <button
+      type="submit"
+      disabled={sending}
+      className="w-full inline-flex items-center justify-center gap-3 border border-gold/40 text-gold py-3 text-xs uppercase tracking-widest font-bold rounded-xl hover:bg-gold/10 transition-colors disabled:opacity-60"
+    >
+      {sending ? (
+        <Loader2 className="w-4 h-4 animate-spin" />
+      ) : (
+        <Mail className="w-4 h-4" />
+      )}
+      CONTINUE WITH EMAIL
+    </button>
+  </form>
+
+</div>
       {error && <p className="mt-3 text-xs text-rose-400 text-center">{error}</p>}
     </>
   );

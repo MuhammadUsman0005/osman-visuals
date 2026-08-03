@@ -21,17 +21,18 @@ import {
   signUpWithPassword,
   useAuth,
 } from "@/lib/auth";
+
 type AuthMode = "signin" | "signup";
 
-export function AuthModalDialog({
-  open,
+// The one place that renders the modal's actual content. Both entry points
+// below (AuthModalDialog — externally controlled, used for redirect flows;
+// AuthModalButton — self-contained header trigger) render THIS, wrapped in
+// their own <Dialog>. Change the design, a field, a copy line — once, here.
+function AuthModalContent({
   onOpenChange,
-  onAuthenticated,
   redirectUrl,
 }: {
-  open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAuthenticated?: () => void;
   redirectUrl?: string;
 }) {
   const { t } = useTranslation();
@@ -39,39 +40,22 @@ export function AuthModalDialog({
   const [mode, setMode] = useState<AuthMode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!open) {
-      setError(null);
-      setSuccess(null);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open || !isSignedIn) return;
-    onAuthenticated?.();
-    onOpenChange(false);
-  }, [open, isSignedIn, onAuthenticated, onOpenChange]);
-
-  // Dynamic redirect URL helper (reads ?next= from URL if available)
-  const getRedirectUrl = () => {
+  function getRedirectUrl() {
     if (typeof window === "undefined") return "/";
-
     if (redirectUrl) {
       return redirectUrl.startsWith("http") ? redirectUrl : window.location.origin + redirectUrl;
     }
-
     const urlParams = new URLSearchParams(window.location.search);
     const nextParam = urlParams.get("next");
-    if (nextParam) {
-      return window.location.origin + decodeURIComponent(nextParam);
-    }
-
+    if (nextParam) return window.location.origin + decodeURIComponent(nextParam);
     return window.location.origin + window.location.pathname + window.location.search;
-  };
+  }
 
   async function handleGoogle() {
     setBusy(true);
@@ -104,12 +88,9 @@ export function AuthModalDialog({
     try {
       if (mode === "signin") {
         await signInWithPassword(email, password);
-
-        // Handle redirect for email/password login
         const urlParams = new URLSearchParams(window.location.search);
         const nextParam = urlParams.get("next");
         const target = redirectUrl || nextParam;
-
         if (target) {
           window.location.href = decodeURIComponent(target);
         } else {
@@ -132,7 +113,6 @@ export function AuthModalDialog({
     setBusy(true);
     setError(null);
     setSuccess(null);
-
     try {
       await resetPasswordForEmail(email || "", getRedirectUrl());
       setSuccess(t("auth.recovering"));
@@ -144,159 +124,229 @@ export function AuthModalDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-     <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto rounded-3xl border border-gold/20 bg-surface p-8 text-bone shadow-2xl">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/10 text-gold border border-gold/30 mb-2">
-          <span className="font-display text-xl font-bold tracking-tighter">OV</span>
-        </div>
+    <>
+      <div className="mx-auto flex justify-center -mt-6 -mb-14">
+        <img
+          src="/signInLogo.png"
+          alt="Osman Visuals"
+          className="h-42 w-42 object-contain invert dark:invert-0"
+        />
+      </div>
 
-        <DialogHeader className="text-center space-y-1 mb-4">
-          <DialogTitle className="font-display text-2xl tracking-tight text-bone text-center">
-            {isSignedIn
-              ? "Welcome back"
-              : mode === "signin"
-                ? "Welcome to Osman Visuals"
-                : "Create your account"}
-          </DialogTitle>
-          <DialogDescription className="text-xs text-bone/60 text-center">
-            {mode === "signin"
-              ? "Log in to access your studio dashboard"
-              : "Sign up to get started with your studio journey"}
-          </DialogDescription>
-        </DialogHeader>
+      <DialogHeader className="text-center space-y-3 mb-5">
+        <DialogTitle className="font-display text-3xl sm:text-3.5xl font-bold tracking-tight text-foreground text-center">
+          {isSignedIn
+            ? "Welcome back"
+            : mode === "signin"
+              ? "Log in to Osman Visuals"
+              : "Create your account"}
+        </DialogTitle>
+        <DialogDescription className="text-sm text-muted-foreground text-center">
+          {mode === "signin"
+            ? "Sign in to continue your creative archive."
+            : "Sign up to get started with your studio journey."}
+        </DialogDescription>
+      </DialogHeader>
 
-        <div className="grid gap-2.5 mb-5">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-11 justify-center gap-3 rounded-xl border border-gold/25 bg-transparent text-bone hover:bg-gold/5 font-normal"
-            onClick={handleGoogle}
-            disabled={busy}
-          >
-            <GoogleMark className="h-4 w-4" />
-            <span className="text-sm">{t("auth.continueGoogle")}</span>
-          </Button>
+      <div className="w-full mx-auto grid gap-2.5 mb-5">
+        <Button
+          type="button"
+          variant="outline"
+          className="h-11 w-full justify-center gap-3 rounded-2xl border border-gold/25 bg-background/40 hover:bg-gold/10 text-foreground hover:text-foreground font-medium transition-all"
+          onClick={handleGoogle}
+          disabled={busy}
+        >
+          <GoogleMark className="h-4 w-4" />
+          <span className="text-sm font-bold">Continue With Google</span>
+        </Button>
 
-          <Button
-            type="button"
-            variant="outline"
-            className="h-11 justify-center gap-3 rounded-xl border border-gold/25 bg-transparent text-bone hover:bg-gold/5 font-normal"
-            onClick={handleGithub}
-            disabled={busy}
-          >
-            <Github className="h-4 w-4" />
-            <span className="text-sm">{t("auth.continueGithub")}</span>
-          </Button>
-        </div>
+        <Button
+          type="button"
+          variant="outline"
+          className="h-11 w-full justify-center gap-3 rounded-2xl border border-gold/25 bg-background/40 hover:bg-gold/10 text-foreground hover:text-foreground font-medium transition-all"
+          onClick={handleGithub}
+          disabled={busy}
+        >
+          <Github className="h-4 w-4" />
+          <span className="text-sm font-bold">Continue With GitHub</span>
+        </Button>
+      </div>
 
-        <div className="flex items-center gap-3 mb-5">
-          <span className="h-px flex-1 bg-gold/20" />
-          <span className="text-[10px] uppercase tracking-[0.3em] text-bone/40">
-            Or continue with email
-          </span>
-          <span className="h-px flex-1 bg-gold/20" />
-        </div>
+      <div className="flex items-center gap-3 mb-6">
+        <span className="h-px flex-1 bg-gold/20" />
+        <span className="text-[11px]  tracking-[0.25em] text-bone/40">Or continue with email</span>
+        <span className="h-px flex-1 bg-gold/20" />
+      </div>
 
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          <div className="grid gap-1.5 text-xs text-bone/70">
-            <span>{t("auth.email")}</span>
+      <form className="grid gap-5" onSubmit={handleSubmit}>
+        <div className="grid gap-1.5 text-xs text-bone/70">
+          <span>Email address</span>
+          <div className="relative">
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-bone/30" />
             <input
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               required
-              className="h-11 rounded-xl border border-gold/20 bg-background/50 px-3.5 text-sm text-bone outline-none transition-colors focus:border-gold focus-visible:ring-1 focus-visible:ring-ring"
-              placeholder="you@osmanvisuals.com"
+              className="h-12 w-full rounded-2xl border border-gold/20 bg-background/50 pl-10 pr-3.5 text-sm text-bone outline-none transition-colors focus:border-gold focus-visible:ring-1 focus-visible:ring-ring"
+              placeholder="Enter you email"
             />
           </div>
+        </div>
 
-          <div className="grid gap-1.5 text-xs text-bone/70">
-            <span>{t("auth.password")}</span>
+        <div className="grid gap-1.5 text-xs text-bone/70">
+          <span>Password</span>
+          <div className="relative">
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-bone/30" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
-              className="h-11 rounded-xl border border-gold/20 bg-background/50 px-3.5 text-sm text-bone outline-none transition-colors focus:border-gold focus-visible:ring-1 focus-visible:ring-ring"
+              className="h-12 w-full rounded-2xl border border-gold/20 bg-background/50 pl-10 pr-10 text-sm text-bone outline-none transition-colors focus:border-gold focus-visible:ring-1 focus-visible:ring-ring"
               placeholder="••••••••"
             />
-          </div>
-
-          {error && <p className="text-xs text-rose-300">{error}</p>}
-          {success && <p className="text-xs text-emerald-300">{success}</p>}
-
-          <Button
-            type="submit"
-            disabled={busy}
-            className="h-11 w-full rounded-xl bg-gold text-void font-medium hover:bg-gold/90 mt-1"
-          >
-            {busy ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : mode === "signin" ? (
-              t("auth.signIn")
-            ) : (
-              t("auth.create")
-            )}
-          </Button>
-
-          <div className="flex items-center justify-between text-xs mt-1">
             <button
               type="button"
-              className="text-gold/80 transition-colors hover:text-gold hover:underline"
-              onClick={handleForgotPassword}
+              onClick={() => setShowPassword((s) => !s)}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-bone/30 hover:text-bone/60"
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {t("auth.forgotPassword")}
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
-
-            {isSignedIn && (
-              <button
-                type="button"
-                className="inline-flex items-center gap-1.5 text-bone/70 transition-colors hover:text-gold"
-                onClick={async () => {
-                  await signOut();
-                  onOpenChange(false);
-                }}
-              >
-                <ShieldCheck className="h-3.5 w-3.5" />
-                Sign out
-              </button>
-            )}
           </div>
-        </form>
-
-        <div className="mt-6 text-center text-xs text-bone/60">
-          {mode === "signin" ? (
-            <p>
-              Don't have an account?{" "}
-              <button
-                type="button"
-                className="text-gold font-medium hover:underline ml-1"
-                onClick={() => {
-                  setMode("signup");
-                  setError(null);
-                  setSuccess(null);
-                }}
-              >
-                Sign up
-              </button>
-            </p>
-          ) : (
-            <p>
-              Already have an account?{" "}
-              <button
-                type="button"
-                className="text-gold font-medium hover:underline ml-1"
-                onClick={() => {
-                  setMode("signin");
-                  setError(null);
-                  setSuccess(null);
-                }}
-              >
-                Sign in
-              </button>
-            </p>
-          )}
         </div>
+
+        {error && <p className="text-xs text-rose-300">{error}</p>}
+        {success && <p className="text-xs text-emerald-300">{success}</p>}
+
+        <Button
+          type="submit"
+          disabled={busy}
+          className="h-[52px] w-full rounded-2xl bg-gold text-void font-medium tracking-wide hover:bg-gold/90"
+        >
+          {busy ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : mode === "signin" ? (
+            t("auth.signIn")
+          ) : (
+            t("auth.create")
+          )}
+        </Button>
+
+        <div className="flex items-center justify-between text-xs -mt-1">
+          <label className="flex items-center gap-2 text-bone/60 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="h-3.5 w-3.5 rounded border-gold/30 accent-gold"
+            />
+            Remember me
+          </label>
+
+          <button
+            type="button"
+            className="text-gold/80 transition-colors hover:text-gold hover:underline"
+            onClick={handleForgotPassword}
+          >
+            {t("auth.forgotPassword")}
+          </button>
+        </div>
+
+        {isSignedIn && (
+          <button
+            type="button"
+            className="inline-flex items-center justify-center gap-1.5 text-xs text-bone/70 transition-colors hover:text-gold"
+            onClick={async () => {
+              await signOut();
+              onOpenChange(false);
+            }}
+          >
+            <ShieldCheck className="h-3.5 w-3.5" />
+            Sign out
+          </button>
+        )}
+      </form>
+
+      <div className="mt-7 text-center text-xs text-bone/60">
+        {mode === "signin" ? (
+          <p>
+            New here?{" "}
+            <button
+              type="button"
+              className="text-gold font-medium hover:underline ml-1"
+              onClick={() => {
+                setMode("signup");
+                setError(null);
+                setSuccess(null);
+              }}
+            >
+              Create your Studio Account →
+            </button>
+          </p>
+        ) : (
+          <p>
+            Already have an account?{" "}
+            <button
+              type="button"
+              className="text-gold font-medium hover:underline ml-1"
+              onClick={() => {
+                setMode("signin");
+                setError(null);
+                setSuccess(null);
+              }}
+            >
+              Sign in
+            </button>
+          </p>
+        )}
+      </div>
+
+      {/* <p className="mt-6 text-center text-[10px] uppercase tracking-[0.2em] text-bone/35">
+        Secure authentication · Google · GitHub · Email
+      </p> */}
+      <p className="mt-4 text-center text-xs text-muted-foreground">
+        By continuing, you agree to Osman Visuals’{" "}
+        <a href="/terms" className="underline hover:text-gold transition-colors">
+          Terms of Use
+        </a>{" "}
+        and{" "}
+        <a href="/refunds" className="underline hover:text-gold transition-colors">
+          Privacy Policy
+        </a>
+        .
+      </p>
+    </>
+  );
+}
+
+const dialogContentClass =
+  "w-[94vw] max-w-lg max-h-[90vh] overflow-y-auto sm:rounded-3xl border border-gold/25 bg-background px-6 pb-8 pt-4 sm:px-8 sm:pb-9 sm:pt-5 text-foreground shadow-[0_30px_80px_rgba(0,0,0,.4)]";
+
+export function AuthModalDialog({
+  open,
+  onOpenChange,
+  onAuthenticated,
+  redirectUrl,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onAuthenticated?: () => void;
+  redirectUrl?: string;
+}) {
+  const { isSignedIn } = useAuth();
+
+  useEffect(() => {
+    if (!open || !isSignedIn) return;
+    onAuthenticated?.();
+    onOpenChange(false);
+  }, [open, isSignedIn, onAuthenticated, onOpenChange]);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className={dialogContentClass}>
+        <AuthModalContent onOpenChange={onOpenChange} redirectUrl={redirectUrl} />
       </DialogContent>
     </Dialog>
   );
@@ -306,99 +356,6 @@ export function AuthModalButton({ className = "" }: { className?: string }) {
   const { t } = useTranslation();
   const { isSignedIn, user, loading } = useAuth();
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<AuthMode>("signin");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!open) {
-      setError(null);
-      setSuccess(null);
-    }
-  }, [open]);
-
-  // Dynamic redirect URL helper (reads ?next= from URL if available)
-  const getRedirectUrl = () => {
-    if (typeof window === "undefined") return "/";
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const nextParam = urlParams.get("next");
-    if (nextParam) {
-      return window.location.origin + decodeURIComponent(nextParam);
-    }
-
-    return window.location.origin + window.location.pathname + window.location.search;
-  };
-
-  async function handleGoogle() {
-    setBusy(true);
-    setError(null);
-    try {
-      await signInWithGoogle(getRedirectUrl());
-    } catch {
-      setError(t("auth.error"));
-      setBusy(false);
-    }
-  }
-
-  async function handleGithub() {
-    setBusy(true);
-    setError(null);
-    try {
-      await signInWithGithub(getRedirectUrl());
-    } catch {
-      setError(t("auth.error"));
-      setBusy(false);
-    }
-  }
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setBusy(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      if (mode === "signin") {
-        await signInWithPassword(email, password);
-
-        // Handle redirect for email/password login
-        const urlParams = new URLSearchParams(window.location.search);
-        const nextParam = urlParams.get("next");
-
-        if (nextParam) {
-          window.location.href = decodeURIComponent(nextParam);
-        } else {
-          setOpen(false);
-        }
-      } else {
-        await signUpWithPassword(email, password);
-        setSuccess("Check your inbox to verify your account.");
-      }
-    } catch {
-      setError(t("auth.error"));
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function handleForgotPassword() {
-    setBusy(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      await resetPasswordForEmail(email || "", getRedirectUrl());
-      setSuccess(t("auth.recovering"));
-    } catch {
-      setError(t("auth.error"));
-    } finally {
-      setBusy(false);
-    }
-  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -418,174 +375,8 @@ export function AuthModalButton({ className = "" }: { className?: string }) {
         </button>
       </DialogTrigger>
 
-      <DialogContent
-  className="
-    w-[94vw]
-    max-w-[520px]
-    max-h-[90vh]
-    overflow-y-auto
-    rounded-[32px]
-    border
-    border-gold/15
-    bg-gradient-to-b
-    from-surface
-    to-background
-    p-10
-    text-bone
-    shadow-[0_30px_80px_rgba(0,0,0,.35)]
-  "
->
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/10 text-gold border border-gold/30 mb-2">
-          <span className="font-display text-xl font-bold tracking-tighter">OV</span>
-        </div>
-
-        <DialogHeader className="text-center space-y-1 mb-4">
-          <DialogTitle className="font-display text-2xl tracking-tight text-bone text-center">
-            {isSignedIn
-              ? "Welcome back"
-              : mode === "signin"
-                ? "Welcome to Osman Visuals"
-                : "Create your account"}
-          </DialogTitle>
-          <DialogDescription className="text-xs text-bone/60 text-center">
-            {mode === "signin"
-              ? "Log in to access your studio dashboard"
-              : "Sign up to get started with your studio journey"}
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="grid gap-2.5 mb-5">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-11 justify-center gap-3 rounded-xl border border-gold/25 bg-transparent text-bone hover:bg-gold/5 font-normal"
-            onClick={handleGoogle}
-            disabled={busy}
-          >
-            <GoogleMark className="h-4 w-4" />
-            <span className="text-sm">{t("auth.continueGoogle")}</span>
-          </Button>
-
-          <Button
-            type="button"
-            variant="outline"
-            className="h-11 justify-center gap-3 rounded-xl border border-gold/25 bg-transparent text-bone hover:bg-gold/5 font-normal"
-            onClick={handleGithub}
-            disabled={busy}
-          >
-            <Github className="h-4 w-4" />
-            <span className="text-sm">{t("auth.continueGithub")}</span>
-          </Button>
-        </div>
-
-        <div className="flex items-center gap-3 mb-5">
-          <span className="h-px flex-1 bg-gold/20" />
-          <span className="text-[10px] uppercase tracking-[0.3em] text-bone/40">
-            Or continue with email
-          </span>
-          <span className="h-px flex-1 bg-gold/20" />
-        </div>
-
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          <div className="grid gap-1.5 text-xs text-bone/70">
-            <span>{t("auth.email")}</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-              className="h-11 rounded-xl border border-gold/20 bg-background/50 px-3.5 text-sm text-bone outline-none transition-colors focus:border-gold focus-visible:ring-1 focus-visible:ring-ring"
-              placeholder="you@osmanvisuals.com"
-            />
-          </div>
-
-          <div className="grid gap-1.5 text-xs text-bone/70">
-            <span>{t("auth.password")}</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              className="h-11 rounded-xl border border-gold/20 bg-background/50 px-3.5 text-sm text-bone outline-none transition-colors focus:border-gold focus-visible:ring-1 focus-visible:ring-ring"
-              placeholder="••••••••"
-            />
-          </div>
-
-          {error && <p className="text-xs text-rose-300">{error}</p>}
-          {success && <p className="text-xs text-emerald-300">{success}</p>}
-
-          <Button
-            type="submit"
-            disabled={busy}
-            className="h-11 w-full rounded-xl bg-gold text-void font-medium hover:bg-gold/90 mt-1"
-          >
-            {busy ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : mode === "signin" ? (
-              t("auth.signIn")
-            ) : (
-              t("auth.create")
-            )}
-          </Button>
-
-          <div className="flex items-center justify-between text-xs mt-1">
-            <button
-              type="button"
-              className="text-gold/80 transition-colors hover:text-gold hover:underline"
-              onClick={handleForgotPassword}
-            >
-              {t("auth.forgotPassword")}
-            </button>
-
-            {isSignedIn && (
-              <button
-                type="button"
-                className="inline-flex items-center gap-1.5 text-bone/70 transition-colors hover:text-gold"
-                onClick={async () => {
-                  await signOut();
-                  setOpen(false);
-                }}
-              >
-                <ShieldCheck className="h-3.5 w-3.5" />
-                Sign out
-              </button>
-            )}
-          </div>
-        </form>
-
-        <div className="mt-6 text-center text-xs text-bone/60">
-          {mode === "signin" ? (
-            <p>
-              Don't have an account?{" "}
-              <button
-                type="button"
-                className="text-gold font-medium hover:underline ml-1"
-                onClick={() => {
-                  setMode("signup");
-                  setError(null);
-                  setSuccess(null);
-                }}
-              >
-                Sign up
-              </button>
-            </p>
-          ) : (
-            <p>
-              Already have an account?{" "}
-              <button
-                type="button"
-                className="text-gold font-medium hover:underline ml-1"
-                onClick={() => {
-                  setMode("signin");
-                  setError(null);
-                  setSuccess(null);
-                }}
-              >
-                Sign in
-              </button>
-            </p>
-          )}
-        </div>
+      <DialogContent className={dialogContentClass}>
+        <AuthModalContent onOpenChange={setOpen} />
       </DialogContent>
     </Dialog>
   );

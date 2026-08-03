@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -181,13 +182,21 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-
 function SiteChrome({ children }: { children: ReactNode }) {
+  const location = useLocation();
+  
+  // Check karein agar user exactly '/unlock' page par hay
+  const isUnlockPage = location.pathname === "/unlock";
+
   return (
     <div className="min-h-screen flex flex-col bg-void text-bone transition-colors duration-300">
-      <SiteHeader />
+      {/* Agar unlock page nahi hay tabhi Navbar dikhao */}
+      {!isUnlockPage && <SiteHeader />}
+      
       <main className="flex-1">{children}</main>
-      <SiteFooter />
+      
+      {/* Agar unlock page nahi hay tabhi Footer dikhao */}
+      {!isUnlockPage && <SiteFooter />}
     </div>
   );
 }
