@@ -80,8 +80,8 @@
 :root {
   --radius: 0.125rem;
 
-  --void: #f0eeec;    /* Soft Warm Ivory Page Background */
-  --surface: #ffffff;
+  --void: #F5F2EE;
+--surface: #FAF8F5;
   /* pure white cards, pop against the ivory */
   --bone: #000000;
   /* near-black warm ink for primary text */

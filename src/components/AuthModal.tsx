@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Github, Loader2, ShieldCheck } from "lucide-react";
+import { Github, Loader2, ShieldCheck, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import {
   signUpWithPassword,
   useAuth,
 } from "@/lib/auth";
+type AuthMode = "signin" | "signup";
 
 export function AuthModalDialog({
   open,
@@ -35,7 +36,7 @@ export function AuthModalDialog({
 }) {
   const { t } = useTranslation();
   const { isSignedIn } = useAuth();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<AuthMode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -58,7 +59,7 @@ export function AuthModalDialog({
   // Dynamic redirect URL helper (reads ?next= from URL if available)
   const getRedirectUrl = () => {
     if (typeof window === "undefined") return "/";
-    
+
     if (redirectUrl) {
       return redirectUrl.startsWith("http") ? redirectUrl : window.location.origin + redirectUrl;
     }
@@ -103,7 +104,7 @@ export function AuthModalDialog({
     try {
       if (mode === "signin") {
         await signInWithPassword(email, password);
-        
+
         // Handle redirect for email/password login
         const urlParams = new URLSearchParams(window.location.search);
         const nextParam = urlParams.get("next");
@@ -144,17 +145,23 @@ export function AuthModalDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto rounded-3xl border border-gold/20 bg-surface p-8 text-bone shadow-2xl">
+     <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto rounded-3xl border border-gold/20 bg-surface p-8 text-bone shadow-2xl">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/10 text-gold border border-gold/30 mb-2">
           <span className="font-display text-xl font-bold tracking-tighter">OV</span>
         </div>
 
         <DialogHeader className="text-center space-y-1 mb-4">
           <DialogTitle className="font-display text-2xl tracking-tight text-bone text-center">
-            {isSignedIn ? "Welcome back" : mode === "signin" ? "Welcome to Osman Visuals" : "Create your account"}
+            {isSignedIn
+              ? "Welcome back"
+              : mode === "signin"
+                ? "Welcome to Osman Visuals"
+                : "Create your account"}
           </DialogTitle>
           <DialogDescription className="text-xs text-bone/60 text-center">
-            {mode === "signin" ? "Log in to access your studio dashboard" : "Sign up to get started with your studio journey"}
+            {mode === "signin"
+              ? "Log in to access your studio dashboard"
+              : "Sign up to get started with your studio journey"}
           </DialogDescription>
         </DialogHeader>
 
@@ -184,7 +191,9 @@ export function AuthModalDialog({
 
         <div className="flex items-center gap-3 mb-5">
           <span className="h-px flex-1 bg-gold/20" />
-          <span className="text-[10px] uppercase tracking-[0.3em] text-bone/40">Or continue with email</span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-bone/40">
+            Or continue with email
+          </span>
           <span className="h-px flex-1 bg-gold/20" />
         </div>
 
@@ -297,7 +306,7 @@ export function AuthModalButton({ className = "" }: { className?: string }) {
   const { t } = useTranslation();
   const { isSignedIn, user, loading } = useAuth();
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<AuthMode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -355,7 +364,7 @@ export function AuthModalButton({ className = "" }: { className?: string }) {
     try {
       if (mode === "signin") {
         await signInWithPassword(email, password);
-        
+
         // Handle redirect for email/password login
         const urlParams = new URLSearchParams(window.location.search);
         const nextParam = urlParams.get("next");
@@ -397,7 +406,7 @@ export function AuthModalButton({ className = "" }: { className?: string }) {
         <button
           type="button"
           className={cn(
-            "inline-flex h-8 items-center justify-center rounded-full border border-gold/55 bg-gold px-3.5 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-void transition-all duration-200 hover:bg-gold/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+            "inline-flex h-9 items-center justify-center rounded-full border border-gold/55 bg-gold px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-void transition-all duration-200 hover:bg-gold/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
             className,
           )}
         >
@@ -409,17 +418,39 @@ export function AuthModalButton({ className = "" }: { className?: string }) {
         </button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto rounded-3xl border border-gold/20 bg-surface p-8 text-bone shadow-2xl">
+      <DialogContent
+  className="
+    w-[94vw]
+    max-w-[520px]
+    max-h-[90vh]
+    overflow-y-auto
+    rounded-[32px]
+    border
+    border-gold/15
+    bg-gradient-to-b
+    from-surface
+    to-background
+    p-10
+    text-bone
+    shadow-[0_30px_80px_rgba(0,0,0,.35)]
+  "
+>
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/10 text-gold border border-gold/30 mb-2">
           <span className="font-display text-xl font-bold tracking-tighter">OV</span>
         </div>
 
         <DialogHeader className="text-center space-y-1 mb-4">
           <DialogTitle className="font-display text-2xl tracking-tight text-bone text-center">
-            {isSignedIn ? "Welcome back" : mode === "signin" ? "Welcome to Osman Visuals" : "Create your account"}
+            {isSignedIn
+              ? "Welcome back"
+              : mode === "signin"
+                ? "Welcome to Osman Visuals"
+                : "Create your account"}
           </DialogTitle>
           <DialogDescription className="text-xs text-bone/60 text-center">
-            {mode === "signin" ? "Log in to access your studio dashboard" : "Sign up to get started with your studio journey"}
+            {mode === "signin"
+              ? "Log in to access your studio dashboard"
+              : "Sign up to get started with your studio journey"}
           </DialogDescription>
         </DialogHeader>
 
@@ -449,7 +480,9 @@ export function AuthModalButton({ className = "" }: { className?: string }) {
 
         <div className="flex items-center gap-3 mb-5">
           <span className="h-px flex-1 bg-gold/20" />
-          <span className="text-[10px] uppercase tracking-[0.3em] text-bone/40">Or continue with email</span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-bone/40">
+            Or continue with email
+          </span>
           <span className="h-px flex-1 bg-gold/20" />
         </div>
 

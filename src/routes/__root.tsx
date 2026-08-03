@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { MobileNav } from "../components/MobileNav";
-import { Instagram, Moon, Sun } from "lucide-react";
+import { Instagram, Moon, Sun, Menu } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { AuthModalButton } from "@/components/AuthModal";
 import "@/lib/i18n";
@@ -45,7 +45,7 @@ useEffect(() => {
       type="button"
       aria-label="Toggle theme"
       // Yahan maine rounded-md ko rounded-full kar diya hai (Circle ke liye)
-      className="group inline-flex h-8 w-8 items-center justify-center rounded-full border border-gold-hairline bg-surface text-bone transition-all duration-200 hover:border-gold/70 hover:bg-gold/5 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+      className="group inline-flex h-9 w-9 items-center justify-center rounded-full border border-gold-hairline bg-surface text-bone transition-all duration-200 hover:border-gold/70 hover:bg-gold/5 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
     >
       {/* Yahan maine isDark par Moon aur light par Sun kar diya hai (Ulta kar diya) */}
       {isDark ? (
@@ -194,6 +194,8 @@ function SiteChrome({ children }: { children: ReactNode }) {
 
 function SiteHeader() {
   const { t } = useTranslation();
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
   const links = [
     { to: "/gallery", label: t("nav.gallery") },
     { to: "/library", label: t("nav.library") },
@@ -201,13 +203,28 @@ function SiteHeader() {
     { to: "/guides", label: t("nav.guides") },
     { to: "/about", label: t("nav.about") },
   ] as const;
+  
   const mobileExtraLinks = [{ to: "/contact", label: t("nav.contact") }] as const;
 
   return (
     <header className="border-b hairline bg-surface/80 backdrop-blur sticky top-0 z-40 transition-colors duration-300">
-      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-4 md:px-6 lg:px-10">
-        <div className="flex items-center justify-start">
-          <Link to="/" className="flex items-baseline gap-2 group">
+      {/* YAHAN FIX KIYA HAY: Mobile ke liye 'flex justify-between' aur desktop ke liye 'md:grid' */}
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr] px-4 md:px-6 lg:px-10">
+        
+        {/* --- LEFT SIDE --- */}
+        <div className="flex items-center justify-start gap-3">
+          {/* Mobile Menu Trigger (Hamburger) */}
+          <button
+            onClick={() => setIsMobileNavOpen(true)}
+            className="md:hidden p-2 -ml-1 text-bone hover:text-gold transition-colors focus-visible:outline-none"
+            aria-label="Open navigation menu"
+          >
+            <Menu size={30} />
+          </button>
+
+       
+          {/* Desktop Full Text Logo */}
+          <Link to="/" className="hidden md:flex items-baseline gap-2 group">
             <span className="font-display text-xl tracking-tight text-bone group-hover:text-gold transition-colors">
               Osman Visuals
             </span>
@@ -215,6 +232,7 @@ function SiteHeader() {
           </Link>
         </div>
 
+        {/* --- MIDDLE (Desktop Links) --- */}
         <nav className="hidden md:flex items-center gap-6 lg:gap-8 justify-center">
           {links.map((link) => (
             <Link
@@ -227,27 +245,27 @@ function SiteHeader() {
           ))}
         </nav>
 
-      <div className="flex items-center justify-end gap-2 md:gap-3">
-          {/* YAHAN ORDER CHANGE KIYA HAI: Pehle AuthModal (Sign In), Phir Language */}
-          <div className="hidden md:flex items-center gap-2">
-            <AuthModalButton />
-            <LanguageSwitcher />
-          </div>
+        {/* --- RIGHT SIDE --- */}
+        <div className="flex items-center justify-end gap-2 md:gap-3">
+          <AuthModalButton />
+          <LanguageSwitcher />
           <ThemeToggle />
-          
-          <div className="md:hidden">
-            <MobileNav
-              links={links}
-              extraLinks={mobileExtraLinks}
-              languageSlot={<LanguageSwitcher className="w-full" />}
-              authSlot={<AuthModalButton className="w-full" />}
-            />
-          </div>
         </div>
       </div>
+
+      {/* --- FULL SCREEN MOBILE DRAWER --- */}
+      <MobileNav
+        isOpen={isMobileNavOpen}
+        onClose={() => setIsMobileNavOpen(false)}
+        links={links}
+        extraLinks={mobileExtraLinks}
+        languageSlot={<LanguageSwitcher className="w-full" />}
+        authSlot={<AuthModalButton className="w-full" />}
+      />
     </header>
   );
 }
+
 function SiteFooter() {
   return (
     <footer className="mt-24 border-t hairline bg-surface/90 backdrop-blur-md transition-colors duration-300 shadow-inner">

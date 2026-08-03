@@ -21,7 +21,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
         <button
           type="button"
           aria-label={t("nav.language")}
-          className={`group inline-flex h-8 w-8 items-center justify-center rounded-full border border-gold-hairline bg-surface text-bone/80 transition-all duration-200 hover:border-gold/70 hover:bg-gold/5 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${className}`.trim()}
+          className={`group inline-flex h-9 w-9 items-center justify-center rounded-full border border-gold-hairline bg-surface text-bone/80 transition-all duration-200 hover:border-gold/70 hover:bg-gold/5 hover:text-gold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${className}`.trim()}
         >
           <Languages className="h-4 w-4 transition-transform duration-200 group-hover:scale-105" />
         </button>
