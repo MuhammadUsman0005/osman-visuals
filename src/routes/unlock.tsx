@@ -41,18 +41,18 @@ const BENEFITS = [
 
 // Yahan apni 12 images ke paths set kar diye gaye hain
 const SHOWCASE_IMAGES = [
-  "/public/images/plate-01.jpg",
-  "/public/images/plate-02.jpg",
-  "/public/images/plate-04.webp",
-  "/public/images/plate-07.jpg",
-  "/public/images/plate-10.jpg",
-  "/public/images/plate-06.webp",
-  "/public/images/plate-08.jpg",
-  "/public/images/plate-05.webp",
-  "/public/images/plate-09.jpg",
-  "/public/images/plate-12.jpg",
-  "/public/images/plate-03.webp",
-  "/public/images/plate-13.jpg",
+  "/images/plate-01.jpg",
+  "/images/plate-02.jpg",
+  "/images/plate-04.webp",
+  "/images/plate-07.jpg",
+  "/images/plate-10.jpg",
+  "/images/plate-06.webp",
+  "/images/plate-08.jpg",
+  "/images/plate-05.webp",
+  "/images/plate-09.jpg",
+  "/images/plate-12.jpg",
+  "/images/plate-03.webp",
+  "/images/plate-13.jpg",
 ];
 
 export const Route = createFileRoute("/unlock")({
