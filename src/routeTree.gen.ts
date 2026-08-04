@@ -16,11 +16,14 @@ import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LicensingRouteImport } from './routes/licensing'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UnlockRouteImport } from './routes/unlock'
+import { Route as UpdatesRouteImport } from './routes/updates'
+import { Route as AccountSettingsRouteImport } from './routes/account.settings'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as GuidesSlugRouteImport } from './routes/guides_.$slug'
 import { Route as ResourcesSlugRouteImport } from './routes/resources_.$slug'
@@ -60,6 +63,11 @@ const LicensingRoute = LicensingRouteImport.update({
   path: '/licensing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RefundsRoute = RefundsRouteImport.update({
   id: '/refunds',
   path: '/refunds',
@@ -83,6 +91,16 @@ const TermsRoute = TermsRouteImport.update({
 const UnlockRoute = UnlockRouteImport.update({
   id: '/unlock',
   path: '/unlock',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UpdatesRoute = UpdatesRouteImport.update({
+  id: '/updates',
+  path: '/updates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountSettingsRoute = AccountSettingsRouteImport.update({
+  id: '/account/settings',
+  path: '/account/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
@@ -109,11 +127,14 @@ export interface FileRoutesByFullPath {
   '/guides': typeof GuidesRoute
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
+  '/profile': typeof ProfileRoute
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/unlock': typeof UnlockRoute
+  '/updates': typeof UpdatesRoute
+  '/account/settings': typeof AccountSettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/resources/$slug': typeof ResourcesSlugRoute
@@ -126,11 +147,14 @@ export interface FileRoutesByTo {
   '/guides': typeof GuidesRoute
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
+  '/profile': typeof ProfileRoute
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/unlock': typeof UnlockRoute
+  '/updates': typeof UpdatesRoute
+  '/account/settings': typeof AccountSettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/resources/$slug': typeof ResourcesSlugRoute
@@ -144,11 +168,14 @@ export interface FileRoutesById {
   '/guides': typeof GuidesRoute
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
+  '/profile': typeof ProfileRoute
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/unlock': typeof UnlockRoute
+  '/updates': typeof UpdatesRoute
+  '/account/settings': typeof AccountSettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/guides_/$slug': typeof GuidesSlugRoute
   '/resources_/$slug': typeof ResourcesSlugRoute
@@ -163,11 +190,14 @@ export interface FileRouteTypes {
     | '/guides'
     | '/library'
     | '/licensing'
+    | '/profile'
     | '/refunds'
     | '/resources'
     | '/sitemap.xml'
     | '/terms'
     | '/unlock'
+    | '/updates'
+    | '/account/settings'
     | '/auth/callback'
     | '/guides/$slug'
     | '/resources/$slug'
@@ -180,11 +210,14 @@ export interface FileRouteTypes {
     | '/guides'
     | '/library'
     | '/licensing'
+    | '/profile'
     | '/refunds'
     | '/resources'
     | '/sitemap.xml'
     | '/terms'
     | '/unlock'
+    | '/updates'
+    | '/account/settings'
     | '/auth/callback'
     | '/guides/$slug'
     | '/resources/$slug'
@@ -197,11 +230,14 @@ export interface FileRouteTypes {
     | '/guides'
     | '/library'
     | '/licensing'
+    | '/profile'
     | '/refunds'
     | '/resources'
     | '/sitemap.xml'
     | '/terms'
     | '/unlock'
+    | '/updates'
+    | '/account/settings'
     | '/auth/callback'
     | '/guides_/$slug'
     | '/resources_/$slug'
@@ -215,11 +251,14 @@ export interface RootRouteChildren {
   GuidesRoute: typeof GuidesRoute
   LibraryRoute: typeof LibraryRoute
   LicensingRoute: typeof LicensingRoute
+  ProfileRoute: typeof ProfileRoute
   RefundsRoute: typeof RefundsRoute
   ResourcesRoute: typeof ResourcesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   UnlockRoute: typeof UnlockRoute
+  UpdatesRoute: typeof UpdatesRoute
+  AccountSettingsRoute: typeof AccountSettingsRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   ResourcesSlugRoute: typeof ResourcesSlugRoute
@@ -276,6 +315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LicensingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/refunds': {
       id: '/refunds'
       path: '/refunds'
@@ -311,6 +357,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnlockRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/updates': {
+      id: '/updates'
+      path: '/updates'
+      fullPath: '/updates'
+      preLoaderRoute: typeof UpdatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/settings': {
+      id: '/account/settings'
+      path: '/account/settings'
+      fullPath: '/account/settings'
+      preLoaderRoute: typeof AccountSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/auth/callback'
@@ -343,11 +403,14 @@ const rootRouteChildren: RootRouteChildren = {
   GuidesRoute: GuidesRoute,
   LibraryRoute: LibraryRoute,
   LicensingRoute: LicensingRoute,
+  ProfileRoute: ProfileRoute,
   RefundsRoute: RefundsRoute,
   ResourcesRoute: ResourcesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   UnlockRoute: UnlockRoute,
+  UpdatesRoute: UpdatesRoute,
+  AccountSettingsRoute: AccountSettingsRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   ResourcesSlugRoute: ResourcesSlugRoute,

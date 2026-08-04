@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   useLocation,
   HeadContent,
   Scripts,
@@ -17,6 +18,8 @@ import { MobileNav } from "../components/MobileNav";
 import { Instagram, Moon, Sun, Menu } from "lucide-react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { AuthModalButton } from "@/components/AuthModal";
+import { UserAccountMenu } from "@/components/UserAccountMenu";
+import { useAuth } from "@/lib/auth";
 import "@/lib/i18n";
 
 // Theme Switcher Component
@@ -183,26 +186,24 @@ function RootComponent() {
   );
 }
 function SiteChrome({ children }: { children: ReactNode }) {
-  const location = useLocation();
-  
-  // Check karein agar user exactly '/unlock' page par hay
-  const isUnlockPage = location.pathname === "/unlock";
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isUnlockPage = pathname === "/unlock";
 
   return (
     <div className="min-h-screen flex flex-col bg-void text-bone transition-colors duration-300">
-      {/* Agar unlock page nahi hay tabhi Navbar dikhao */}
+      {/* Navbar unlock page par nahi dikhega */}
       {!isUnlockPage && <SiteHeader />}
       
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 flex flex-col">{children}</main>
       
-      {/* Agar unlock page nahi hay tabhi Footer dikhao */}
+      {/* Footer unlock page par nahi dikhega */}
       {!isUnlockPage && <SiteFooter />}
     </div>
   );
 }
-
 function SiteHeader() {
   const { t } = useTranslation();
+  const { isSignedIn } = useAuth();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   const links = [
@@ -255,8 +256,8 @@ function SiteHeader() {
         </nav>
 
         {/* --- RIGHT SIDE --- */}
-        <div className="flex items-center justify-end gap-2 md:gap-3">
-          <AuthModalButton />
+      <div className="flex items-center justify-end gap-2 md:gap-3">
+          {isSignedIn ? <UserAccountMenu /> : <AuthModalButton />}
           <LanguageSwitcher />
           <ThemeToggle />
         </div>
@@ -269,7 +270,13 @@ function SiteHeader() {
         links={links}
         extraLinks={mobileExtraLinks}
         languageSlot={<LanguageSwitcher className="w-full" />}
-        authSlot={<AuthModalButton className="w-full" />}
+        authSlot={
+          isSignedIn ? (
+            <UserAccountMenu variant="mobile" />
+          ) : (
+            <AuthModalButton className="w-full" />
+          )
+        }
       />
     </header>
   );
