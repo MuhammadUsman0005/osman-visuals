@@ -200,7 +200,7 @@ function SiteChrome({ children }: { children: ReactNode }) {
       {!isUnlockPage && <SiteFooter />}
     </div>
   );
-}
+
 function SiteHeader() {
   const { t } = useTranslation();
   const { isSignedIn } = useAuth();
@@ -256,10 +256,20 @@ function SiteHeader() {
         </nav>
 
         {/* --- RIGHT SIDE --- */}
-      <div className="flex items-center justify-end gap-2 md:gap-3">
-          {isSignedIn ? <UserAccountMenu /> : <AuthModalButton />}
+     {/* --- RIGHT SIDE --- */}
+        <div className="flex items-center justify-end gap-2 md:gap-3">
+          
+          {/* 1. Pehle: Sign In Button / User Menu */}
+          
+          {/* 2. Dusra: Theme Toggle (Sirf tab dikhega jab user Signed In NA ho) */}
+          
+          {/* 3. Teesra: Language Selector Button */}
           <LanguageSwitcher />
-          <ThemeToggle />
+          
+          {!isSignedIn && (
+            <ThemeToggle />
+          )}
+          {isSignedIn ? <UserAccountMenu /> : <AuthModalButton />}
         </div>
       </div>
 
@@ -391,4 +401,5 @@ function SiteFooter() {
       </div>
     </footer>
   );
+}
 }

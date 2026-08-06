@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, Heart } from "lucide-react"; // <--- Heart import add kiya
 import { supabase } from "@/integrations/supabase/client";
 import type { Prompt } from "@/components/PromptCard";
 import { SearchBar } from "@/components/SearchBar";
@@ -36,6 +36,31 @@ function galleryImage(p: Prompt): string | null {
 }
 
 function Gallery() {
+  // 1. LocalStorage se initial saved favorites read karein
+const [favoritedIds, setFavoritedIds] = useState<Record<string, boolean>>(() => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("osman_visuals_favorites");
+    return saved ? JSON.parse(saved) : {};
+  }
+  return {};
+});
+
+// 2. Click karne par LocalStorage mein save / remove karein
+const toggleFavorite = (id: string, e: React.MouseEvent) => {
+  e.stopPropagation(); // Image modal open hone se rokne ke liye
+
+  setFavoritedIds((prev) => {
+    const updated = { ...prev, [id]: !prev[id] };
+    
+    // Agar false ho gaya (unfavorited), toh key delete bhi kar sakte hain
+    if (!updated[id]) {
+      delete updated[id];
+    }
+
+    localStorage.setItem("osman_visuals_favorites", JSON.stringify(updated));
+    return updated;
+  });
+};
   const navigate = useNavigate();
   const { isSignedIn } = useAuth();
   const [active, setActive] = useState<Prompt | null>(null);
@@ -151,50 +176,70 @@ function Gallery() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filteredImages.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setActive(p)}
-                className="relative block w-full aspect-[4/5] border hairline overflow-hidden group cursor-pointer"
-                aria-label={`View ${p.title}`}
-              >
-                {/* 1. Zoom-in animation */}
-                <img
-                  src={galleryImage(p)!}
-                  alt={p.title}
-                  loading="lazy"
-                  className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-                />
+          {filteredImages.map((p) => {
+  const isFav = Boolean(favoritedIds[p.id]);
 
-                <span
-                  className={`absolute top-2 right-2 text-[9px] sm:text-[10px] uppercase tracking-widest px-1.5 py-0.5 sm:px-2 sm:py-1 bg-on-photo-chip backdrop-blur-sm border hairline z-20 ${
-                    p.is_premium ? "text-on-photo-gold" : "text-on-photo-text/80"
-                  }`}
-                >
-                  {p.is_premium ? "Exclusive" : "Free"}
-                </span>
+  return (
+    <button
+      key={p.id}
+      onClick={() => setActive(p)}
+      className="relative block w-full aspect-[4/5] border hairline overflow-hidden group cursor-pointer"
+      aria-label={`View ${p.title}`}
+    >
+      {/* 1. Zoom-in animation image */}
+      <img
+        src={galleryImage(p)!}
+        alt={p.title}
+        loading="lazy"
+        className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+      />
 
-                {/* 2. Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-60 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10" />
+      {/* Exclusive / Free Chip (Top Right) */}
+      <span
+        className={`absolute top-2 right-2 text-[9px] sm:text-[10px] uppercase tracking-widest px-1.5 py-0.5 sm:px-2 sm:py-1 bg-on-photo-chip backdrop-blur-sm border hairline z-20 ${
+          p.is_premium ? "text-on-photo-gold" : "text-on-photo-text/80"
+        }`}
+      >
+        {p.is_premium ? "Exclusive" : "Free"}
+      </span>
 
-                {/* 3. Text & Username Container */}
-                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 ease-out flex flex-col gap-1 z-20 items-start">
-                  <span className="text-left text-sx sm:text-base text-on-photo-text font-medium leading-tight line-clamp-2 drop-shadow-md">
-                    {p.title}
-                  </span>
+      {/* 2. Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-60 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10" />
 
-                  <a
-                    href="https://instagram.com/osmanvisuals"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-[10px] tracking-wider font-body text-on-photo-gold hover:text-on-photo-text hover:underline pointer-events-auto"
-                  >
-                    @osmanvisuals
-                  </a>
-                </div>
-              </button>
-            ))}
+      {/* 3. Text & Username Container (Bottom Left) */}
+      <div className="absolute bottom-0 left-0 right-14 p-3 sm:p-4 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 ease-out flex flex-col gap-1 z-20 items-start">
+        <span className="text-left text-sx sm:text-base text-on-photo-text font-medium leading-tight line-clamp-2 drop-shadow-md">
+          {p.title}
+        </span>
+
+        <a
+          href="https://instagram.com/osmanvisuals"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="text-[10px] tracking-wider font-body text-on-photo-gold hover:text-on-photo-text hover:underline pointer-events-auto"
+        >
+          @osmanvisuals
+        </a>
+      </div>
+
+      {/* 4. FAVORITE HEART BUTTON (Bottom Right - Hover Only & Gold Bold) */}
+      <div
+        onClick={(e) => toggleFavorite(p.id, e)}
+        className="absolute bottom-3 right-3 z-30 p-2 rounded-full bg-transparent hover:bg-white/20 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 ease-out cursor-pointer flex items-center justify-center"
+        aria-label="Add to favorites"
+      >
+        <Heart
+          className={`w-5 h-5 transition-all duration-300 cubic-bezier(0.175,0.885,0.32,1.275) transform active:scale-125 ${
+            isFav
+              ? "fill-red-500 text-red-500 stroke-red-500 scale-110 animate-in zoom-in-75"
+              : "text-gold stroke-[2.5] hover:scale-110"
+          }`}
+        />
+      </div>
+    </button>
+  );
+})}
           </div>
         )}
       </section>

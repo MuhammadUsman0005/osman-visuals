@@ -1,23 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Bell } from "lucide-react";
+import { Download } from "lucide-react";
 
-export const Route = createFileRoute("/updates")({
-  head: () => ({
-    meta: [{ title: "Updates | Osman Visuals" }],
-  }),
-  component: UpdatesPage,
+export const Route = createFileRoute("/downloads")({
+  head: () => ({ meta: [{ title: "Downloads | Osman Visuals" }] }),
+  component: DownloadsPage,
 });
 
-function UpdatesPage() {
+function DownloadsPage() {
   return (
     <section className="mx-auto max-w-2xl px-6 py-20 text-center">
       <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/10 text-gold border border-gold/30 mb-4">
-        <Bell className="w-5 h-5" />
+        <Download className="w-5 h-5" />
       </div>
       <p className="eyebrow">Your Studio</p>
-      <h1 className="mt-3 font-display text-3xl md:text-4xl text-bone">Updates</h1>
+      <h1 className="mt-3 font-display text-3xl md:text-4xl text-bone">Downloads</h1>
       <p className="mt-4 text-sm text-bone/60 max-w-md mx-auto">
-        New prompts, packs, and archive activity will be announced here soon.
+        Every prompt pack, PDF, or ZIP you download will be tracked here soon.
       </p>
     </section>
   );

@@ -12,17 +12,21 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DownloadsRouteImport } from './routes/downloads'
+import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as GuidesRouteImport } from './routes/guides'
+import { Route as HelpRouteImport } from './routes/help'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LicensingRouteImport } from './routes/licensing'
+import { Route as MyLibraryRouteImport } from './routes/my-library'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UnlockRouteImport } from './routes/unlock'
-import { Route as UpdatesRouteImport } from './routes/updates'
 import { Route as AccountSettingsRouteImport } from './routes/account.settings'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as GuidesSlugRouteImport } from './routes/guides_.$slug'
@@ -43,6 +47,16 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DownloadsRoute = DownloadsRouteImport.update({
+  id: '/downloads',
+  path: '/downloads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GalleryRoute = GalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
@@ -53,6 +67,11 @@ const GuidesRoute = GuidesRouteImport.update({
   path: '/guides',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LibraryRoute = LibraryRouteImport.update({
   id: '/library',
   path: '/library',
@@ -61,6 +80,16 @@ const LibraryRoute = LibraryRouteImport.update({
 const LicensingRoute = LicensingRouteImport.update({
   id: '/licensing',
   path: '/licensing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyLibraryRoute = MyLibraryRouteImport.update({
+  id: '/my-library',
+  path: '/my-library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -93,11 +122,6 @@ const UnlockRoute = UnlockRouteImport.update({
   path: '/unlock',
   getParentRoute: () => rootRouteImport,
 } as any)
-const UpdatesRoute = UpdatesRouteImport.update({
-  id: '/updates',
-  path: '/updates',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AccountSettingsRoute = AccountSettingsRouteImport.update({
   id: '/account/settings',
   path: '/account/settings',
@@ -123,17 +147,21 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/downloads': typeof DownloadsRoute
+  '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
   '/guides': typeof GuidesRoute
+  '/help': typeof HelpRoute
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
+  '/my-library': typeof MyLibraryRoute
+  '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/unlock': typeof UnlockRoute
-  '/updates': typeof UpdatesRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -143,17 +171,21 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/downloads': typeof DownloadsRoute
+  '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
   '/guides': typeof GuidesRoute
+  '/help': typeof HelpRoute
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
+  '/my-library': typeof MyLibraryRoute
+  '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/unlock': typeof UnlockRoute
-  '/updates': typeof UpdatesRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -164,17 +196,21 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/downloads': typeof DownloadsRoute
+  '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
   '/guides': typeof GuidesRoute
+  '/help': typeof HelpRoute
   '/library': typeof LibraryRoute
   '/licensing': typeof LicensingRoute
+  '/my-library': typeof MyLibraryRoute
+  '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/refunds': typeof RefundsRoute
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/unlock': typeof UnlockRoute
-  '/updates': typeof UpdatesRoute
   '/account/settings': typeof AccountSettingsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/guides_/$slug': typeof GuidesSlugRoute
@@ -186,17 +222,21 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/downloads'
+    | '/favorites'
     | '/gallery'
     | '/guides'
+    | '/help'
     | '/library'
     | '/licensing'
+    | '/my-library'
+    | '/notifications'
     | '/profile'
     | '/refunds'
     | '/resources'
     | '/sitemap.xml'
     | '/terms'
     | '/unlock'
-    | '/updates'
     | '/account/settings'
     | '/auth/callback'
     | '/guides/$slug'
@@ -206,17 +246,21 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/downloads'
+    | '/favorites'
     | '/gallery'
     | '/guides'
+    | '/help'
     | '/library'
     | '/licensing'
+    | '/my-library'
+    | '/notifications'
     | '/profile'
     | '/refunds'
     | '/resources'
     | '/sitemap.xml'
     | '/terms'
     | '/unlock'
-    | '/updates'
     | '/account/settings'
     | '/auth/callback'
     | '/guides/$slug'
@@ -226,17 +270,21 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/downloads'
+    | '/favorites'
     | '/gallery'
     | '/guides'
+    | '/help'
     | '/library'
     | '/licensing'
+    | '/my-library'
+    | '/notifications'
     | '/profile'
     | '/refunds'
     | '/resources'
     | '/sitemap.xml'
     | '/terms'
     | '/unlock'
-    | '/updates'
     | '/account/settings'
     | '/auth/callback'
     | '/guides_/$slug'
@@ -247,17 +295,21 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  DownloadsRoute: typeof DownloadsRoute
+  FavoritesRoute: typeof FavoritesRoute
   GalleryRoute: typeof GalleryRoute
   GuidesRoute: typeof GuidesRoute
+  HelpRoute: typeof HelpRoute
   LibraryRoute: typeof LibraryRoute
   LicensingRoute: typeof LicensingRoute
+  MyLibraryRoute: typeof MyLibraryRoute
+  NotificationsRoute: typeof NotificationsRoute
   ProfileRoute: typeof ProfileRoute
   RefundsRoute: typeof RefundsRoute
   ResourcesRoute: typeof ResourcesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   UnlockRoute: typeof UnlockRoute
-  UpdatesRoute: typeof UpdatesRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
@@ -287,6 +339,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/downloads': {
+      id: '/downloads'
+      path: '/downloads'
+      fullPath: '/downloads'
+      preLoaderRoute: typeof DownloadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gallery': {
       id: '/gallery'
       path: '/gallery'
@@ -301,6 +367,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuidesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/library': {
       id: '/library'
       path: '/library'
@@ -313,6 +386,20 @@ declare module '@tanstack/react-router' {
       path: '/licensing'
       fullPath: '/licensing'
       preLoaderRoute: typeof LicensingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-library': {
+      id: '/my-library'
+      path: '/my-library'
+      fullPath: '/my-library'
+      preLoaderRoute: typeof MyLibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -357,13 +444,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnlockRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/updates': {
-      id: '/updates'
-      path: '/updates'
-      fullPath: '/updates'
-      preLoaderRoute: typeof UpdatesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/account/settings': {
       id: '/account/settings'
       path: '/account/settings'
@@ -399,17 +479,21 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  DownloadsRoute: DownloadsRoute,
+  FavoritesRoute: FavoritesRoute,
   GalleryRoute: GalleryRoute,
   GuidesRoute: GuidesRoute,
+  HelpRoute: HelpRoute,
   LibraryRoute: LibraryRoute,
   LicensingRoute: LicensingRoute,
+  MyLibraryRoute: MyLibraryRoute,
+  NotificationsRoute: NotificationsRoute,
   ProfileRoute: ProfileRoute,
   RefundsRoute: RefundsRoute,
   ResourcesRoute: ResourcesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   UnlockRoute: UnlockRoute,
-  UpdatesRoute: UpdatesRoute,
   AccountSettingsRoute: AccountSettingsRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   GuidesSlugRoute: GuidesSlugRoute,
