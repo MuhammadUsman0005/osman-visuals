@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth, signOut } from "@/lib/auth";
 import { useThemeMode, type ThemeMode } from "@/lib/theme";
+import { useState, useEffect } from "react";
 
 // Two initials (e.g. "Muhammad Usman" -> "MU") when we have a name, else
 // falls back to the first letter of the email.
@@ -48,6 +49,28 @@ const itemClass =
 export function UserAccountMenu({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {
   const { user } = useAuth();
   const { mode, setMode } = useThemeMode();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Check unread notifications count from localStorage for badge integration
+  useEffect(() => {
+    const checkUnreadNotifications = () => {
+      const saved = localStorage.getItem("osman_notifications");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          const unread = parsed.filter((n: { read: boolean }) => !n.read).length;
+          setUnreadCount(unread);
+        } catch {
+          setUnreadCount(0);
+        }
+      }
+    };
+
+    checkUnreadNotifications();
+    // Listen for storage updates across tabs/components
+    window.addEventListener("storage", checkUnreadNotifications);
+    return () => window.removeEventListener("storage", checkUnreadNotifications);
+  }, []);
 
   if (!user) return null;
 
@@ -125,58 +148,59 @@ export function UserAccountMenu({ variant = "desktop" }: { variant?: "desktop" |
               Account Settings
             </Link>
           </DropdownMenuItem>
-<DropdownMenuSub>
-  {/* 1. Appearance Main Trigger */}
-  <DropdownMenuSubTrigger 
-    className={`${itemClass} group hover:bg-gold hover:text-black data-[state=open]:bg-gold data-[state=open]:text-black transition-colors cursor-pointer`}
-  >
-    <Palette className="h-4 w-4 text-gold/80 group-hover:text-black group-data-[state=open]:text-black transition-colors" />
-    <span>Appearance</span>
-  </DropdownMenuSubTrigger>
+          
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger 
+              className={`${itemClass} group hover:bg-gold hover:text-black data-[state=open]:bg-gold data-[state=open]:text-black transition-colors cursor-pointer`}
+            >
+              <Palette className="h-4 w-4 text-gold/80 group-hover:text-black group-data-[state=open]:text-black transition-colors" />
+              <span>Appearance</span>
+            </DropdownMenuSubTrigger>
 
-  <DropdownMenuPortal>
-    <DropdownMenuSubContent
-      sideOffset={8}
-      className="w-44 rounded-2xl border-gold-hairline bg-surface/95 backdrop-blur p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
-    >
-      <DropdownMenuRadioGroup value={mode} onValueChange={(v) => setMode(v as ThemeMode)}>
-        
-        {/* 2. Dark Option */}
-        <DropdownMenuRadioItem 
-          value="dark" 
-          className={`${itemClass} group hover:bg-gold hover:text-black data-[highlighted]:bg-gold data-[highlighted]:text-black transition-colors cursor-pointer`}
-        >
-          <Moon className="h-4 w-4 text-gold/80 group-hover:text-black group-data-[highlighted]:text-black transition-colors" />
-          Dark
-        </DropdownMenuRadioItem>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent
+                sideOffset={8}
+                className="w-44 rounded-2xl border-gold-hairline bg-surface/95 backdrop-blur p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
+              >
+                <DropdownMenuRadioGroup value={mode} onValueChange={(v) => setMode(v as ThemeMode)}>
+                  <DropdownMenuRadioItem 
+                    value="dark" 
+                    className={`${itemClass} group hover:bg-gold hover:text-black data-[highlighted]:bg-gold data-[highlighted]:text-black transition-colors cursor-pointer`}
+                  >
+                    <Moon className="h-4 w-4 text-gold/80 group-hover:text-black group-data-[highlighted]:text-black transition-colors" />
+                    Dark
+                  </DropdownMenuRadioItem>
 
-        {/* 3. Light Option */}
-        <DropdownMenuRadioItem 
-          value="light" 
-          className={`${itemClass} group hover:bg-gold hover:text-black data-[highlighted]:bg-gold data-[highlighted]:text-black transition-colors cursor-pointer`}
-        >
-          <Sun className="h-4 w-4 text-gold/80 group-hover:text-black group-data-[highlighted]:text-black transition-colors" />
-          Light
-        </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem 
+                    value="light" 
+                    className={`${itemClass} group hover:bg-gold hover:text-black data-[highlighted]:bg-gold data-[highlighted]:text-black transition-colors cursor-pointer`}
+                  >
+                    <Sun className="h-4 w-4 text-gold/80 group-hover:text-black group-data-[highlighted]:text-black transition-colors" />
+                    Light
+                  </DropdownMenuRadioItem>
 
-        {/* 4. System Option */}
-        <DropdownMenuRadioItem 
-          value="system" 
-          className={`${itemClass} group hover:bg-gold hover:text-black data-[highlighted]:bg-gold data-[highlighted]:text-black transition-colors cursor-pointer`}
-        >
-          <Monitor className="h-4 w-4 text-gold/80 group-hover:text-black group-data-[highlighted]:text-black transition-colors" />
-          System
-        </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem 
+                    value="system" 
+                    className={`${itemClass} group hover:bg-gold hover:text-black data-[highlighted]:bg-gold data-[highlighted]:text-black transition-colors cursor-pointer`}
+                  >
+                    <Monitor className="h-4 w-4 text-gold/80 group-hover:text-black group-data-[highlighted]:text-black transition-colors" />
+                    System
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
 
-      </DropdownMenuRadioGroup>
-    </DropdownMenuSubContent>
-  </DropdownMenuPortal>
-</DropdownMenuSub>
-
+          {/* Notifications Link with Unread Badge Integration */}
           <DropdownMenuItem asChild className={itemClass}>
-            <Link to="/notifications">
-              <BellRing className="h-4 w-4 text-gold/80" />
-              Notifications
+            <Link to="/notifications" className="flex items-center justify-between w-full">
+              <span className="flex items-center gap-2.5">
+                <BellRing className="h-4 w-4 text-gold/80" />
+                Notifications
+              </span>
+              {unreadCount > 0 && (
+                <span className="w-2.5 h-2.5 rounded-full bg-gold animate-pulse shrink-0" title={`${unreadCount} unread`} />
+              )}
             </Link>
           </DropdownMenuItem>
         </div>

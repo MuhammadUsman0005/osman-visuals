@@ -7,7 +7,6 @@ import type { Prompt } from "@/components/PromptCard";
 import { SearchBar } from "@/components/SearchBar";
 import { useAuth } from "@/lib/auth";
 
-
 export const Route = createFileRoute("/gallery")({
   head: () => ({
     meta: [
@@ -37,30 +36,32 @@ function galleryImage(p: Prompt): string | null {
 
 function Gallery() {
   // 1. LocalStorage se initial saved favorites read karein
-const [favoritedIds, setFavoritedIds] = useState<Record<string, boolean>>(() => {
-  if (typeof window !== "undefined") {
-    const saved = localStorage.getItem("osman_visuals_favorites");
-    return saved ? JSON.parse(saved) : {};
-  }
-  return {};
-});
-
-// 2. Click karne par LocalStorage mein save / remove karein
-const toggleFavorite = (id: string, e: React.MouseEvent) => {
-  e.stopPropagation(); // Image modal open hone se rokne ke liye
-
-  setFavoritedIds((prev) => {
-    const updated = { ...prev, [id]: !prev[id] };
-    
-    // Agar false ho gaya (unfavorited), toh key delete bhi kar sakte hain
-    if (!updated[id]) {
-      delete updated[id];
+  const [favoritedIds, setFavoritedIds] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("favorites");
+      return saved ? JSON.parse(saved) : [];
     }
-
-    localStorage.setItem("osman_visuals_favorites", JSON.stringify(updated));
-    return updated;
+    return [];
   });
-};
+
+  // 2. Click karne par LocalStorage mein save / remove karein
+  const toggleFavorite = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Image modal open hone se rokne ke liye
+
+    setFavoritedIds((prev) => {
+      let updated: string[];
+      if (prev.includes(id)) {
+        // Agar pehle se hai toh remove kar dein
+        updated = prev.filter((favId) => favId !== id);
+      } else {
+        // Agar nahi hai toh add kar dein
+        updated = [...prev, id];
+      }
+
+      localStorage.setItem("favorites", JSON.stringify(updated));
+      return updated;
+    });
+  };
   const navigate = useNavigate();
   const { isSignedIn } = useAuth();
   const [active, setActive] = useState<Prompt | null>(null);
@@ -176,175 +177,169 @@ const toggleFavorite = (id: string, e: React.MouseEvent) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredImages.map((p) => {
-  const isFav = Boolean(favoritedIds[p.id]);
+            {filteredImages.map((p) => {
+              const isFav = favoritedIds.includes(p.id);
 
-  return (
-    <button
-      key={p.id}
-      onClick={() => setActive(p)}
-      className="relative block w-full aspect-[4/5] border hairline overflow-hidden group cursor-pointer"
-      aria-label={`View ${p.title}`}
-    >
-      {/* 1. Zoom-in animation image */}
-      <img
-        src={galleryImage(p)!}
-        alt={p.title}
-        loading="lazy"
-        className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-      />
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => setActive(p)}
+                  className="relative block w-full aspect-[4/5] border hairline overflow-hidden group cursor-pointer"
+                  aria-label={`View ${p.title}`}
+                >
+                  {/* 1. Zoom-in animation image */}
+                  <img
+                    src={galleryImage(p)!}
+                    alt={p.title}
+                    loading="lazy"
+                    className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                  />
 
-      {/* Exclusive / Free Chip (Top Right) */}
-      <span
-        className={`absolute top-2 right-2 text-[9px] sm:text-[10px] uppercase tracking-widest px-1.5 py-0.5 sm:px-2 sm:py-1 bg-on-photo-chip backdrop-blur-sm border hairline z-20 ${
-          p.is_premium ? "text-on-photo-gold" : "text-on-photo-text/80"
-        }`}
-      >
-        {p.is_premium ? "Exclusive" : "Free"}
-      </span>
+                  {/* Exclusive / Free Chip (Top Right) */}
+                  <span
+                    className={`absolute top-2 right-2 text-[9px] sm:text-[10px] uppercase tracking-widest px-1.5 py-0.5 sm:px-2 sm:py-1 bg-on-photo-chip backdrop-blur-sm border hairline z-20 ${
+                      p.is_premium ? "text-on-photo-gold" : "text-on-photo-text/80"
+                    }`}
+                  >
+                    {p.is_premium ? "Exclusive" : "Free"}
+                  </span>
 
-      {/* 2. Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-60 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10" />
+                  {/* 2. Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-60 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10" />
 
-      {/* 3. Text & Username Container (Bottom Left) */}
-      <div className="absolute bottom-0 left-0 right-14 p-3 sm:p-4 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 ease-out flex flex-col gap-1 z-20 items-start">
-        <span className="text-left text-sx sm:text-base text-on-photo-text font-medium leading-tight line-clamp-2 drop-shadow-md">
-          {p.title}
-        </span>
+                  {/* 3. Text & Username Container (Bottom Left) */}
+                  <div className="absolute bottom-0 left-0 right-14 p-3 sm:p-4 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 ease-out flex flex-col gap-1 z-20 items-start">
+                    <span className="text-left text-sx sm:text-base text-on-photo-text font-medium leading-tight line-clamp-2 drop-shadow-md">
+                      {p.title}
+                    </span>
 
-        <a
-          href="https://instagram.com/osmanvisuals"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="text-[10px] tracking-wider font-body text-on-photo-gold hover:text-on-photo-text hover:underline pointer-events-auto"
-        >
-          @osmanvisuals
-        </a>
-      </div>
+                    <a
+                      href="https://instagram.com/osmanvisuals"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-[10px] tracking-wider font-body text-on-photo-gold hover:text-on-photo-text hover:underline pointer-events-auto"
+                    >
+                      @osmanvisuals
+                    </a>
+                  </div>
 
-      {/* 4. FAVORITE HEART BUTTON (Bottom Right - Hover Only & Gold Bold) */}
-      <div
-        onClick={(e) => toggleFavorite(p.id, e)}
-        className="absolute bottom-3 right-3 z-30 p-2 rounded-full bg-transparent hover:bg-white/20 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 ease-out cursor-pointer flex items-center justify-center"
-        aria-label="Add to favorites"
-      >
-        <Heart
-          className={`w-5 h-5 transition-all duration-300 cubic-bezier(0.175,0.885,0.32,1.275) transform active:scale-125 ${
-            isFav
-              ? "fill-red-500 text-red-500 stroke-red-500 scale-110 animate-in zoom-in-75"
-              : "text-gold stroke-[2.5] hover:scale-110"
-          }`}
-        />
-      </div>
-    </button>
-  );
-})}
+                  {/* 4. FAVORITE HEART BUTTON (Bottom Right - Hover Only & Gold Bold) */}
+                  <div
+                    onClick={(e) => toggleFavorite(p.id, e)}
+                    className="absolute bottom-3 right-3 z-30 p-2 rounded-full bg-transparent hover:bg-white/20 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 ease-out cursor-pointer flex items-center justify-center"
+                    aria-label="Add to favorites"
+                  >
+                    <Heart
+                      className={`w-5 h-5 transition-all duration-300 cubic-bezier(0.175,0.885,0.32,1.275) transform active:scale-125 ${
+                        isFav
+                          ? "fill-red-500 text-red-500 stroke-red-500 scale-110 animate-in zoom-in-75"
+                          : "text-gold stroke-[2.5] hover:scale-110"
+                      }`}
+                    />
+                  </div>
+                </button>
+              );
+            })}
           </div>
         )}
       </section>
 
       {/* FLOATING MODAL WITH PREVIEW BACKDROP */}
-    {/* FLOATING MODAL WITH PREVIEW BACKDROP */}
-{active && (
-  <div
-    className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-[2px] animate-in fade-in duration-300"
-    onClick={() => setActive(null)}
-  >
-    <div className="flex min-h-full items-center justify-center p-3 sm:p-6 my-auto">
-      
-      {/* Outer Modal Card - Now wider (max-w-4xl) to support two columns */}
-      <div
-        className="relative w-full max-w-4xl my-auto rounded-2xl overflow-hidden bg-void border hairline shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        aria-label={active.title}
-      >
-        {/* Close Button - Match Prompt Preview styling */}
-        <button
+      {/* FLOATING MODAL WITH PREVIEW BACKDROP */}
+      {active && (
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-[2px] animate-in fade-in duration-300"
           onClick={() => setActive(null)}
-          className="absolute top-3 right-3 z-[60] w-8 h-8 flex items-center justify-center rounded-md border hairline bg-void/80 backdrop-blur-md hover:bg-surface text-bone transition-colors"
-          aria-label="Close"
         >
-          <X className="w-4 h-4" />
-        </button>
-
-        {/* 2-Column Grid System */}
-        <div className="grid w-full lg:grid-cols-2 bg-void overflow-hidden">
-          
-          {/* Left Side: STRICT 4:5 ASPECT RATIO IMAGE CONTAINER */}
-          <div className="aspect-[4/5] w-full bg-black relative flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r hairline">
-            <img
-              src={galleryImage(active)!}
-              alt={active.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          {/* Right Side: Scrollable Content Column */}
-     {/* Right Side: Scrollable Content Column */}
-          <div className="h-full w-full px-6 py-8 max-h-[60vh] lg:max-h-none overflow-y-auto flex flex-col bg-surface">
-            
-            <h2 className="font-display text-2xl md:text-3xl text-bone leading-tight">
-              {active.title}
-            </h2>
-
-            {active.categories && active.categories.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-4">
-                {active.categories.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => {
-                      setActive(null);
-                      navigate({ to: "/library", search: { category: c } });
-                    }}
-                    className="text-[10px] uppercase tracking-widest text-stone-700 dark:text-bone/60 border border-stone-300 hover:bg-gold/10 hover:text-gold hover:border-gold/30 transition-colors cursor-pointer dark:border-bone/20 px-1.5 py-0.5 font-medium"
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <div className="mt-6">
-              <p className="eyebrow mb-2">About this piece</p>
-              {active.description ? (
-                <p className="text-sm text-bone/70 leading-relaxed">
-                  {active.description}
-                </p>
-              ) : (
-                <p className="text-sm text-bone/40 italic">
-                  No description available for this piece.
-                </p>
-              )}
-            </div>
-
-           {/* Action Button - Flows immediately after description and aligns RIGHT */}
-           {/* Action Button - Flows immediately after description and aligns RIGHT */}
-            <div className="mt-6 flex justify-end">
+          <div className="flex min-h-full items-center justify-center p-3 sm:p-6 my-auto">
+            {/* Outer Modal Card - Now wider (max-w-4xl) to support two columns */}
+            <div
+              className="relative w-full max-w-4xl my-auto rounded-2xl overflow-hidden bg-void border hairline shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label={active.title}
+            >
+              {/* Close Button - Match Prompt Preview styling */}
               <button
-  onClick={() => {
-    if (active.is_premium && !isSignedIn) {
-      // Seedha /unlock page par bhejein with proper next URL pointing to library with open slug
-      const returnUrl = encodeURIComponent(`/library?open=${active.slug}`);
-      window.location.href = `/unlock?next=${returnUrl}`;
-      return;
-    }
-    viewPrompt(active);
-  }}
-  className="inline-flex items-center justify-center gap-2 bg-gold text-void px-6 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors rounded-full"
->
-  View Full Prompt
-</button>
+                onClick={() => setActive(null)}
+                className="absolute top-3 right-3 z-[60] w-8 h-8 flex items-center justify-center rounded-md border hairline bg-void/80 backdrop-blur-md hover:bg-surface text-bone transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              {/* 2-Column Grid System */}
+              <div className="grid w-full lg:grid-cols-2 bg-void overflow-hidden">
+                {/* Left Side: STRICT 4:5 ASPECT RATIO IMAGE CONTAINER */}
+                <div className="aspect-[4/5] w-full bg-black relative flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r hairline">
+                  <img
+                    src={galleryImage(active)!}
+                    alt={active.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Right Side: Scrollable Content Column */}
+                {/* Right Side: Scrollable Content Column */}
+                <div className="h-full w-full px-6 py-8 max-h-[60vh] lg:max-h-none overflow-y-auto flex flex-col bg-surface">
+                  <h2 className="font-display text-2xl md:text-3xl text-bone leading-tight">
+                    {active.title}
+                  </h2>
+
+                  {active.categories && active.categories.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-4">
+                      {active.categories.map((c) => (
+                        <button
+                          key={c}
+                          onClick={() => {
+                            setActive(null);
+                            navigate({ to: "/library", search: { category: c } });
+                          }}
+                          className="text-[10px] uppercase tracking-widest text-stone-700 dark:text-bone/60 border border-stone-300 hover:bg-gold/10 hover:text-gold hover:border-gold/30 transition-colors cursor-pointer dark:border-bone/20 px-1.5 py-0.5 font-medium"
+                        >
+                          {c}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="mt-6">
+                    <p className="eyebrow mb-2">About this piece</p>
+                    {active.description ? (
+                      <p className="text-sm text-bone/70 leading-relaxed">{active.description}</p>
+                    ) : (
+                      <p className="text-sm text-bone/40 italic">
+                        No description available for this piece.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Action Button - Flows immediately after description and aligns RIGHT */}
+                  {/* Action Button - Flows immediately after description and aligns RIGHT */}
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      onClick={() => {
+                        if (active.is_premium && !isSignedIn) {
+                          // Seedha /unlock page par bhejein with proper next URL pointing to library with open slug
+                          const returnUrl = encodeURIComponent(`/library?open=${active.slug}`);
+                          window.location.href = `/unlock?next=${returnUrl}`;
+                          return;
+                        }
+                        viewPrompt(active);
+                      }}
+                      className="inline-flex items-center justify-center gap-2 bg-gold text-void px-6 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gold/90 transition-colors rounded-full"
+                    >
+                      View Full Prompt
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            
           </div>
         </div>
-    </div>
-    </div>
-    </div>
-)}
-      </>
-    );
+      )}
+    </>
+  );
 }
